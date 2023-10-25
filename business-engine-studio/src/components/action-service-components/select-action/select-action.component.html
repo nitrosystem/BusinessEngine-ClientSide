@@ -1,0 +1,83 @@
+<div class="b-table theme-gray">
+    <div class="table-header">
+        <div class="header-label">
+            <h4 class="header-title">Select Action</h4>
+            <span class="header-subtitle">Select one action for current action.</span>
+        </div>
+        <div class="header-tools me-3 col-4">
+            <div class="col-10 me-2">
+                <div class="b-input-group">
+                    <select ng-model="$.model.ActionID" class="b-input form-select b-btn btn-action text-start" ng-options="action.ActionID as action.ActionName for action in $.actions | filter:{ActionSubtype:$.actionType}" ng-change="$.onActionChange()" chosen placeholder-text-single="'Select action'"
+                        required>
+                        <option disabled></option>
+                    </select>
+                    <span><i class="codicon codicon-ruby"></i></span>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="b-btn btn-action" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="codicon codicon-kebab-vertical me-0"></i>
+                </button>
+                <div class="dropdown-menu b-dropdown-menu">
+                    <a class="dropdown-item" href="#" ng-click="$.onRefreshActionParamsClick()">
+                        <i class="codicon codicon-refresh me-2"></i> Refresh Action Params
+                    </a>
+                    <a class="dropdown-item" href="#" ng-click="$.onAddActionClick()">
+                        <i class="codicon codicon-plus me-2"></i> Add New Action
+                    </a>
+                    <a class="dropdown-item" href="#" ng-if="$.action.ActionID" ng-click="$.onEditActionClick()">
+                        <i class="codicon codicon-edit me-2"></i> Edit Action
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-body">
+        <div class="d-flex columns-name">
+            <div class="col-4">Param Name</div>
+            <div class="col-5">Param Value</div>
+            <div class="col-1">
+                <i class="codicon codicon-ellipsis"></i>
+            </div>
+        </div>
+        <div class="d-flex table-row" ng-repeat="param in $.model.Params | orderBy : 'ViewOrder'" ng-if="!param.IsEdited" ng-click="$.onRowItemClick(param,$index)" role="button" ng-style="{'order':($index+1)}">
+            <div class="col-4 my-auto">
+                {{param.ParamName}}
+            </div>
+            <div class="col-5 my-auto">
+                {{param.ParamValue}}
+            </div>
+            <div class=" col-1">
+                <div class="b-multi-btns">
+                    <button type="button" class="p-0" ng-click="$.onDeleteItemClick($index,$event)">
+                        <i class="codicon codicon-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!-- Edit Param -->
+        <!------------------------------------>
+        <div ng-if="$.param.IsEdited" class="d-flex table-row edit-row" ng-style="{'order':$.param.OrderID}">
+            <div class="col-4 my-auto">{{$.param.ParamName}}</div>
+            <div class="col-5 my-auto">
+                <div monaco-editor ng-model="$.param.ParamValue" data-language="bProperties" data-one-line="true" b-custom-focus="onEditParam" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" required></div>
+            </div>
+            <div class="col-2 my-auto">
+                <div class="b-multi-btns">
+                    <button type="button" class="p-0" ng-click="$.onDoneClick()">
+                        <i class="codicon codicon-check"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-footer">
+        <div ng-if="!$.action.Params.length" class="b-notify notify-warning mb-4">
+            <i class="codicon codicon-info b-icon-2"></i>
+            <div class="text">
+                <h4 class="label">Action has not any params.</h4>
+            </div>
+        </div>
+    </div>
+</div>

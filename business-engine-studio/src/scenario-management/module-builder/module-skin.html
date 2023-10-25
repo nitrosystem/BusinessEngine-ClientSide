@@ -1,0 +1,100 @@
+<b-right-widget ng-if="$.workingMode=='module-theme'" data-title="Module Theme" data-icon="symbol-color" data-subtitle="Select skin & template & theme" data-await-action="$.awaitAction" class="mb-select-skin" data-module="$" data-reload-method="onReloadSkinsClick">
+    <!------------------------------------>
+    <!--Module Skin-->
+    <!------------------------------------>
+    <div class="b-group mb-4">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModuleSkin">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Module Skin
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <div id="grpModuleSkin" class="group-content collapse show">
+            <ul class="module-skins">
+                <li class="skin-item" ng-repeat="skin in $.skins" ng-class="{'active':$.module.Skin==skin.SkinName}">
+                    <button type="button" class="item-button" ng-click="$.onSelectSkinClick(skin)">
+                        <div class="image-wrapper">
+                            <img ng-src="{{skin.SkinImage}}" />
+                        </div>
+                        <h6 class="skin-name">{{skin.Title}}</h6>
+                        <p ng-if="skin.Description" class="skin-description">{{skin.Description}}</p>
+                        <p ng-if="!skin.Description" class="skin-no-description">No description!</p>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Module Theme-->
+    <!------------------------------------>
+    <div class="b-group mb-4" ng-if="$.module.ModuleSkin.Themes.length">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModuleTheme">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Module Theme
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <div id="grpModuleTheme" class="group-content collapse show">
+            <ul class="module-skins">
+                <li class="skin-item" ng-repeat="theme in $.module.ModuleSkin.Themes" ng-class="{'active':$.module.Theme==theme.ThemeName}">
+                    <button type="button" class="item-button" ng-click="$.onSelectSkinThemeClick(theme)">
+                        <div class="image-wrapper">
+                            <img ng-src="{{theme.ThemeImage}}" />
+                        </div>
+                        <h6 class="skin-name">{{theme.Title}}</h6>
+                        <p ng-if="theme.Description" class="skin-description">{{theme.Description}}</p>
+                        <p ng-if="!theme.Description" class="skin-no-description">No description!</p>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Module Template-->
+    <!------------------------------------>
+    <div class="b-group mb-4" ng-if="$.module.ModuleSkin[$.module.ModuleType+'Templates'].length">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModuleTemplate">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Module Template
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <div id="grpModuleTemplate" class="group-content collapse show">
+            <ul class="module-skins">
+                <li class="skin-item" ng-repeat="template in $.module.ModuleSkin[$.module.ModuleType+'Templates']" ng-class="{'active':$.module.Template==template.TemplateName}">
+                    <button type="button" class="item-button" ng-click="$.onSelectSkinTemplateClick(template)">
+                        <div class="image-wrapper">
+                            <img ng-src="{{template.TemplateImage}}" />
+                        </div>
+                        <h6 class="skin-name">{{template.Title}}</h6>
+                        <p ng-if="template.Description" class="skin-description">{{template.Description}}</p>
+                        <p ng-if="!template.Description" class="skin-no-description">No description!</p>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveSkinClick()" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+            Save
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelSkinClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

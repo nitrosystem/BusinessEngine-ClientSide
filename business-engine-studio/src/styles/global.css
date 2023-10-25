@@ -1,0 +1,163 @@
+.b-small-nowrap {
+  font-size: 0.6rem !important;
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+.b-full-screen {
+  position: fixed !important;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 95vh;
+  z-index: 9999;
+}
+
+.b-full-screen .monaco-scrollable-element {
+  max-height: 93vh;
+}
+
+/* --------------------------------------------------------
+        Width Styles
+    -----------------------------------------------------------*/
+
+.w1-rem {
+  width: 1rem;
+}
+
+.w2-rem {
+  width: 2rem;
+}
+
+.w3-rem {
+  width: 3rem;
+}
+
+.w4-rem {
+  width: 4rem;
+}
+
+.w5-rem {
+  width: 5rem;
+}
+
+.w6-rem {
+  width: 6rem;
+}
+
+.w7-rem {
+  width: 7rem;
+}
+
+.w8-rem {
+  width: 8rem;
+}
+
+.w9-rem {
+  width: 9rem;
+}
+
+.w10-rem {
+  width: 10rem;
+}
+
+.w-fit {
+  width: fit-content;
+}
+
+/* --------------------------------------------------------
+        Font  Styles
+    -----------------------------------------------------------*/
+
+.fs08-rem {
+  font-size: 0.8rem !important;
+}
+
+.fs1-rem {
+  font-size: 1rem !important;
+}
+
+.fs2-rem {
+  font-size: 2rem !important;
+}
+
+.fs25-rem {
+  font-size: 2.5rem !important;
+}
+
+/* --------------------------------------------------------
+        Icon Font  Styles
+    -----------------------------------------------------------*/
+
+.b-icon-1 {
+  font-size: 1rem !important;
+}
+
+.b-icon-1_5 {
+  font-size: 1.5rem !important;
+}
+
+.b-icon-2 {
+  font-size: 2rem !important;
+}
+
+.b-hide-elem {
+  opacity: 0 !important;
+  filter: alpha(opacity=0) !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+.b-clean {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none;
+}
+
+.table-columns-vmiddle {
+  vertical-align: middle;
+}
+
+.b-front {
+  z-index: 9999999999999999;
+}
+
+/* --------------------------------------------------------
+        Custom Upload Box
+    -----------------------------------------------------------*/
+
+.b-upload-box {
+  position: relative;
+  padding: 3rem;
+  margin: 0.3rem 0.3rem 1rem;
+  border: dotted 0.4rem #ab9a5f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.b-upload-box > input {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.b-upload-box > p {
+  color: #c7ae55;
+  text-shadow: 0 0 3px #ff0000, 0 0 5px #0000ff;
+}
+
+.b-upload-box > i {
+  font-size: 3rem !important;
+  color: #ffc700;
+}

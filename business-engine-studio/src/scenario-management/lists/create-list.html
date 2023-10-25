@@ -1,0 +1,87 @@
+<div ng-controller="createListController as $" class="create-list" ng-class="{'was-validated':$.form.validated}">
+    <b-content-widget data-title="Create List" data-icon="table" data-module-type="create-list" data-subtitle="Add or edit scenario list" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <div class="d-flex">
+            <div class="col-7 b-splitter border-end pe-5">
+                <div class="b-field">
+                    <label class="form-label">Scenario</label>
+                    <div class="b-input-group">
+                        <select id="drpScenarioID" ng-model="$.listModule.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen placeholder-text-single="'Select form scenario'"
+                            required>
+                        </select>
+                        <span><i class="codicon codicon-activate-breakpoints"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">List Name</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtModuleName" ng-model="$.listModule.ModuleName" class="b-input form-control" placeholder="Enter form name(must be unique)" autocomplete="off" required />
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">List Title</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtModuleTitle" ng-model="$.listModule.ModuleTitle" class="b-input form-control" placeholder="Enter form title" autocomplete="off" required />
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col ps-5">
+                <div class="b-field">
+                    <label class="form-label">Module Builder Type</label>
+                    <div class="b-input-group">
+                        <select id="drpScenarioID" ng-model="$.listModule.ModuleBuilderType" class="b-input form-select" ng-disabled="$.running" chosen placeholder-text-single="'Select module builder type'" required>
+                        <option value="FormDesigner">Form Designer</option>
+                        <option value="HtmlEditor">Html Editor</option>
+                        </select>
+                        <span><i class="codicon codicon-code"></i></span>
+                    </div>
+                </div>
+                <div class="b-field" ng-if="$.listModule.ModuleBuilderType=='HtmlEditor'">
+                    <label class="form-label">Files(html,js,css)</label>
+                    <div class="b-small-nowrap b-input form-control">
+                        /Portals/[Portal-System]/BusinessEngine/[ScenarioName]/[ModuleName]-custom.html
+                    </div>
+                    <div class="b-small-nowrap b-input form-control">
+                        /Portals/[Portal-System]/BusinessEngine/[ScenarioName]/[ModuleName]-custom.js
+                    </div>
+                    <div class="b-small-nowrap b-input form-control">
+                        /Portals/[Portal-System]/BusinessEngine/[ScenarioName]/[ModuleName]-custom.css
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Server Side Rendering</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.listModule.IsSSR">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="b-field" ng-if="$.listModule.IsSSR">
+                    <label class="form-label">Disable Front Framework</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.listModule.IsDisabledFrontFramework">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr class="mb-4" />
+        <div class="d-flex mb-1">
+            <div class="justify-content-start">
+                <button type="button" ng-if="$.listModule.ModuleID" class="b-btn btn-action me-2" b-custom-tooltip title="Goto Module Builder" ng-click="$.onGotoModuleBuilderClick()" ng-disabled="$.running">
+                    <i class="codicon codicon-preview me-0"></i>
+                </button>
+            </div>
+            <div class="justify-content-end ms-auto">
+                <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveListClick()" ng-disabled="$.running">
+                    <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-form'}"></i>
+                    Save List
+                </button>
+                <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelListClick()" ng-disabled="$.running">
+                    <i class="codicon codicon-circle-slash"></i>
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </b-content-widget>
+</div>

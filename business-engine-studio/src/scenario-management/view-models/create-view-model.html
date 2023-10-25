@@ -1,0 +1,193 @@
+<div ng-controller="createViewModelController as $" class="create-view-model" ng-class="{'was-validated':$.form.validated}">
+    <b-content-widget data-title="Create View Model" data-icon="output" data-module-type="create-view-model" data-subtitle="Add or edit scenario view model" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--View Model-->
+        <!------------------------------------>
+        <div class="view-model">
+            <!------------------------------------>
+            <!--Left Side-->
+            <!------------------------------------>
+            <div class="col-7 b-splitter border-end pe-5">
+                <div class="b-field">
+                    <label class="form-label">Scenario</label>
+                    <div class="b-input-group">
+                        <select id="drpScenarioID" ng-model="$.viewModel.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-change="onScenarioChange()" ng-disabled="$.running" chosen placeholder-text-single="'Select viewModel scenario'"
+                            required>
+                        </select>
+                        <span><i class="codicon codicon-activate-breakpoints"></i></span>
+                    </div>
+                </div>
+                <div class="b-field" ng-if="!$.viewModel.ViewModelID && $.databases.length">
+                    <label class="form-label">Database</label>
+                    <div class="b-input-group">
+                        <select ng-model="$.viewModel.DatabaseID" class="b-input form-select" ng-options="db.DatabaseID as db.Title for db in $.databases" ng-change="onDatabaseChange()" chosen placeholder-text-single="'Select a database'">
+                            <option value="">Current Database(DNN)</option>
+                        </select>
+                        <span><i class="codicon codicon-database"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">View Model Name</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtViewModelName" ng-model="$.viewModel.ViewModelName" class="b-input form-control" placeholder="Enter viewModel name" autocomplete="off" required />
+                        <span><i class="codicon codicon-account"></i></span>
+                    </div>
+                    <p class="b-invalid">{{$.form.error.ViewModelName}}</p>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">View Order</label>
+                    <div class="b-input-group">
+                        <input type="number" ng-model="$.viewModel.ViewOrder" class="b-input form-control" placeholder="Enter table view order" autocomplete="off" />
+                        <span><i class="codicon codicon-list-ordered"></i></span>
+                    </div>
+                </div>
+            </div>
+            <!------------------------------------>
+            <!--Right Side-->
+            <!------------------------------------>
+            <div class="col ps-5 d-flex flex-column">
+                <div class="b-field">
+                    <label class="form-label">Description</label>
+                    <div class="b-input-group">
+                        <textarea ng-model="$.viewModel.Description" class="b-input form-control" rows="4" placeholder="Enter view model description"></textarea>
+                        <span class="my-auto"><i class="codicon codicon-debug-stackframe-active"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--View Model Properties-->
+        <!------------------------------------>
+        <div class="view-model-properties">
+            <div class="b-table theme-gray">
+                <div class="table-header">
+                    <div class="header-label">
+                        <h4 class="header-title">View Model Properties</h4>
+                        <span class="header-subtitle">Properties of the current view model</span>
+                    </div>
+                    <div class="header-tools">
+                        <div class="b-btn-group">
+                            <button type="button" class="b-btn btn-action" ng-click="$.onAddPropertyClick()" ng-disabled="$.property">
+                                <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                                Add Property
+                            </button>
+                            <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.property" data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu b-dropdown-menu">
+                                <a class="dropdown-item" href="#">Import properties from excel file</a>
+                                <a class="dropdown-item" href="#">Import properties from text file</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-body">
+                    <div class="d-flex columns-name order-1">
+                        <div class="col-4">Property Name</div>
+                        <div class="col-4">Property Type</div>
+                        <div class="col-2">
+                            <button type="button" class="b-clean text-light" disabled>
+                                <i class="codicon codicon-arrow-up d-inline-block me-1"></i>
+                            </button>
+                            <button type="button" class="b-clean text-light" disabled>
+                                <i class="codicon codicon-arrow-down d-inline-block"></i>
+                            </button>
+                        </div>
+                        <div class="col-2">
+                            <i class="codicon codicon-ellipsis"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex table-row" ng-repeat="property in $.viewModel.Properties | orderBy : 'ViewOrder'" ng-if="!property.IsEdited" ng-style="{'order':($index+1)}">
+                        <div class="col-4 my-auto" ng-click="$.onRowItemClick(property,$index)">
+                            {{property.PropertyName}}
+                        </div>
+                        <div class="col-4 my-auto" ng-click="$.onRowItemClick(property,$index)">
+                            {{property.PropertyType}}
+                        </div>
+                        <div class="col-2 my-auto">
+                            <button type="button" class="b-clean text-light" ng-disabled="$.property || $index==0">
+                                <i class="codicon codicon-arrow-up d-inline-block me-1"
+                                    ng-click="$.onPropertySwapClick($index,$index-1)"></i>
+                            </button>
+                            <button type="button" class="b-clean text-light" ng-disabled="$.property || $index==$.viewModel.Properties.length-1">
+                                <i class="codicon codicon-arrow-down d-inline-block"
+                                    ng-click="$.onPropertySwapClick($index,$index+1)"></i>
+                            </button>
+                        </div>
+                        <div class=" col-2">
+                            <div class="b-multi-btns">
+                                <button type="button" ng-click="$.viewModel.Properties.splice($index,1)" ng-disabled="$.property" b-custom-tooltip data-bs-placement="bottom" title="Cancel Property">
+                                    <i class="codicon codicon-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!------------------------------------>
+                    <!-- Edit Property -->
+                    <!------------------------------------>
+                    <div ng-if="$.property.IsEdited" class="d-flex table-row edit-row" ng-style="{'order':$.property.ViewOrder}">
+                        <div class="col-4 me-2">
+                            <input type="text" id="txtPropertyName" ng-model="$.property.PropertyName" class="b-input form-control" b-custom-focus="onEditProperty" placeholder="Enter property name" autocomplete="off" required />
+                            <p class="b-invalid">{{$.propertyForm.error.PropertyName}}</p>
+                        </div>
+                        <div class="col-4 me-2">
+                            <select id="drpPropertyType" ng-model="$.property.PropertyType" class="b-input form-select" ng-options="type.Value as type.Text for type in $.propertyTypes" chosen placeholder-text-single="'Select property type'" required>
+                            </select>
+                            <select ng-if="$.property.PropertyType=='viewModel' || $.property.PropertyType=='listOfViewModel'" id="drpPropertyTypeID" ng-model="$.property.PropertyTypeID" class="b-input form-select" ng-options="vm.ViewModelID as vm.ViewModelName for vm in $.viewModels"
+                                chosen placeholder-text-single="'Select view model'">
+                            </select>
+                            <p class="b-invalid">{{$.propertyForm.error.PropertyType}}</p>
+                            <p class="b-invalid">{{$.propertyForm.error.PropertyTypeID}}</p>
+                        </div>
+                        <div class="col-2"></div>
+                        <div class="col-2">
+                            <div class="b-multi-btns">
+                                <button type="button" ng-click="$.onSavePropertyClick()" b-custom-tooltip data-bs-placement="bottom" title="Save Property">
+                                    <i class="codicon codicon-save"></i>
+                                </button>
+                                <button type="button" ng-click="$.onCancelPropertyClick()" b-custom-tooltip data-bs-placement="bottom" title="Cancel Property">
+                                    <i class="codicon codicon-circle-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <button type="button" class="b-btn btn-action btn-sm mb-3" ng-click="$.onAddPropertyClick()" ng-disabled="$.property">
+                        <i class="codicon codicon-plus me-0" ng-disabled="$.running"></i>
+                    </button>
+                    <div ng-if="!$.viewModel.Properties.length" class="b-notify notify-warning mb-4">
+                        <i class="codicon codicon-info b-icon-2"></i>
+                        <div class="text">
+                            <h4 class="label">ViewModel has no properties.</h4>
+                            <span class="subtext">
+                                Click
+                                Add Property
+                                to add a property!.
+                            </span>
+                        </div>
+                    </div>
+                    <p class="b-invalid">{{$.form.error.Properties}}</p>
+                    <div class="mt-3 mb-1 d-flex">
+                        <div class="me-auto" ng-if="$.viewModel.ViewModelID">
+                            <button type="button" class="b-btn btn-danger" ng-click="$.onDeleteViewModelClick()" ng-disabled="$.running">
+                                <i class="codicon codicon-trash"></i>
+                                Remove View Model
+                            </button>
+                        </div>
+                        <div class="ms-auto">
+                            <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveViewModelClick()" ng-disabled="$.running || $.property">
+                                <i class="codicon codicon-save"
+                                ng-class="{'loading-circle mini':$.running=='save-viewModel'}"></i>
+                                Save View Model
+                            </button>
+                            <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelViewModelClick()" ng-disabled="$.running || $.property">
+                                <i class="codicon codicon-circle-slash"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+</div>

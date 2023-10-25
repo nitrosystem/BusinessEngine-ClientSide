@@ -1,0 +1,259 @@
+<div id="mobule-builder" class="module-builder" ng-controller="moduleBuilderController as $">
+    <!------------------------------------>
+    <!--Sidebar-->
+    <!------------------------------------>
+    <div class="mb-sidebar" b-custom-sidebar="builder">
+        <ul class="sidebar-tabs">
+            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='toolbox'}" role="presentation" ng-click="$.onSidebarTabClick('toolbox')" ng-if="$.module.ModuleBuilderType != 'HtmlEditor'">
+                <a class="item-link" role="button">
+                    <i class="codicon codicon-extensions"></i>
+                </a>
+            </li>
+            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='field-settings'}" role="presentation" ng-click="$.onSidebarTabClick('field-settings')" ng-if="$.module.ModuleBuilderType != 'HtmlEditor'">
+                <a class="item-link" role="button">
+                    <i class="codicon codicon-settings-gear"></i>
+                </a>
+            </li>
+            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='selected-components'}" role="presentation" ng-click="$.onSidebarTabClick('selected-components')">
+                <a class="item-link" role="button">
+                    <i class="codicon codicon-layers"></i>
+                </a>
+            </li>
+            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='actions'}" role="presentation" ng-click="$.onSidebarTabClick('actions')">
+                <a class="item-link" role="button">
+                    <i class="codicon codicon-github-action"></i>
+                </a>
+            </li>
+        </ul>
+        <div class="search-box">
+            <input type="text" class="search-input" ng-model="$.searchComponent" placeholder="Search by title" />
+            <i class="codicon codicon-collapse-all" ng-click="$.collapsedComponentGroups=!$.collapsedComponentGroups"></i>
+        </div>
+        <div class="tab-contents b-scrollbar h-100">
+            <!------------------------------------>
+            <!--Toolbox Tab-->
+            <!------------------------------------>
+            <div class="tab-content" ng-if="$.currentSidebarTab=='toolbox' && $.module.ModuleBuilderType != 'HtmlEditor'">
+                <div class="field-types">
+                    <div class="b-group group-sm mb-2" ng-repeat="(key,value) in $.fieldTypes | fuzzyBy: 'Title': $.searchComponent |  groupBy:'GroupName' ">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldType_{{$index}}" ng-class="{'collapsed':$.collapsedComponentGroups}">
+                            <h3 class="group-label">
+                                <span class="group-icon">
+                                    <i class="codicon codicon-server-process"></i>
+                                </span> {{key}}
+                            </h3>
+                            <span class="group-collapse">
+                                <i class="codicon codicon-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div id="grpFieldType_{{$index}}" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
+                            <div class="row">
+                                <div class="col-6" ng-repeat="fieldType in value | toArray:false | orderBy:'ViewOrder'">
+                                    <div class="field-type" jqyoui-draggable="{animate:true,onStop:'$.onStopDrag($index)'}" jqyoui-options="{appendTo: 'body',revert: 'invalid',helper: 'clone'}" data-drag="true" data-new-field="true" data-field-type="{{fieldType.FieldType}}">
+                                        <i class="{{fieldType.Icon}}"></i>
+                                        <label class="title">{{fieldType.Title}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!------------------------------------>
+            <!--Field Settings Tab-->
+            <!------------------------------------>
+            <div class="tab-content" ng-if="$.currentSidebarTab=='field-settings' && $.currentField && $.module.ModuleBuilderType != 'HtmlEditor'">
+                <div ng-include="$.fieldSettingsWidget"></div>
+            </div>
+            <div class="tab-content" ng-if="$.currentSidebarTab=='selected-components'">
+            </div>
+            <!------------------------------------>
+            <!--Actions List-->
+            <!------------------------------------>
+            <div class="tab-content" ng-if="$.currentSidebarTab=='actions'">
+                <div class="actions-header" ng-if="$.fieldActionsFilter">
+                    <label class="field-title">{{$.currentField.FieldName}} Actions</label>
+                    <span class="close-filter" ng-click="$.onRemoveActionsFilterClick()">
+                        <i class="codicon codicon-close"></i>
+                    </span>
+                </div>
+                <div ng-if="$.fieldActionsFilter && (!$.currentField.Actions ||!$.currentField.Actions.length)" class="b-notify notify-warning mb-4">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <h4 class="label">the Current field has no any actions.</h4>
+                    </div>
+                </div>
+                <ul class="action-list">
+                    <li class="action-item" ng-repeat="action in $.actions | fuzzyBy: 'FieldID': $.fieldActionsFilter | orderBy:['-FieldID','-ParentID','ViewOrder']">
+                        <div class="action-type">
+                            <i class="action-icon {{action.ActionTypeIcon}}"></i>
+                            <span>{{action.ActionType}}</span>
+                        </div>
+                        <h5 class="action-title">
+                            <span class="action-name">{{action.ActionName}}</span>
+                            <span class="action-name">{{action.Event }}</span>
+                            <span ng-if="!action.FieldID">Module Action</span>
+                            <span ng-if="action.FieldID">{{action.FieldName}}</span>
+                        </h5>
+                        <div class="action-buttons">
+                            <button type="button" class="b-btn btn-sm btn-action mb-2" ng-click="$.onEditActionClick(action)">
+                                <i class="codicon codicon-edit me-0"></i>
+                            </button>
+                            <button type="button" class="b-btn btn-sm btn-action mb-2" ng-click="$.onDeleteActionClick(action.ActionID,$index)">
+                                <i class="codicon codicon-trash me-0"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+                <div class="actions-footer">
+                    <button type="button" class="b-btn btn-action btn-sm me-2" ng-click="$.onGotoActionsPageClick()">
+                        <i class="codicon codicon-github-action"></i>
+                         Actions Page
+                    </button>
+                    <button type="button" ng-if="!$.fieldActionsFilter" class="b-btn btn-action btn-sm" ng-click="$.onAddActionClick('module',$.module.ModuleID)">
+                        <i class="codicon codicon-plus"></i>
+                        New Action
+                    </button>
+                    <button type="button" ng-if="$.fieldActionsFilter" class="b-btn btn-action btn-sm" ng-click="$.onAddActionClick('field',$.currentField.FieldID)">
+                        <i class="codicon codicon-plus"></i>
+                        New Field Action
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Workspace Board-->
+    <!------------------------------------>
+    <b-content-widget data-title="{{$.module.ModuleTitle}} - {{$.module.ModuleType}} Module Builder" data-icon="notebook-template" data-module-type="module-builder" data-subtitle="{{$.module.ModuleName}}" data-await-action="$.awaitAction" class="mb-workspace"
+        data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <div class="workspace-actions">
+            <div class="b-btn-group me-3">
+                <button type="button" class="b-btn btn-action" ng-click="$.onShowActionsClick()">
+                    <i class="codicon codicon-bracket-dot"></i>
+                    Actions
+                </button>
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+                <div class="dropdown-menu b-dropdown-menu">
+                    <a class="dropdown-item" href="" ng-click="$.onAddActionClick('module',$.module.ModuleID)">
+                        New Action
+                    </a>
+                </div>
+            </div>
+            <div class="b-btn-group me-3">
+                <button type="button" class="b-btn btn-action" ng-click="$.onShowVariablesClick()">
+                    <i class="codicon codicon-preserve-case"></i>
+                    Variables
+                </button>
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+                <div class="dropdown-menu b-dropdown-menu">
+                    <a class="dropdown-item" href="">
+                        Module Settings
+                    </a>
+                </div>
+            </div>
+            <div class="b-btn-group me-3">
+                <button type="button" class="b-btn btn-action" ng-click="$.onShowLayoutTemplateClick()" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
+                    <i class="codicon codicon-symbol-color"></i>
+                    Layout Template
+                </button>
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+                <div class="dropdown-menu b-dropdown-menu">
+                    <a class="dropdown-item" href="" ng-click="$.onShowModuleSkinClick()">
+                        Module Skin
+                    </a>
+                    <a class="dropdown-item" href="" ng-click="$.onShowCustomResourceClick()">
+                        Add Custom Resources To the Module
+                    </a>
+                </div>
+            </div>
+            <!------------------------------------>
+            <!--Standard Form Builder Buttons-->
+            <!------------------------------------>
+            <div class="b-btn-group" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
+                <button type="button" class="b-btn btn-submit" ng-click="$.onRenderModuleClick()">
+                    <i class="codicon codicon-play"></i>
+                    Render Module
+                </button>
+                <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <div class="dropdown-menu b-dropdown-menu">
+                    <a class="dropdown-item" href="" ng-click="$.onRebuildModuleClick()">Rebuild Module</a>
+                    <a class="dropdown-item" href="" ng-click="$.onRenderModuleClick(true)">Render Dashboard Modules Scripts & Styles</a>
+                    <a class="dropdown-item" target="_blank" ng-href="{{$.moduleViewLinkUrl}}">Show Module Output</a>
+                </div>
+            </div>
+            <!------------------------------------>
+            <!--Html Editor Buttons-->
+            <!------------------------------------>
+            <div ng-if="$.module.ModuleBuilderType=='HtmlEditor'">
+                <button type="button" class="b-btn btn-submit" ng-click="$.saveModule()">
+                    <i class="codicon codicon-save"></i>
+                    Save Module
+                </button>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Standard Form Builder Board-->
+        <!------------------------------------>
+        <div class="workspace-fields" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
+            <div id="board{{$.module.ModuleID}}" class="panes"></div>
+        </div>
+        <!------------------------------------>
+        <!--Html Editor-->
+        <!------------------------------------>
+        <div class="tabs-container pb-3" ng-if="$.module.ModuleBuilderType=='HtmlEditor'" ng-class="{'b-full-screen':$.IsEditorFullscreen}">
+            <ul class="nav nav-tabs b-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="html-tab{{$.module.ModuleID}}" data-bs-toggle="tab" data-bs-target="#html{{$.module.ModuleID}}" type="button" role="tab" aria-controls="html{{$.module.ModuleID}}" aria-selected="true" data-tab="1">Html</button>
+                </li>
+                <li class="nav-item" role="presentation" ng-if="!$.module.IsDisabledFrontFramework">
+                    <button class="nav-link" id="js-tab{{$.module.ModuleID}}" data-bs-toggle="tab" data-bs-target="#js{{$.module.ModuleID}}" type="button" role="tab" aria-controls="js{{$.module.ModuleID}}" aria-selected="false" data-tab="2">Javascript</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="css-tab{{$.module.ModuleID}}" data-bs-toggle="tab" data-bs-target="#css{{$.module.ModuleID}}" type="button" role="tab" aria-controls="css{{$.module.ModuleID}}" aria-selected="false" data-tab="3">Css</button>
+                </li>
+                <li class="position-absolute end-0 m-3">
+                    <button type="button" ng-if="$.IsEditorFullscreen" class="b-btn btn-action fullscreen-save-button" ng-click="$.saveModule()">
+                        <i class="codicon codicon-save"></i>
+                        Save Module
+                    </button>
+                    <i class="codicon" ng-class="{'codicon-screen-full':!$.IsEditorFullscreen,'codicon-screen-normal':$.IsEditorFullscreen}" ng-click="$.IsEditorFullscreen=!$.IsEditorFullscreen"></i>
+                </li>
+            </ul>
+            <div class="tab-content p-0 mb-4">
+                <div class="tab-pane fade show active" id="html{{$.module.ModuleID}}" role="tabpanel" aria-labelledby="html-tab{{$.module.ModuleID}}">
+                    <div monaco-editor ng-model="$.module.CustomHtml" data-source="['fields','form','_b','variables','actionParams']" data-language="html" data-height="100vh" required>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="js{{$.module.ModuleID}}" role="tabpanel" aria-labelledby="js-tab{{$.module.ModuleID}}" ng-if="!$.module.IsDisabledFrontFramework">
+                    <div monaco-editor ng-model="$.module.CustomJs" data-source="['fields','form','_b','variables','actionParams']" data-language="javascript" data-height="100vh" required>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="css{{$.module.ModuleID}}" role="tabpanel" aria-labelledby="css-tab{{$.module.ModuleID}}">
+                    <div monaco-editor ng-model="$.module.CustomCss" data-source="['fields','form','_b','variables','actionParams']" data-language="css" data-height="100vh" required>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="justify-content-end ms-auto me-3">
+                    <button type="button" class="b-btn btn-submit me-2" ng-click="$.saveModule()" ng-disabled="$.running">
+                        <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-module'}"></i>
+                        Save Module
+                    </button>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+
+    <div ng-include="$.moduleVariablesWidget"></div>
+    <div ng-include="$.moduleSkinWidget"></div>
+    <div ng-include="$.moduleLayoutTemplateWidget"></div>
+    <div ng-include="$.moduleCustomResourceWidget"></div>
+    <div ng-include="$.fieldEditWidget"></div>
+    <div ng-include="$.fieldShowConditionsWidget"></div>
+    <div ng-include="$.fieldConditionalValuesWidget"></div>
+    <div ng-include="$.fieldDataSourceWidget"></div>
+</div>

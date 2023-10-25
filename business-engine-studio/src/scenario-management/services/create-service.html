@@ -1,0 +1,161 @@
+<div ng-controller="createServiceController as $" class="create-service" ng-class="{'was-validated':$.form.validated}">
+    <b-content-widget data-title="Create Service" data-icon="table" data-module-type="create-service" data-subtitle="Add or edit scenario service" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--Create Service Wizard-->
+        <!------------------------------------>
+        <div class="wizard-steps artin">
+            <div class="wz-steps">
+                <div class="wz-step" ng-click="$.onStepClick(1,$event)" ng-class="{'disabled':$.running,'active':$.step==1}">
+                    <span></span>Service Type
+                </div>
+                <div class="wz-step" ng-click="$.onStepClick(2,$event)" ng-class="{'disabled':$.running || $.stepsValid<2,'active':$.step==2 }"><span></span>Service Info
+                </div>
+                <div class="wz-step" ng-click="$.onStepClick(3,$event)" ng-class="{'disabled':$.running || $.stepsValid<3,'active':$.step==3}"><span></span>Service Builder
+                </div>
+            </div>
+            <div class="step-content">
+                <!--Wizard Loading-->
+                <div class="pre-loader theme-default" ng-hide="$.hideStepPreloader">
+                    <div class="lines"></div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 1 (Select Service Subtype)-->
+                <!------------------------------------>
+                <div ng-if="$.step==1">
+                    <div ng-model="$.service.ServiceSubtype" class="b-required" required>
+                        <div class="b-group mb-5" ng-repeat="(key,value) in $.serviceTypes | groupBy:'ServiceType'">
+                            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpServiceType{{$.service.ServiceID}}_{{$index}}">
+                                <h3 class="group-label">
+                                    <span class="group-icon">
+                                        <i class="codicon codicon-server-process"></i>
+                                    </span> {{key}}
+                                </h3>
+                                <span class="group-collapse">
+                                    <i class="codicon codicon-chevron-up"></i>
+                                </span>
+                            </div>
+                            <div id="grpServiceType{{$.service.ServiceID}}_{{$index}}" class="group-content collapse show">
+                                <div class="row">
+                                    <!--Select Service Subtype-->
+                                    <div class="col" ng-repeat="serviceType in value | toArray:false | orderBy:'ViewOrder'">
+                                        <div class="card b-custom-selective mb-4" ng-click="$.onSelectServiceSubtypeClick(serviceType)" ng-class="{'selected':$.service.ServiceSubtype==serviceType.ServiceSubtype}">
+                                            <div class="card-body text-center">
+                                                <i class="fs-1 {{serviceType.Icon}} text-muted mb-4 d-block"></i>
+                                                <h5 class="card-title text-nowrap">{{serviceType.Title}}</h5>
+                                                <p class="card-text text-muted">{{serviceType.Description}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 2 (Service Basic Info)-->
+                <!------------------------------------>
+                <div ng-if="$.step==2" class="d-flex">
+                    <div class="col-7 b-splitter border-end pe-5">
+                        <div class="b-field">
+                            <label class="form-label">Scenario</label>
+                            <div class="b-input-group">
+                                <select id="drpScenarioID{{$.service.ServiceID}}" ng-model="$.service.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen placeholder-text-single="'Select service scenario'"
+                                    required>
+                                </select>
+                                <span><i class="codicon codicon-activate-breakpoints"></i></span>
+                            </div>
+                        </div>
+                        <div class="b-field">
+                            <label class="form-label">Service Name(Unique)</label>
+                            <div class="b-input-group">
+                                <input type="text" id="txtServiceName{{$.service.ServiceID}}" ng-model="$.service.ServiceName" class="b-input form-control" placeholder="Enter service name(must be unique)" autocomplete="off" required />
+                                <span><i class="codicon codicon-gear"></i></span>
+                            </div>
+                        </div>
+                        <div class="b-field">
+                            <label class="form-label">Authorization Run Service</label>
+                            <div class="b-input-group">
+                                <select ng-model="$.service.AuthorizationRunService" class="b-input form-select" ng-options="role for role in $.roles" chosen multiple placeholder-text-multiple="'Authorization run service'"></select>
+                                <span><i class="codicon codicon-bookmark"></i></span>
+                            </div>
+                        </div>
+                        <div class="b-field">
+                            <label class="form-label">View Order</label>
+                            <div class="b-input-group">
+                                <input type="number" ng-model="$.service.ViewOrder" class="b-input form-control" placeholder="Enter service view order" />
+                                <span><i class="codicon codicon-sort-numeric-up"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col ps-5">
+                        <div class="b-field">
+                            <label class="form-label">Description</label>
+                            <div class="b-input-group">
+                                <textarea ng-model="$.service.Description" class="b-input form-control" rows="4" placeholder="Enter service description(for better development)"></textarea>
+                                <span class="my-auto"><i class="codicon codicon-debug-stackframe-active"></i></span>
+                            </div>
+                        </div>
+                        <div class="b-field">
+                            <label class="b-checkbox">
+                                <input type="checkbox" ng-model="$.service.HasResult" />
+                                <i class="checkbox-icon"></i>
+                                Query Has Result
+                            </label>
+                        </div>
+                        <div class="b-field" ng-if="$.service.HasResult">
+                            <label class="form-label">Result Type</label>
+                            <select ng-model="$.service.ResultType" class="b-input form-select" required>
+                                <option value="">Select service type</option>
+                                <option ng-value="0">Scaler</option>
+                                <option ng-value="1">Data Row</option>
+                                <option ng-value="2">List</option>
+                            </select>
+                        </div>
+                        <div class="b-field">
+                            <label class="b-checkbox">
+                                <input type="checkbox" ng-model="$.service.IsEnabled" />
+                                <i class="checkbox-icon"></i>
+                                Enable
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 3 (Service Builder)-->
+                <!------------------------------------>
+                <div ng-show="$.step==3">
+                    <div id="pnlServiceBuilder{{$.service.ServiceID}}" class="service-builder"> </div>
+                </div>
+                <hr class="mb-4" />
+                <div class="mb-1 d-flex">
+                    <div class="me-auto" ng-if="$.service.ServiceID">
+                        <button type="button" class="b-btn btn-danger" ng-click="$.onDeleteServiceClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-trash"></i>
+                            Remove Service
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="b-btn btn-action me-2" ng-if="$.step>1" ng-click="$.onPrevStepClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-arrow-left"></i>
+                            Previous
+                        </button>
+                        <button type="button" class="b-btn me-2" ng-if="$.step<3" ng-click="$.onNextStepClick()" ng-disabled="$.running">
+                            Next
+                            <i class="codicon codicon-arrow-right ms-2 me-0"></i>
+                        </button>
+                        <button type="button" class="b-btn btn-submit me-2" ng-if="$.step==3" ng-click="$.onSaveServiceClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-save"
+                                ng-class="{'loading-circle mini':$.running=='save-service'}"></i>
+                            Save Service
+                        </button>
+                        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelServiceClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-circle-slash"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+</div>

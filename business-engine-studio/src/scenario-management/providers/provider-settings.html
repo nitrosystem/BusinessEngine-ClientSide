@@ -1,0 +1,74 @@
+<div ng-controller="providerSettingsController as $" class="provider-settings" ng-class="{'was-validated':$.providerForm.validated}">
+    <b-content-widget data-title="Provider Settings" data-icon="table" data-module-type="provider-settings" data-subtitle="provider seetings & config" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--Provider Settings & Config Wizard-->
+        <!------------------------------------>
+        <div class="wizard-steps artin">
+            <div class="wz-steps">
+                <div class="wz-step" ng-click="$.onStepClick(1,$event)" ng-class="{'disabled':$.running}"> <span></span>Global Settings
+                </div>
+                <div class="wz-step" ng-click="$.onStepClick(2,$event)" ng-class="{'disabled':$.running}"><span></span>{{$.provider.ProviderName}} Widget
+                </div>
+            </div>
+            <div class="step-content">
+                <!--Wizard Loading-->
+                <div class="pre-loader theme-default" ng-hide="$.hideStepPreloader">
+                    <div class="lines"></div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 1 (Global Settings)-->
+                <!------------------------------------>
+                <div ng-if="$.step==1">
+                    <div class="d-flex">
+                        <div class="col-5 border-end b-splitter pe-5">
+                            <div class="b-field">
+                                <label class="form-label">Provider Type</label>
+                                <div class="b-input">{{$.provider.ProviderType}}</div>
+                            </div>
+                            <div class="b-field">
+                                <label class="form-label">Provider Name</label>
+                                <div class="b-input">{{$.provider.ProviderName}}</div>
+                            </div>
+                            <div class="b-field">
+                                <label class="form-label">Title</label>
+                                <input type="text" id="txtProviderTitle" class="b-input" ng-model="$.provider.Title" required>
+                                <p class="b-invalid">{{$.providerForm.error.Title}}</p>
+                            </div>
+                        </div>
+                        <div class="col ps-7 ps-5">
+                            <div class="b-field">
+                                <label class="form-label">Provider Component</label>
+                                <input type="text" id="txtProviderComponent" class="b-input" ng-model="$.provider.ProviderComponent" required>
+                                <p class="b-invalid">{{$.providerForm.error.ProviderComponent}}</p>
+                            </div>
+                            <div class="b-field">
+                                <label class="form-label">Business Controller Class</label>
+                                <input type="text" id="txtBusinessControllerClass" class="b-input" ng-model="$.provider.BusinessControllerClass" required>
+                                <p class="b-invalid">{{$.providerForm.error.BusinessControllerClass}}</p>
+                            </div>
+                            <div class="b-field">
+                                <label class="form-label">Description</label>
+                                <textarea rows="2" class="b-input" ng-model="$.provider.Description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-4" />
+                    <div class="d-flex mb-1">
+                        <div class="justify-content-end ms-auto">
+                            <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveProviderClick()" ng-disabled="$.running">
+                                <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-form'}"></i>
+                                Save Settings
+                            </button>
+                            <button type="button" class="b-btn btn-cancel" ng-click="$.onCloseWindow()" ng-disabled="$.running">
+                                <i class="codicon codicon-circle-slash"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="$.step==2">
+                    <div id="providerWidget"></div>
+                </div>
+            </div>
+        </div>
+</div>

@@ -1,0 +1,312 @@
+<div ng-controller="createActionController as $" class="create-action" ng-class="{'was-validated':$.form.validated}">
+    <b-content-widget data-title="Create Action" data-icon="table" data-module-type="create-action" data-subtitle="Add or edit scenario action" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--Create Action Wizard-->
+        <!------------------------------------>
+        <div class="wizard-steps artin">
+            <div class="wz-steps">
+                <div class="wz-step" ng-click="$.onStepClick(1,$event)" ng-class="{'disabled':$.running,'active':$.step==1}"> <span></span>Action Type
+                </div>
+                <div class="wz-step" ng-click="$.onStepClick(2,$event)" ng-class="{'disabled':$.running || $.stepsValid<2,'active':$.step==2 }"><span></span>Action Info
+                </div>
+                <div class="wz-step" ng-click="$.onStepClick(3,$event)" ng-if="$.action.HasPreScript" ng-class="{'disabled':$.running || $.stepsValid<3,'active':$.step==3 }"><span></span>Pre Script
+                </div>
+                <div class="wz-step" ng-click="$.onStepClick(4,$event)" ng-class="{'disabled':$.running || $.stepsValid<4,'active':$.step==4}"><span></span>Action Builder
+                </div>
+                <div class="wz-step" ng-click="$.onStepClick(5,$event)" ng-if="$.action.HasPostScript" ng-class="{'disabled':$.running || $.stepsValid<5,'active':$.step==5 }"><span></span>Post Script
+                </div>
+                <div class="wz-step" ng-click="$.onStepClick(6,$event)" ng-class="{'disabled':$.running || $.stepsValid<6,'active':$.step==6}"><span></span>Result & Conditions
+                </div>
+            </div>
+            <div class="step-content">
+                <!--Wizard Loading-->
+                <div class="pre-loader theme-default" ng-hide="$.hideStepPreloader">
+                    <div class="lines"></div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 1 (Select Action Subtype)-->
+                <!------------------------------------>
+                <div ng-if="$.step==1">
+                    <!--Is Server Side-->
+                    <div class="b-field">
+                        <div class="form-label">Is Server Side Action</div>
+                        <label class="b-switch">
+                            <input type="checkbox" ng-model="$.action.IsServerSide">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="b-notify notify-warning mb-4">
+                        <i class="codicon codicon-shield b-icon-2"></i>
+                        <div class="text">
+                            <h4 class="label">Important.</h4>
+                            <p class="subtext">Server side actions have higher security and client side actions have higher performance and flexibility.
+                            </p>
+                            <a href="#" class="card-link">More info</a>
+                        </div>
+                    </div>
+                    <div ng-model="$.action.ActionType" class="b-required" required>
+                        <div class="b-group mb-5" ng-if="value" ng-repeat="(key,value) in $.actionTypes | filter: $.$scope.serverSideFilter | groupBy:'GroupName'">
+                            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpActionType{{$.action.ActionID}}_{{$index}}">
+                                <h3 class="group-label">
+                                    <span class="group-icon">
+                                        <i class="codicon codicon-server-process"></i>
+                                    </span> {{key}}
+                                </h3>
+                                <span class="group-collapse">
+                                    <i class="codicon codicon-chevron-up"></i>
+                                </span>
+                            </div>
+                            <div id="grpActionType{{$.action.ActionID}}_{{$index}}" class="group-content collapse show">
+                                <div class="row">
+                                    <!--Select Action Subtype-->
+                                    <div class="col" ng-repeat="actionType in value | toArray:false | orderBy:'ViewOrder'">
+                                        <div class="card b-custom-selective mb-4" ng-click="$.onSelectActionTypeClick(actionType)" ng-class="{'selected':$.action.ActionType==actionType.ActionType}">
+                                            <div class="card-body text-center">
+                                                <i class="fs-1 {{actionType.Icon}} text-muted mb-4 d-block"></i>
+                                                <h5 class="card-title text-nowrap">{{actionType.Title}}</h5>
+                                                <p class="card-text text-muted">{{actionType.Description}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 2 (Action Basic Info)-->
+                <!------------------------------------>
+                <div ng-if="$.step==2" class="d-flex">
+                    <div class="col-7 border-end b-splitter pe-5">
+                        <!--Action Name-->
+                        <div class="b-field">
+                            <label class="form-label">Action Name</label>
+                            <div class="b-input-group">
+                                <input type="text" id="txtActionName{{$.action.ActionID}}" class="b-input form-control" ng-model="$.action.ActionName" placeholder="Enter action name" autocomplete="off" required />
+                                <span><i class="codicon codicon-gear"></i></span>
+                            </div>
+                        </div>
+                        <!--View Order-->
+                        <div class="b-field">
+                            <label class="form-label">View Order</label>
+                            <div class="b-input-group">
+                                <input type="number" ng-model="$.action.ViewOrder" class="b-input form-control b-input" placeholder="Enter view order" />
+                                <span><i class="codicon codicon-fold"></i></span>
+                            </div>
+                        </div>
+                        <!--Pre Script-->
+                        <div class="b-field">
+                            <label class="b-checkbox">
+                                <input type="checkbox" ng-model="$.action.HasPreScript" />
+                                <i class="checkbox-icon"></i>
+                                Pre Script
+                            </label>
+                        </div>
+                        <!--Post Script-->
+                        <div class="b-field">
+                            <label class="b-checkbox">
+                                <input type="checkbox" ng-model="$.action.HasPostScript" />
+                                <i class="checkbox-icon"></i>
+                                Post Script
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col ps-5">
+                        <!--Event-->
+                        <div class="b-field">
+                            <label class="form-label">Event</label>
+                            <div class="b-input-group">
+                                <select id="drpEvent{{$.action.ActionID}}" ng-model="$.action.Event" class="b-input form-select" ng-options="event.Value as event.Text for event in $.events" ng-change="onEventChange()" chosen placeholder-text-single="'Select action event'" required>
+                                    <option disabled></option>
+                                </select>
+                                <span><i class="codicon codicon-bookmark"></i></span>
+                            </div>
+                        </div>
+                        <!--Parent Action-->
+                        <div class="b-field" ng-if="$.action.Event == 'OnActionCompleted'">
+                            <label class="form-label">Action</label>
+                            <div id="drpParentID{{$.action.ActionID}}" class="b-input-group">
+                                <select ng-model="$.action.ParentID" class="b-input form-select" ng-options="ac.ActionID as ac.ActionName for ac in $.actions" chosen placeholder-text-single="'Select an action'" required>
+                                    <option disabled></option>
+                                </select>
+                                <span><i class="codicon codicon-clippy"></i></span>
+                            </div>
+                        </div>
+                        <!--Result Mode-->
+                        <div class="b-field" ng-if="$.action.Event == 'OnActionCompleted'">
+                            <label class="form-label">Result Mode</label>
+                            <div class="b-input-group">
+                                <select id="drpParentResultStatus{{$.action.ActionID}}" ng-model="$.action.ParentResultStatus" class="b-input form-select" chosen placeholder-text-single="'Select action result mode'" required>
+                                    <option disabled></option>
+                                    <option ng-value="0">All Mode</option>
+                                    <option ng-value="1">On Completed Success</option>
+                                    <option ng-value="2">On Completed Error</option>
+                                </select>
+                                <span><i class="codicon codicon-comment-discussion"></i></span>
+                            </div>
+                        </div>
+                        <!--Payment Name-->
+                        <div class="b-field" ng-if="$.action.Event == 'OnPaymentCompleted'">
+                            <label class="form-label">Payment Method Name</label>
+                            <div class="b-input-group">
+                                <select id="drpPaymentMethodID{{$.action.ActionID}}" ng-model="$.action.PaymentMethodID" class="b-input form-select" ng-options="payment.PaymentMethodID as payment.PaymentName for payment in $.paymentMethods" chosen placeholder-text-single="'Select payment method'"
+                                    required>
+                                    <option disabled></option>
+                                </select>
+                                <span><i class="codicon codicon-credit-card"></i></span>
+                            </div>
+                        </div>
+                        <!--Result Mode-->
+                        <div class="b-field" ng-if="$.action.Event == 'OnPaymentCompleted'">
+                            <label class="form-label">Result Mode</label>
+                            <div class="b-input-group">
+                                <select id="drpPaymentResultStatus{{$.action.ActionID}}" ng-model="$.action.PaymentResultStatus" class="b-input form-select" chosen placeholder-text-single="'Select payment result mode'" required>
+                                    <option disabled></option>
+                                    <option ng-value="0">All Mode</option>
+                                    <option ng-value="1">On Payment Success</option>
+                                    <option ng-value="2">On Payment Error</option>
+                                </select>
+                                <span><i class="codicon codicon-command"></i></span>
+                            </div>
+                        </div>
+                        <div class="b-field" ng-if="$.action.IsServerSide && $.action.Event && $.action.Event != 'OnActionCompleted'">
+                            <div class="form-label">Run of Child Actions in Server Side</div>
+                            <label class="b-switch">
+                                <input type="checkbox" ng-model="$.action.RunChildsInServerSide">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="b-field" ng-if="$.action.IsServerSide && $.action.Event!='OnPageLoad'">
+                            <label class="form-label d-block">Check action conditions in client side</label>
+                            <label class="b-switch">
+                                <input type="checkbox" ng-model="$.action.CheckConditionsInClientSide">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div ng-if="!$.entity.Columns.length" class="b-notify notify-warning mb-4">
+                            <i class="codicon codicon-question b-icon-2"></i>
+                            <div class="text">
+                                <h4 class="label">Help.</h4>
+                                <p class="subtext">Some quick example text to build on the card title and make up the bulk of the card's content.
+                                </p>
+                                <a href="#" class="card-link">More info</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 3 (Pre Script)-->
+                <!------------------------------------>
+                <div ng-if="$.step==3">
+                    <!--Pre Script-->
+                    <div class="b-field">
+                        <label class="b-checkbox">
+                            <input type="checkbox" ng-model="$.action.DisableConditionForPreScript" />
+                            <i class="checkbox-icon"></i>
+                            Disable Condition For Run Pre Script
+                        </label>
+                    </div>
+                    <div class="b-field">
+                        <div monaco-editor ng-model="$.action.PreScript" data-language="javascript" data-height="350px" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" required>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 4 (Action Builder)-->
+                <!------------------------------------>
+                <div ng-show="$.step==4">
+                    <div id="pnlActionBuilder{{$.action.ActionID}}" class="action-builder"> </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 5 (Post Script)-->
+                <!------------------------------------>
+                <div ng-if="$.step==5">
+                    <!--Pre Script-->
+                    <div class="b-field">
+                        <div monaco-editor ng-model="$.action.PostScript" data-language="javascript" data-height="350px" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" required></div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 6 (Result & Consitions)-->
+                <!------------------------------------>
+                <div ng-if="$.step==6">
+                    <div class="b-group mb-4">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpActionResults{{$.action.ActionID}}">
+                            <h3 class="group-label">
+                                <span class="group-icon">
+                                    <i class="codicon codicon-server-process"></i>
+                                </span> Action Results
+                            </h3>
+                            <span class="group-collapse">
+                                <i class="codicon codicon-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div id="grpActionResults{{$.action.ActionID}}" class="group-content collapse show">
+                            <b-property-list ng-model="$.action.Results" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-action-params="$.action.Params"></b-property-list>
+                        </div>
+                    </div>
+                    <div class="b-group">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpActionConditions{{$.action.ActionID}}">
+                            <h3 class="group-label">
+                                <span class="group-icon">
+                                    <i class="codicon codicon-server-process"></i>
+                                </span> Action Conditions
+                            </h3>
+                            <span class="group-collapse">
+                                <i class="codicon codicon-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div id="grpActionConditions{{$.action.ActionID}}" class="group-content collapse show">
+                            <b-condition-list ng-model="$.action.Conditions" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-action-params="$.action.Params"></b-condition-list>
+                        </div>
+                    </div>
+                    <div class="b-group mb-4">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpActionParams{{$.action.ActionID}}">
+                            <h3 class="group-label">
+                                <span class="group-icon">
+                                    <i class="codicon codicon-server-process"></i>
+                                </span> Action Params
+                            </h3>
+                            <span class="group-collapse">
+                                <i class="codicon codicon-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div id="grpActionParams{{$.action.ActionID}}" class="group-content collapse show">
+                            <b-action-param-list params="$.action.Params" data-action-id="$.action.ActionID" data-actions="$.actions" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields"
+                                data-action-params="$.action.Params"></b-action-param-list>
+                        </div>
+                    </div>
+
+                </div>
+                <hr class="mb-4" />
+                <div class="mb-1 d-flex">
+                    <div class="me-auto" ng-if="$.action.ActionID">
+                        <button type="button" class="b-btn btn-danger" ng-click="$.onDeleteActionClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-trash"></i>
+                            Remove Action
+                        </button>
+                    </div>
+                    <div class="ms-auto">
+                        <button type="button" class="b-btn btn-action me-2" ng-if="$.step>1" ng-click="$.onPrevStepClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-arrow-left"></i>
+                            Previous
+                        </button>
+                        <button type="button" class="b-btn me-2" ng-if="$.step<6" ng-click="$.onNextStepClick()" ng-disabled="$.running">
+                            Next
+                            <i class="codicon codicon-arrow-right ms-2 me-0"></i>
+                        </button>
+                        <button type="button" class="b-btn btn-submit me-2" ng-if="$.step>=4" ng-click="$.onSaveActionClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+                            Save Action
+                        </button>
+                        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelActionClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-circle-slash"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+</div>

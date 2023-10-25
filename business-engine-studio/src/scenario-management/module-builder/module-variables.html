@@ -1,0 +1,100 @@
+<b-right-widget ng-if="$.workingMode=='module-variables'" data-title="Module Variables" data-icon="preserve-case" data-subtitle="Set module variables" data-await-action="$.awaitAction" data-module="$" data-reload-method="onReloadVariablesClick">
+    <div class="b-table theme-gray">
+        <div class="table-body pt-4">
+            <div class="d-flex columns-name">
+                <div class="col-4">Variable Name</div>
+                <div class="col-3">Variable Type</div>
+                <div class="col-2">Scope</div>
+                <div class="col-2">
+                    <button type="button" class="b-clean text-light" disabled>
+                        <i class="codicon codicon-arrow-up d-inline-block me-1"></i>
+                    </button>
+                    <button type="button" class="b-clean text-light" disabled>
+                        <i class="codicon codicon-arrow-down d-inline-block"></i>
+                    </button>
+                </div>
+                <div class="col-1">
+                    <i class="codicon codicon-ellipsis"></i>
+                </div>
+            </div>
+            <div class="d-flex table-row" ng-repeat="variable in $.variables" ng-if="!variable.IsEdited" role="button" ng-style="{'order':($index+1)}">
+                <div class="col-4 my-auto"> {{variable.VariableName}} </div>
+                <div class="col-3 my-auto"> {{variable.VariableType}} </div>
+                <div class="col-2 my-auto"> {{variable.Scope}} </div>
+                <div class="col-2 my-auto">
+                    <button type="button" class="b-clean text-light" ng-disabled="$.variable || $index==0">
+                        <i class="codicon codicon-arrow-up d-inline-block me-1"
+                            ng-click="$.onVariableSwapClick($index,$index-1)"></i>
+                    </button>
+                    <button type="button" class="b-clean text-light" ng-disabled="$.variable || $index==$.variables.length-1">
+                        <i class="codicon codicon-arrow-down d-inline-block"
+                            ng-click="$.onVariableSwapClick($index,$index+1)"></i>
+                    </button>
+                </div>
+                <div class=" col-1">
+                    <div class="b-multi-btns">
+                        <button type="button" class="p-0" ng-click="$.onEditVariableClick(variable,$index)" ng-disabled="$.variable" title="Edit Variable">
+                            <i class="codicon codicon-edit"></i>
+                        </button>
+                        <button type="button" ng-click="$.onDeleteVariableClick($index,1)" ng-disabled="$.variable" title="Delete Variable">
+                            <i class="codicon codicon-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!------------------------------------>
+            <!-- Edit Variable -->
+            <!------------------------------------>
+            <div ng-if="$.variable.IsEdited" class="d-flex table-row edit-row" ng-style="{'order':$.variable.OrderID}">
+                <div class="col-4 my-auto">
+                    <input type="text" ng-model="$.variable.VariableName" class="b-input form-control" b-custom-focus="onEditVariable" placeholder="Enter variable name" autocomplete="off" required />
+                </div>
+                <div class="col-3 my-auto">
+                    <select ng-model="$.variable.VariableType" class="b-input form-select" ng-options="type.Value as type.Text for type in $.variableTypes" required>
+                        <option value="">Select variable type</option>
+                    </select>
+                    <select ng-if="$.variable.VariableType=='viewModel' || $.variable.VariableType=='listOfViewModel'" ng-model="$.variable.ViewModelID" class="b-input form-select" ng-options="vm.ViewModelID as vm.ViewModelName for vm in $.viewModels" required>
+                        <option value="">Select view model</option>
+                    </select>
+                </div>
+                <div class="col-2 my-auto">
+                    <select ng-model="$.variable.Scope" class="b-input form-select" ng-options="scope.Value as scope.Text for scope in $.variableScopes" required>
+                        <option value="">Select Variable Scope</option>
+                    </select>
+                </div>
+                <div class="col-3 my-auto">
+                    <div class="b-multi-btns">
+                        <button type="button" class="p-0" ng-click="$.onSaveVariableClick()" title="Save Variable">
+                            <i class="codicon codicon-save"></i>
+                        </button>
+                        <button type="button" class="p-0" ng-click="$.onCancelVariableClick()" title="Cancel Variable">
+                            <i class="codicon codicon-circle-slash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-footer">
+            <div ng-if="!$.variables.length" class="b-notify notify-warning mb-4">
+                <i class="codicon codicon-info b-icon-2"></i>
+                <div class="text">
+                    <h4 class="label">no variables.</h4>
+                </div>
+            </div>
+            <button type="button" class="b-btn btn-action" ng-click="$.onAddVariableClick()" ng-disabled="$.variable">
+                <i class="codicon codicon-plus me-0"></i>
+            </button>
+        </div>
+    </div>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveVariablesClick()" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+            Save variables
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelVariablesClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

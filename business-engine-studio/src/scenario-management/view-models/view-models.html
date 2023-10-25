@@ -1,0 +1,113 @@
+<div ng-controller="viewModelsController as $" class="viewModels">
+    <b-content-widget data-title="View Models" data-icon="combine" data-module-type="viewModels"
+        data-subtitle="Scenario view models" data-await-action="$.awaitAction">
+        <div class="b-table">
+            <div class="table-header">
+                <div class="col-3 me-3">
+                    <div class="b-input-group">
+                        <input type="text" ng-model="$.filter.ViewModelName" class="b-input form-control"
+                            placeholder="Search by viewModel name" />
+                        <span><i class="codicon codicon-bell"></i></span>
+                    </div>
+                </div>
+                <div class="col-3 me-3">
+                    <div class="b-input-group">
+                        <input type="text" ng-model="$.filter.ViewModelName" class="b-input form-control"
+                            placeholder="Search by viewModel name" />
+                        <span><i class="codicon codicon-circuit-board"></i></span>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <div class="b-input-group">
+                        <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()"
+                            ng-disabled="$.column">
+                            <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="header-tools">
+                    <div class="b-btn-group">
+                        <button type="button" class="b-btn btn-action" ng-click="$.onAddViewModelClick()"
+                            ng-disabled="$.column">
+                            <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                            Add ViewModel
+                        </button>
+                        <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
+                            ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
+                        </button>
+                        <div class="dropdown-menu b-dropdown-menu">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-body">
+                <div class="grid columns-name">
+                    <div class="g-col-1">
+                        <label class="b-checkbox">
+                            <input type="checkbox" ng-model="$.filter.IsSelectedAll">
+                            <i class="checkbox-icon"></i>
+                        </label>
+                    </div>
+                    <div class="g-col-5">View Model Name</div>
+                    <div class="g-col-2">
+                        <i class="codicon codicon-arrow-up d-inline-block"></i>
+                        <i class="codicon codicon-arrow-down d-inline-block"></i>
+                    </div>
+                    <div class="g-col-2">
+                        <i class="codicon codicon-ellipsis"></i>
+                    </div>
+                </div>
+                <div class="grid table-row" ng-repeat="viewModel in $.viewModels | orderBy: 'ViewOrder'">
+                    <div class="g-col-1">
+                        <label class="b-checkbox">
+                            <input type="checkbox" ng-model="viewModel.IsSelected">
+                            <i class="checkbox-icon"></i>
+                        </label>
+                    </div>
+                    <div class="g-col-5">
+                        {{viewModel.ViewModelName}}
+                    </div>
+                    <div class="g-col-2">
+                        <button type="button" class="b-clean text-light p-0" ng-disabled="$.running || $index==0">
+                            <i class="codicon codicon-arrow-up d-inline-block me-1"
+                                ng-click="$.onViewModelSwapClick($index,$index-1)"></i>
+                        </button>
+                        <button type="button" class="b-clean text-light p-0"
+                            ng-disabled="$.running || $index==$.viewModels.length-1">
+                            <i class="codicon codicon-arrow-down d-inline-block"
+                                ng-click="$.onViewModelSwapClick($index,$index+1)"></i>
+                        </button>
+                    </div>
+                    <div class="g-col-2">
+                        <div class="b-multi-btns">
+                            <button type="button"
+                                ng-click="$.onEditViewModelClick(viewModel.ViewModelID,viewModel.ViewModelName)">
+                                <i class="codicon codicon-edit"></i>
+                            </button>
+                            <button type="button" ng-click="$.onDeleteViewModelClick(viewModel.ViewModelID,$index)">
+                                <i class="codicon codicon-trash"></i>
+                            </button>
+                            <button type="button">
+                                <i class="codicon codicon-ellipsis"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-footer">
+                <div ng-if="!$.viewModels.length" class="b-notify notify-warning mb-4">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <h4 class="label">No viewModels.</h4>
+                        <span class="subtext">
+                            Click
+                            <button type="button" class="b-btn btn-sm ms-2 me-2" ng-click="$.onAddViewModelClick()">Add
+                                ViewModel</button> for creating a new
+                            viewModel.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+</div>

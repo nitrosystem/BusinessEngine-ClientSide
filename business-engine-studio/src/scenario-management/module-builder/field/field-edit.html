@@ -1,0 +1,109 @@
+<b-right-widget ng-if="$.workingMode=='field-edit'" data-title="Edit Field ({{$.currentField.FieldType}})" data-icon="notebook-template" data-subtitle="Build custom module with more components" data-await-action="$.awaitAction" class="mb-edit-field" data-module="$">
+    <div class="d-flex">
+        <div class="col-7 b-splitter border-end pe-3">
+            <div class="b-field">
+                <label class="form-label">Field Name</label>
+                <div class="b-input-group">
+                    <input type="text" id="txtFieldName" class="b-input form-control" ng-model="$.currentField.FieldName" placeholder="Enter field name" autocomplete="off" required />
+                    <span><i class="codicon codicon-gear"></i></span>
+                </div>
+            </div>
+            <div class="b-field" ng-if="!$.currentField.Settings.IsHideFieldText">
+                <label class="form-label">Field Text</label>
+                <div class="b-input-group">
+                    <input type="text" id="txtFieldText" class="b-input form-control" ng-model="$.currentField.FieldText" placeholder="Enter field text" autocomplete="off" required />
+                    <span><i class="codicon codicon-gear"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-5 ps-3">
+            <div class="b-field">
+                <label class="form-label d-block">Is Required</label>
+                <label class="b-switch d-block">
+                    <input type="checkbox" ng-model="$.currentField.IsRequired">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="b-field">
+                <label class="form-label d-block">Hide Field Text</label>
+                <label class="b-switch d-block">
+                    <input type="checkbox" ng-model="$.currentField.Settings.IsHideFieldText">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Field Template-->
+    <!------------------------------------>
+    <div class="b-group mb-4">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldTemplates">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Field Template
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <div id="grpFieldTemplates" class="group-content collapse show">
+            <ul class="field-templates">
+                <li class="template-item" ng-repeat="template in $.currentField.FieldTypeObject.Templates" ng-class="{'active':template.TemplateName==$.currentField.Template}">
+                    <button type="button" class="item-button" ng-click="$.onSelectFieldTemplate(template.TemplateName)">
+                        <i ng-if="!template.TemplateImage&&!template.FontIcon" class="codicon codicon-preview"></i>
+                        <div ng-if="template.TemplateImage"  class="image-wrapper" >
+                            <img ng-src="{{template.TemplateImage}}"/>
+                        </div>
+                        <i ng-if="template.FontIcon" class="{{template.FontIcon}}"></i>
+                        <h6 class="template-name">{{template.TemplateName}}</h6>
+                        <p ng-if="template.Description" class="template-description">{{template.Description}}</p>
+                        <p ng-if="!template.Description" class="template-no-description">No description!</p>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Field Theme-->
+    <!------------------------------------>
+    <div class="b-group mb-4">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldThemes">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Field Theme
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <div id="grpFieldThemes" class="group-content collapse show">
+            <ul class="field-templates">
+                <li class="template-item" ng-repeat="theme in $.currentField.FieldTypeObject.Themes" ng-class="{'active':theme.ThemeName==$.currentField.Theme}">
+                    <button type="button" class="item-button" ng-click="$.onSelectFieldTemplate(theme.ThemeName)">
+                        <i ng-if="!theme.TemplateImage&&!theme.FontIcon" class="codicon codicon-preview"></i>
+                        <div ng-if="theme.TemplateImage"  class="image-wrapper" >
+                            <img ng-src="{{theme.ThemeImage}}"/>
+                        </div>
+                        <i ng-if="theme.FontIcon" class="{{theme.FontIcon}}"></i>
+                        <h6 class="template-name">{{theme.ThemeName}}</h6>
+                        <p ng-if="theme.Description" class="template-description">{{theme.Description}}</p>
+                        <p ng-if="!theme.Description" class="template-no-description">No description!</p>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveFieldClick($event,true)" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+            Save Field
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelFieldClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

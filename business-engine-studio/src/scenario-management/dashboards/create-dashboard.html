@@ -1,0 +1,70 @@
+<div ng-controller="createDashboardController as $" class="create-dashboard" ng-class="{'was-validated':$.form.validated}">
+    <b-content-widget data-title="Create Dashboard" data-icon="table" data-module-type="create-dashboard" data-subtitle="Add or edit scenario dashboard" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--Create Dashboard -->
+        <!------------------------------------>
+        <div class="d-flex">
+            <div class="col-7 b-splitter border-end pe-5">
+                <div class="b-field">
+                    <label class="form-label">Scenario</label>
+                    <div class="b-input-group">
+                        <select id="drpScenarioID" ng-model="$.dashboard.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen placeholder-text-single="'Select dashboard scenario'"
+                            required>
+                        </select>
+                        <span><i class="codicon codicon-activate-breakpoints"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Dashboard Name</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtModuleName" ng-model="$.dashboard.ModuleName" class="b-input form-control" placeholder="Enter dashboard name(must be unique)" autocomplete="off" required />
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Dashboard Title</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtModuleTitle" ng-model="$.dashboard.ModuleTitle" class="b-input form-control" placeholder="Enter dashboard title" autocomplete="off" required />
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Authorization View Dashboard</label>
+                    <div class="b-input-group">
+                        <select ng-model="$.dashboard.AuthorizationViewDashboard" class="b-input form-select" ng-options="role for role in $.roles" chosen multiple placeholder-text-multiple="'Authorization run dashboard'"></select>
+                        <span><i class="codicon codicon-bookmark"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col ps-5">
+                <div class="b-field">
+                    <label class="form-label">Dashboard Type</label>
+                    <select id="drpDashboardType" ng-model="$.dashboard.DashboardType" class="b-input form-select" required>
+                        <option value="" disabled>Select dashboard type</option>
+                        <option ng-value="1">Standalone Panel</option>
+                        <option ng-value="2">Dnn Module</option>
+                    </select>
+                </div>
+                <div class="b-field" ng-if="$.dashboard.DashboardType==1">
+                    <label class="form-label">Unique Name</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtUniqueName" ng-model="$.dashboard.UniqueName" class="b-input form-control" placeholder="Enter unique name" autocomplete="off" required />
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+                <hr class="mb-4" />
+                <div class="mb-1 d-flex justify-content-end mt-auto">
+                    <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveDashboardClick()" ng-disabled="$.running">
+                        <i class="codicon codicon-save"
+                            ng-class="{'loading-circle mini':$.running=='save-dashboard'}"></i>
+                        Save Dashboard
+                    </button>
+                    <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelDashboardClick()" ng-disabled="$.running">
+                        <i class="codicon codicon-circle-slash"></i>
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+</div>

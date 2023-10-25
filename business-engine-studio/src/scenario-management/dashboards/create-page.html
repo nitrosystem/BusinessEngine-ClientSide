@@ -1,0 +1,206 @@
+<div ng-controller="createDashboardPageController as $" class="create-dashboard-page">
+    <b-content-widget data-title="Create Page" data-icon="table" data-module-type="create-page" data-subtitle="Add or edit dashboard page" data-await-action="$.awaitAction" data-hide-toolbar="$.moduleType == 'dashboard-pages'" data-module="$" data-reload-method="onPageLoad"
+        data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--Dashboard Page-->
+        <!------------------------------------>
+        <div class="create-dashboard-page d-flex">
+            <!------------------------------------>
+            <!--Left Side-->
+            <!------------------------------------>
+            <div class="col-6 b-splitter border-end pe-4" ng-class="{'was-validated':$.form.validated}">
+                <div class="b-field">
+                    <label class="form-label">Page Parent</label>
+                    <div class="b-input-group">
+                        <select ng-model="$.page.ParentID" class="b-input form-select" placeholder-text-single="'None'" ng-options="page.PageID as page.LevelTitle for page in $.allPages" chosen></select>
+                        <span><i class="codicon codicon-files"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Page Type</label>
+                    <div class="b-input-group">
+                        <select id="drpPageType" ng-model="$.page.PageType" class="b-input form-select" placeholder-text-single="'Select page type'" required>
+                            <option value="" disabled>Select page type</option>
+                            <option ng-value="0">Standard</option>
+                            <option ng-value="1">Url</option>
+                            <option ng-value="2">Existing Page</option>
+                        </select>
+                        <span><i class="codicon codicon-browser"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Page Name</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtPageName" ng-model="$.page.PageName" class="b-input form-control" autocomplete="off" placeholder="Enter page name" required />
+                        <span><i class="codicon codicon-book"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Page Title</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtPageTitle" ng-model="$.page.Title" class="b-input form-control" autocomplete="off" placeholder="Enter page title" required />
+                        <span><i class="codicon codicon-bookmark"></i></span>
+                    </div>
+                </div>
+                <div class="b-field" ng-if="$.page.PageType==1">
+                    <label class="form-label">Url</label>
+                    <div class="b-input-group">
+                        <input type="text" ng-model="$.page.Url" class="b-input form-control" autocomplete="off" placeholder="Enter url address" required />
+                        <span><i class="codicon codicon-credit-card"></i></span>
+                    </div>
+                </div>
+                <div class="b-field" ng-if="$.page.PageType==2">
+                    <label class="form-label">Existing Page</label>
+                    <div class="b-input-group">
+                        <select ng-model="$.page.ExistingPageID" class="b-input form-select" placeholder-text-single="'None'" ng-options="page.PageID as page.LevelTitle for page in $.allPages" chosen></select>
+                        <span><i class="codicon codicon-files"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label d-block">Inherit Permission From Dashboard</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.page.InheritPermissionFromDashboard">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="b-field" ng-if="!$.page.InheritPermissionFromDashboard">
+                    <label class="form-label">Authorization View Page</label>
+                    <div class="b-input-group">
+                        <select ng-model="$.page.AuthorizationViewPage" class="b-input form-select" ng-options="role for role in $.roles" chosen multiple placeholder-text-multiple="'Authorization view page roles'" required>
+                            <option disabled></option>
+                        </select>
+                        <span><i class="codicon codicon-shield-lock"></i></span>
+                    </div>
+                </div>
+            </div>
+            <!------------------------------------>
+            <!--Right Side-->
+            <!------------------------------------>
+            <div class="col-6 ps-4" ng-class="{'was-validated':$.moduleForm.validated}">
+                <div class="b-field">
+                    <label class="form-label d-block">Is Visible</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.page.IsVisible">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="b-field">
+                    <label class="form-label d-block">Include Module</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.page.IncludeModule" ng-disabled="$.page.Module.ModuleID">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <!------------------------------------>
+                <!--Page Module-->
+                <!------------------------------------>
+                <div class="b-notify notify-warning mb-4" ng-if="$.page.IncludeModule && !$.page.PageID">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <span class="text">
+                            First, you must save the page details
+                        </span>
+                    </div>
+                </div>
+                <div ng-if="$.page.IncludeModule && $.page.PageID">
+                    <div class="b-field">
+                        <label class="form-label">Module Type</label>
+                        <div class="b-input-group">
+                            <select id="drpModuleType" ng-model="$.page.Module.ModuleType" class="b-input form-select" chosen required>
+                                <option value="" disabled>Select module type</option>
+                                <option value="Form">Form</option>
+                                <option value="List">List</option>
+                            </select>
+                            <span><i class="codicon codicon-bookmark"></i></span>
+                        </div>
+                    </div>
+                    <div class="b-field">
+                        <label class="form-label">Module Builder Type</label>
+                        <div class="b-input-group">
+                            <select id="drpScenarioID" ng-model="$.page.Module.ModuleBuilderType" class="b-input form-select" ng-disabled="$.running" chosen placeholder-text-single="'Select module builder type'" required>
+                            <option value="FormDesigner">Form Designer</option>
+                            <option value="HtmlEditor">Html Editor</option>
+                            </select>
+                            <span><i class="codicon codicon-code"></i></span>
+                        </div>
+                    </div>
+                    <div class="b-field">
+                        <label class="form-label">Module Name</label>
+                        <div class="b-input-group">
+                            <input type="text" id="txtModuleName" class="b-input form-control" ng-model="$.page.Module.ModuleName" placeholder="Enter module name" autocomplete="off" required />
+                            <span><i class="codicon codicon-gear"></i></span>
+                        </div>
+                    </div>
+                    <div class="b-field">
+                        <label class="form-label">Module Title</label>
+                        <div class="b-input-group">
+                            <input type="text" id="txtModuleTitle" class="b-input form-control" ng-model="$.page.Module.ModuleTitle" placeholder="Enter module title" autocomplete="off" required />
+                            <span><i class="codicon codicon-gear"></i></span>
+                        </div>
+                    </div>
+                    <hr class="mb-2" />
+                    <div class="d-flex pt-2">
+                        <div class="justify-content-start" ng-if="$.page.Module.ModuleID">
+                            <button type="button" class="b-btn btn-sm btn-cancel me-2" b-custom-tooltip title="Goto Module Builder" ng-click="$.onGotoModuleBuilderClick()" ng-disabled="$.running">
+                                <i class="codicon codicon-preview me-0"></i>
+                            </button>
+                        </div>
+                        <div class="justify-content-end ms-auto">
+                            <button type="button" class="b-btn btn-sm btn-action me-2" b-custom-tooltip title="Save Page Module" ng-click="$.onSaveModuleClick($event,true)" ng-disabled="$.running">
+                                <i class="codicon codicon-save me-0"
+                                    ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+                            </button>
+                            <button type="button" class="b-btn btn-sm btn-action" ng-if="$.page.Module.ModuleID" b-custom-tooltip title="Delete Page Module" ng-click="$.onDeleteModuleClick()" ng-disabled="$.running">
+                                <i class="codicon codicon-trash me-0"
+                                    ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!-- Page Data -->
+        <!------------------------------------>
+        <div class="b-table theme-gray mt-3">
+            <div class="table-body">
+                <div class="d-flex columns-name p-2">
+                    <div class="col-4">Name</div>
+                    <div class="col-6">Value</div>
+                    <div class="col-2">
+                        <i class="codicon codicon-ellipsis"></i>
+                    </div>
+                </div>
+                <div class="d-flex table-row" ng-repeat="(key, value) in $.page.Settings">
+                    <div class="col-4 my-auto">
+                        <input type="text" class="b-input form-control" ng-model="key" ng-blur="$.onPageDataBlur(key,value,$index)" placeholder="Enter property name" />
+                    </div>
+                    <div class="col-6 my-auto">
+                        <input type="text" class="b-input form-control" ng-model="value" ng-blur="$.onPageDataBlur(key,value,$index)" placeholder="Enter property value" />
+                    </div>
+                    <div class="col-2 my-auto">
+                        <button type="button" class="b-btn btn-sm btn-action ms-1" ng-click="$.onDeletePageDataProperty(key)">
+                            <i class="codicon codicon-trash me-0"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-footer">
+                <button type="button" class="b-btn btn-sm btn-action" b-custom-tooltip data-bs-placement="bottom" title="Add Property" ng-click="$.onAddPageDataProperty()">
+                    <i class="codicon codicon-plus me-0"></i>
+                </button>
+            </div>
+        </div>
+        <hr class="mb-4" />
+        <div class="mb-1 d-flex justify-content-end mt-auto">
+            <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSavePageClick()" ng-disabled="$.running">
+                <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-dashboard'}"></i>
+                Save Page
+            </button>
+            <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelPageClick()" ng-disabled="$.running">
+                <i class="codicon codicon-circle-slash"></i>
+                Cancel
+            </button>
+        </div>
+    </b-content-widget>
+</div>

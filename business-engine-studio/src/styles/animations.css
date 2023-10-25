@@ -1,0 +1,216 @@
+/* --------------------------------------------------------
+        spin animation
+    -----------------------------------------------------------*/
+.spin {
+  -webkit-animation-name: spin;
+  -webkit-animation-duration: 4000ms;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: spin;
+  -moz-animation-duration: 4000ms;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+  -ms-animation-name: spin;
+  -ms-animation-duration: 4000ms;
+  -ms-animation-iteration-count: infinite;
+  -ms-animation-timing-function: linear;
+  animation-name: spin;
+  animation-duration: 4000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@-moz-keyframes spin {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------------------------
+        progress animation
+    -----------------------------------------------------------*/
+.progress-animation {
+  animation: progress-animation 2s linear infinite;
+}
+
+@keyframes progress-animation {
+  from {
+    background-position: 100%;
+  }
+
+  to {
+    background-position: 0;
+  }
+}
+
+/* --------------------------------------------------------
+        shimmer animation
+    -----------------------------------------------------------*/
+.shimmer {
+  /* the shimmer magic */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#222),
+    to(#222),
+    color-stop(0.5, #fff)
+  );
+  background: -moz-gradient(
+    linear,
+    left top,
+    right top,
+    from(#222),
+    to(#222),
+    color-stop(0.5, #fff)
+  );
+  background: gradient(
+    linear,
+    left top,
+    right top,
+    from(#222),
+    to(#222),
+    color-stop(0.5, #fff)
+  );
+  -webkit-background-size: 125px 100%;
+  -moz-background-size: 125px 100%;
+  background-size: 125px 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  -webkit-animation-name: shimmer;
+  -moz-animation-name: shimmer;
+  -webkit-animation-name: shimmer;
+  animation-name: shimmer;
+  -webkit-animation-duration: 2s;
+  -moz-animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-color: #222;
+}
+
+@-moz-keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+
+  100% {
+    background-position: top right;
+  }
+}
+
+@-webkit-keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+
+  100% {
+    background-position: top right;
+  }
+}
+
+@-o-keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+
+  100% {
+    background-position: top right;
+  }
+}
+
+@-ms-keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+
+  100% {
+    background-position: top right;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+
+  100% {
+    background-position: top right;
+  }
+}
+
+/* --------------------------------------------------------
+        Rotate & Border Color Animation
+    -----------------------------------------------------------*/
+.rotate-border-color {
+  animation: rotate-border-color 1.2s linear infinite;
+  transition: border-color 0.6s linear;
+}
+
+@keyframes rotate-border-color {
+  50% {
+    border-left-color: #9b59b6;
+  }
+  75% {
+    border-left-color: #e67e22;
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------------------------
+        Tik Animation
+    -----------------------------------------------------------*/
+.tik {
+  animation: check-icon 0.8s ease;
+}
+
+@keyframes tik {
+  0% {
+    height: 0;
+    width: 0;
+  }
+  20% {
+    height: 0;
+    width: 0.4rem;
+  }
+  40% {
+    height: 0.5rem;
+    width: 0.4rem;
+  }
+  100% {
+    height: 1rem;
+    width: 0.4rem;
+  }
+}

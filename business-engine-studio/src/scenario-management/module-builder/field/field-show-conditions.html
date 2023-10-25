@@ -1,0 +1,14 @@
+<b-right-widget ng-if="$.workingMode=='field-show-conditions'" data-title="Show Conditions" data-icon="notebook-template" data-subtitle="{{$.currentField.FieldName}} show conditions" data-await-action="$.awaitAction" class="mb-edit-field visible" data-module="$">
+    <b-condition-list ng-model="$.currentField.ShowConditions" data-source="['fields','form','variables','actionParams']" data-variables="variables" data-fields="fields" data-action-params="$.action.Params"></b-condition-list>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveFieldClick($event)" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+            Save Conditions
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelFieldClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

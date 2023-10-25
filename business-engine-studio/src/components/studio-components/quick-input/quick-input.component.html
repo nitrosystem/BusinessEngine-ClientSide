@@ -1,0 +1,16 @@
+<div class="b-widget-quick-input">
+    <div class="input-box">
+        <input type="text" class="search-input" ng-model="$.data.SearchValue" placeholder="{{$.searchPlaceholder}}" />
+    </div>
+    <div class="list-box">
+        <div class="row-item" ng-repeat="item in $.items" ng-click="$.onRowClick(item)" ng-class="{'active':item.IsSelected}">
+            <a class="item-link">
+                <i ng-if="$.itemIcon" class="codicon codicon-{{$.itemIcon}}"></i>
+                <span class="item-title">{{item[$.itemTitle]}}</span>
+                <pre ng-if="$.itemSubtitle && item[$.itemSubtitle]" class="item-subtitle">({{item[$.itemSubtitle]}})</pre>
+            </a>
+            <a ng-if="item.Separator" class="separator">{{item.Separator}}</a>
+        </div>
+    </div>
+</div>
+<div class="b-widget-quick-input-drop"></div>

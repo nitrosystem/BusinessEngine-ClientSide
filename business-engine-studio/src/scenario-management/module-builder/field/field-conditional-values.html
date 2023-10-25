@@ -1,0 +1,53 @@
+<b-right-widget ng-if="$.workingMode=='field-conditional-values'" data-title="Conditional Value(s)" data-icon="notebook-template" data-subtitle="{{$.currentField.FieldName}} conditional value(s)" data-await-action="$.awaitAction" class="mb-edit-field visible"
+    data-module="$">
+    <div ng-repeat="item in $.currentField.FieldValues">
+        <div class="b-field">
+            <label class="form-label">Value Expression</label>
+            <div class="d-flex">
+                <div class="col-8">
+                    <div monaco-editor ng-model="item.ValueExpression" data-language="bProperties" data-one-line="true" data-source="{{dataSource}}" required>
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="codicon codicon-kebab-vertical me-0"></i>
+                    </button>
+                    <div class="dropdown-menu b-dropdown-menu">
+                        <a class="dropdown-item" href="" ng-click="$.onExpressionParsingTypeChange(item,'')">
+                            <i ng-if="!item.ExpressionParsingType" class="codicon codicon-check-all me-2"></i> Parse String
+                        </a>
+                        <a class="dropdown-item" href="" ng-click="$.onExpressionParsingTypeChange(item,'get-value')">
+                            <i ng-if="item.ExpressionParsingType=='get-value'" class="codicon codicon-check-all me-2"></i> Get Value
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="b-field">
+            <label class="form-label">Conditions</label>
+            <b-condition-list ng-model="item.Conditions" data-source="['fields','form','variables','actionParams']" data-variables="variables" data-fields="fields" data-action-params="$.action.Params"></b-condition-list>
+        </div>
+        <div class="b-field">
+            <button type="button" class="b-btn btn-sm btn-action ms-auto d-flex" ng-click="$.currentField.FieldValues.splice($index,1)">
+                <i class="codicon codicon-trash me-0"></i>
+            </button>
+        </div>
+    </div>
+    <div class="b-field">
+        <button type="button" class="b-btn btn-sm btn-action" ng-click="$.onAddFieldConditionalValueClick()">
+            <i class="codicon codicon-plus me-0"></i>
+        </button>
+    </div>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveFieldClick($event)" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+            Save
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelFieldClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

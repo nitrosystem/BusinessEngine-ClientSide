@@ -1,0 +1,64 @@
+<div ng-controller="createScenarioController as $" class="create-Scenario" ng-class="{'was-validated':$.form.validated}">
+    <b-content-widget data-title="Create Scenario" data-icon="table" data-module-type="create-Scenario" data-subtitle="Add or edit scenario" data-await-action="$.awaitAction">
+        <div class="d-flex">
+            <div class="col-7 b-splitter border-end pe-5">
+                <div class="b-field">
+                    <label class="Scenario-label">Scenario Name</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtScenarioName" ng-model="$.scenario.ScenarioName" class="b-input form-control" placeholder="Enter Scenario name(must be unique)" autocomplete="off" required />
+                        <span>
+                            <i class="codicon codicon-gear"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="Scenario-label">Scenario Title</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtScenarioTitle" ng-model="$.scenario.ScenarioTitle" class="b-input form-control" placeholder="Enter Scenario name(must be unique)" autocomplete="off" required />
+                        <span>
+                            <i class="codicon codicon-gear"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="Scenario-label">Database Object Prefix</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtDatabaseObjectPrefix" ng-model="$.scenario.DatabaseObjectPrefix" class="b-input form-control" placeholder="Enter Scenario name(must be unique)" autocomplete="off" required />
+                        <span>
+                            <i class="codicon codicon-gear"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col ps-5">
+                <div class="b-notify notify-warning mb-4">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <h4 class="label">Low Risk!</h4>
+                        <span class="subtext">
+                            If you want to clean the scenario sections.You can render all the scenario modules.
+                            this work have low risk but can clean output pages and modules.
+                        </span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <button type="button" class="b-btn btn-action btn-lg btn-full" ng-click="$.onRenderScenarioModulesClick()" ng-disabled="$.running">
+                        <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='render-all-modules'}"></i>
+                        Render All Scenario Modules
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr class="mb-4" />
+        <div class="mb-1 d-flex justify-content-end mt-auto">
+            <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveScenarioClick()" ng-disabled="$.running">
+                <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-Scenario'}"></i>
+                Save Scenario
+            </button>
+            <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelScenarioClick()" ng-disabled="$.running">
+                <i class="codicon codicon-circle-slash"></i>
+                Cancel
+            </button>
+        </div>
+    </b-content-widget>
+</div>

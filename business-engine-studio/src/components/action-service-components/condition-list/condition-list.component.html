@@ -1,0 +1,89 @@
+<div class="b-table theme-gray">
+    <div class="table-body pt-4">
+        <div class="d-flex columns-name">
+            <div class="col-7">Condition</div>
+            <div class="col-2">Group Name</div>
+            <div class="col-2">
+                <button type="button" class="b-clean text-light" disabled>
+                    <i class="codicon codicon-arrow-up d-inline-block me-1"></i>
+                </button>
+                <button type="button" class="b-clean text-light" disabled>
+                    <i class="codicon codicon-arrow-down d-inline-block"></i>
+                </button>
+            </div>
+            <div class="col-1">
+                <i class="codicon codicon-ellipsis"></i>
+            </div>
+        </div>
+        <div class="d-flex table-row" ng-repeat="condition in $.conditions" ng-if="!condition.IsEdited" role="button" ng-style="{'order':($index+1)}" ng-click="$.onRowItemClick(condition,$index)">
+            <div class="col-7 my-auto">
+                <div class="row">
+                    <div class="col-5">{{condition.LeftExpression}} </div>
+                    <div class="col-2 p-0">{{condition.EvalType}} </div>
+                    <div class="col-4">{{condition.RightExpression}} </div>
+                </div>
+            </div>
+            <div class="col-2 my-auto"> {{condition.GroupName}} </div>
+            <div class="col-2 my-auto">
+                <button type="button" class="b-clean text-light" ng-disabled="$.condition || $index==0">
+                    <i class="codicon codicon-arrow-up d-inline-block me-1"
+                        ng-click="$.onPropertySwapClick($index,$index-1)"></i>
+                </button>
+                <button type="button" class="b-clean text-light" ng-disabled="$.condition || $index==$.conditions.length-1">
+                    <i class="codicon codicon-arrow-down d-inline-block"
+                        ng-click="$.onPropertySwapClick($index,$index+1)"></i>
+                </button>
+            </div>
+            <div class="col-1">
+                <div class="b-multi-btns">
+                    <button type="button" ng-click="$.onDeleteItemClick($index,$event)">
+                        <i class="codicon codicon-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!-- Edit Condition -->
+        <!------------------------------------>
+        <div ng-if="$.condition.IsEdited" class="d-flex table-row edit-row" ng-style="{'order':$.condition.ViewOrder}">
+            <div class="col-9 my-auto">
+                <div class="d-flex">
+                    <div class="col-5">
+                        <div monaco-editor ng-model="$.condition.LeftExpression" data-language="bProperties" data-one-line="true" b-custom-focus="onEditCondition" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields"
+                            data-service-result="true" required>
+                        </div>
+                    </div>
+                    <div class="col-2 p-0">
+                        <select ng-model="$.condition.EvalType" class="b-input form-select text-center ps-0 pe-0" ng-options="eval.Value as eval.Text for eval in $.evalTypes" required>
+                            <option value="">Operator</option>
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <div monaco-editor ng-model="$.condition.RightExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true" required></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2 my-auto">
+                <input type="text" ng-model="$.condition.GroupName" class="b-input form-control" />
+            </div>
+            <div class="col-1 my-auto">
+                <div class="b-multi-btns">
+                    <button type="button" class="p-0" ng-click="$.onDoneClick()">
+                        <i class="codicon codicon-check"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-footer">
+        <div ng-if="!$.conditions.length" class="b-notify notify-warning mb-4">
+            <i class="codicon codicon-info b-icon-2"></i>
+            <div class="text">
+                <h4 class="label">no conditions.</h4>
+            </div>
+        </div>
+        <button type="button" class="b-btn btn-action" ng-click="$.onAddConditionClick()">
+            <i class="codicon codicon-plus me-0"></i>
+        </button>
+    </div>
+</div>

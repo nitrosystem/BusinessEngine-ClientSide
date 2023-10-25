@@ -1,0 +1,88 @@
+<div class="b-table theme-gray">
+    <div class="table-header">
+        <div class="header-label">
+            <h4 class="header-title">Service Params</h4>
+            <span class="header-subtitle">Parameters of the selected service</span>
+        </div>
+        <div class="header-tools">
+            <div class="col-1">
+                <button type="button" ng-if="$.serviceId" class="b-btn btn-action" ng-click="$.onRefreshServiceParamsClick()">
+                    <i class="codicon codicon-refresh me-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="table-body">
+        <div class="d-flex columns-name">
+            <div class="col-4">Pdfsdfaram Name</div>
+            <div class="col-4">Param Value</div>
+            <div class="col-3">Default Value</div>
+            <div class="col-1">
+                <i class="codicon codicon-ellipsis"></i>
+            </div>
+        </div>
+        <div class="d-flex table-row" ng-repeat="param in $.params | orderBy : 'ViewOrder'" ng-if="!param.IsEdited" ng-click="$.onRowItemClick(param,$index)" role="button" ng-style="{'order':($index+1)}">
+            <div class="col-4 my-auto">
+                {{param.ParamName}}
+            </div>
+            <div class="col-4 my-auto">
+                {{param.ParamValue}}
+            </div>
+            <div class="col-3 my-auto">
+                {{param.DefaultValue}}
+            </div>
+            <div class=" col-1">
+                <div class="b-multi-btns">
+                    <button type="button" class="p-0" ng-click="$.onDeleteItemClick($index,$event)">
+                        <i class="codicon codicon-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!-- Edit Param -->
+        <!------------------------------------>
+        <div ng-if="$.param.IsEdited" class="d-flex table-row edit-row" ng-style="{'order':$.param.OrderID}">
+            <div class="col-4 my-auto">{{$.param.ParamName}}</div>
+            <div class="col-4 my-auto">
+                <div class="d-flex">
+                    <div class="col-10">
+                        <div monaco-editor ng-model="$.param.ParamValue" data-language="bProperties" data-one-line="true" b-custom-focus="onEditParam" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true"
+                            required>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="codicon codicon-kebab-vertical me-0"></i>
+                        </button>
+                        <div class="dropdown-menu b-dropdown-menu">
+                            <a class="dropdown-item" href="" ng-click="$.param.ExpressionParsingType=''">
+                                <i ng-if="!$.param.ExpressionParsingType" class="codicon codicon-check-all me-2"></i> Parse String
+                            </a>
+                            <a class="dropdown-item" href="" ng-click="$.param.ExpressionParsingType='get-value'">
+                                <i ng-if="$.param.ExpressionParsingType=='get-value'" class="codicon codicon-check-all me-2"></i> Get Value
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2 my-auto">
+            </div>
+            <div class="col-1 my-auto">
+                <div class="b-multi-btns">
+                    <button type="button" class="p-0" ng-click="$.onDoneClick()">
+                        <i class="codicon codicon-check"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-footer">
+        <div ng-if="!$.params.length" class="b-notify notify-warning mb-4">
+            <i class="codicon codicon-info b-icon-2"></i>
+            <div class="text">
+                <h4 class="label">Service has not any params.</h4>
+            </div>
+        </div>
+    </div>
+</div>

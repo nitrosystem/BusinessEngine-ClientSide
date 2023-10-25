@@ -1,0 +1,45 @@
+<div class="b-right-widget-drop" b-esc-key="$.onRightWidgetKeydownChange()">
+    <div class="b-right-widget" ng-class="{'is-waiting':$.awaitAction,'is-error':$.awaitAction.isError,'w-100':$.widgetFull}">
+        <div class="widget-header d-flex">
+            <div class="col-10">
+                <div class="widget-title" ng-if="!$.awaitAction">
+                    <i class="codicon codicon-{{$.icon}} b-{{$.moduleType}}"></i>
+                    <h2>{{$.title}}</h2>
+                    <p ng-if="$.subtitle">({{$.subtitle}})</p>
+                </div>
+                <div class="widget-title shimmer" ng-if="$.awaitAction">
+                    <div ng-if="!$.awaitAction.isError" class="loading-circle me-2"></div>
+                    <i ng-if="$.awaitAction.isError" class="codicon codicon-warning"></i>
+                    <h2>{{$.awaitAction.title}}</h2>
+                    <p ng-if="$.awaitAction.subtitle">({{$.awaitAction.subtitle}})</p>
+                    <i ng-if="$.awaitAction.isError" class="ms-2 codicon codicon-unverified" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Error Details" data-bs-html="true" data-bs-content="{{$.awaitAction.desc}}"></i>
+                </div>
+            </div>
+            <div class="col">
+                <ul class="widget-tools">
+                    <li>
+                        <a b-custom-tooltip data-bs-placement="left" title="Minimize">
+                            <i class="codicon codicon-chevron-down"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a b-custom-tooltip data-bs-placement="left" title="{{!$.widgetFull?'Maximize':'Restore Down'}}" ng-click="$.onMaximizeClick()">
+                            <i ng-class="{'codicon-chrome-restore':$.widgetFull,'codicon-vm':!$.widgetFull}" class="codicon"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a b-custom-tooltip data-bs-placement="left" title="Refresh" ng-click="$.onReloadClick()">
+                            <i class="codicon codicon-refresh"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a b-custom-tooltip data-bs-placement="left" title="Close" ng-click="$.onCloseClick()">
+                            <i class="codicon codicon-close"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div b-esc-key="$.onRightWidgetKeydownChange()" class="widget-body b-scrollbar" ng-transclude>
+        </div>
+    </div>
+</div>

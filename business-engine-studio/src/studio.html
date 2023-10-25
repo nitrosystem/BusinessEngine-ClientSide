@@ -1,0 +1,160 @@
+<div class="business-engine-studio">
+    <!------------------------------------>
+    <!--Begin Menu Bar-->
+    <!------------------------------------>
+    <div class="menu-bar"></div>
+    <!------------------------------------>
+    <!--End Menu Bar-->
+    <!------------------------------------>
+
+    <!------------------------------------>
+    <!--Begin Activity Bar-->
+    <!------------------------------------>
+    <div class="activity-bar">
+        <div class="top-actions">
+            <ul class="actions-container">
+                <li class="action-item" ng-repeat="item in $.activityBarItems" ng-class="{'active':item.name==$.$rootScope.currentActivityBar}">
+                    <a class="action-label" role="button" title="{{item.title}}" b-custom-tooltip data-bs-placement="right" ng-click="$.onActivityBarItemClick(item.name)">
+                        <i class="codicon codicon-{{item.icon}}"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="user-actions">
+            <ul class="actions-container">
+                <li class="action-item">
+                    <a class="action-label" role="button" b-custom-tooltip data-bs-placement="right" title="Settings">
+                        <i class="codicon codicon-settings-gear"></i>
+                    </a>
+                </li>
+                <!-- <li class="action-item">
+                    <a class="action-label" role="button" b-custom-tooltip data-bs-placement="right" title="Accounts">
+                        <i class="codicon codicon-account"></i>
+                    </a>
+                </li> -->
+                <li class="action-item">
+                    <a class="action-label" href="{{$.returnUrl}}" role="button" b-custom-tooltip data-bs-placement="right" title="Return to the dnn page you came">
+                        <i class="codicon codicon-sign-in"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--End Activity Bar-->
+    <!------------------------------------>
+
+    <!------------------------------------>
+    <!--Begin Side Bar-->
+    <!------------------------------------>
+    <div class="sidebar" b-custom-resizeable>
+        <!------------------------------------>
+        <!-- Sidebar Explorer Widget-->
+        <!------------------------------------>
+        <b-sidebar-explorer ng-if="$.$rootScope.currentActivityBar=='explorer' && $.$rootScope.explorerItems"></b-sidebar-explorer>
+        <b-extensions ng-if="$.$rootScope.currentActivityBar=='extensions'"></b-extensions>
+    </div>
+    <!------------------------------------>
+    <!--End Side Bar-->
+    <!------------------------------------>
+
+    <!------------------------------------>
+    <!--Begin Workspace Panel-->
+    <!------------------------------------>
+    <div class="workspace-panel">
+        <!------------------------------------>
+        <!--Top bar tabs-->
+        <!------------------------------------>
+        <div class="top-bar-tabs" id="workspaceTabs">
+            <ul class="nav nav-tabs">
+                <li class="nav-item" role="presentation" ng-repeat="tab in $.$rootScope.tabs track by tab.key" ng-click="$.onTabClick(tab)">
+                    <a class="nav-link text-secondary" ng-class="{'active':tab.key == $.$rootScope.currentTab.key}" role="tab">
+                        <i class="codicon codicon-{{tab.icon}} item-icon b-{{tab.moduleType}}-icon"></i> {{tab.title}}
+                        <i class="codicon codicon-chrome-close close-icon" role="button" ng-click="$.onCloseTabClick(tab.key,$event)"></i>
+                    </a>
+                </li>
+                <li class="nav-item more-item" ng-if="$.$rootScope.tabs.length">
+                    <div class="btn-group mt-1">
+                        <button type="button" class="more-button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="codicon codicon-kebab-vertical"></i>
+                            </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" ng-click="$.onCloseAllTabsClick()">Close All Tabs</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <div id="pnlShortcutSection" class="top-bar-more-menu"></div>
+        </div>
+        <!------------------------------------>
+        <!-- Tabs Content-->
+        <!------------------------------------>
+        <div class="tab-content " id="workspaceTabsContent">
+            <div class="tab-pane fade show active" role="tabpanel" ng-repeat="tab in $.$rootScope.tabs track by tab.key" ng-show="tab.key == $.$rootScope.currentTab.key">
+                <div class="widget-body" ng-if="tab.isLoaded" ng-include="tab.content"> </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--End Workspace Panel-->
+    <!------------------------------------>
+
+    <!------------------------------------>
+    <!--Begin Status Bar-->
+    <!------------------------------------>
+    <div class="status-bar">
+        <!-- موقت و نیاز به جابجایی  -->
+        <!-- <b-widget-quick-input items="$.scenarios" item-Title="ScenarioTitle" item-Subtitle="ScenarioName" item-icon="archive" search-placeholder="Select a scenario"></b-widget-quick-input> -->
+
+        <b-widget-quick-input items="$.scenarios" item-Title="ScenarioTitle" item-Subtitle="ScenarioName" item-icon="archive" search-placeholder="Select a scenario"></b-widget-quick-input>
+        <div class="active-scenario">
+            <span class="scenario-link small text-white d-flex justify-content-end me-2 pe-none" ng-click="$.onSelectScenarioClick()">Scenario : {{$.$rootScope.scenario.ScenarioName}}</span>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--End Status Bar-->
+    <!------------------------------------>
+
+    <!------------------------------------>
+    <!--Begin Notifications-->
+    <!------------------------------------>
+    <div id="bNotifications" class="notifications"> </div>
+    <!------------------------------------>
+    <!--End Notifications-->
+    <!------------------------------------>
+
+    <!------------------------------------>
+    <!--Begin Select Scenario-->
+    <!------------------------------------>
+    <div id="wnSelectScenario" b-custom-modal class="modal fade b-modal-dark" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Select Scenario</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="b-field">
+                        <label class="form-label">Scenario</label>
+                        <div class="b-input-group">
+                            <select ng-model="$.scenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen placeholder-text-single="'Select scenario'" required>
+                            </select>
+                            <span><i class="codicon codicon-activate-breakpoints"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="b-btn btn-action btn-sm me-auto" ng-click="$.onAddScenarioClick()" b-custom-tooltip title="Add New Scenario" ng-disabled="$.running">
+                        <i class="codicon codicon-plus me-0"></i>
+                    </button>
+                    <button type="button" class="b-btn btn-submit me-2" ng-disabled="!$.scenarioID" ng-click="$.onSelectScenarioClick()" ng-disabled="$.running">
+                        <i class="codicon codicon-save"></i>
+                        Select Scenario
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--End Select Scenario-->
+    <!------------------------------------>
+</div>

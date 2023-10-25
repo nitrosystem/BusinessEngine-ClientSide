@@ -1,0 +1,136 @@
+<div class="b-table theme-gray">
+    <div class="table-body pt-4">
+        <div class="d-flex columns-name">
+            <div class="col-9">Property</div>
+            <div class="col-2">
+                <button type="button" class="b-clean text-light" disabled>
+                    <i class="codicon codicon-arrow-up d-inline-block me-1"></i>
+                </button>
+                <button type="button" class="b-clean text-light" disabled>
+                    <i class="codicon codicon-arrow-down d-inline-block"></i>
+                </button>
+            </div>
+            <div class="col-1">
+                <i class="codicon codicon-ellipsis"></i>
+            </div>
+        </div>
+        <div class="d-flex table-row" ng-repeat="property in $.properties track by $index" ng-if="!property.IsEdited" role="button" ng-style="{'order':($index+1)}">
+            <div class="col-9 my-auto" ng-click="$.onRowItemClick(property,$index)">
+                <div class="row">
+                    <div class="col-5">{{property.LeftExpression}} </div>
+                    <div class="col-2 p-0">{{property.EvalType}} </div>
+                    <div class="col-4">{{property.RightExpression}} </div>
+                </div>
+            </div>
+            <div class="col-2 my-auto">
+                <button type="button" class="b-clean text-light" ng-disabled="$.property || $index==0">
+                    <i class="codicon codicon-arrow-up d-inline-block me-1"
+                        ng-click="$.onPropertySwapClick($index,$index-1)"></i>
+                </button>
+                <button type="button" class="b-clean text-light" ng-disabled="$.property || $index==$.properties.length-1">
+                    <i class="codicon codicon-arrow-down d-inline-block"
+                        ng-click="$.onPropertySwapClick($index,$index+1)"></i>
+                </button>
+            </div>
+            <div class=" col-1">
+                <div class="b-multi-btns">
+                    <button type="button" ng-click="$.onDeleteItemClick($index,$event)">
+                        <i class="codicon codicon-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!-- Edit Property -->
+        <!------------------------------------>
+        <div ng-if="$.property.IsEdited" class="table-row edit-row" ng-style="{'order':$.property.OrderID}">
+            <div class="row">
+                <div class="col-11 my-auto">
+                    <div class="d-flex">
+                        <div class="col-5">
+                            <div class="d-flex">
+                                <div class="col-10">
+                                    <div monaco-editor ng-model="$.property.LeftExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" b-custom-focus="onEditProperty"
+                                        required></div>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="codicon codicon-kebab-vertical me-0"></i>
+                                </button>
+                                    <div class="dropdown-menu b-dropdown-menu">
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType=''">
+                                            <i ng-if="!$.property.ExpressionParsingType" class="codicon codicon-check-all me-2"></i> Parse String
+                                        </a>
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='eval-int-number'">
+                                            <i ng-if="$.property.ExpressionParsingType=='eval-int-number'" class="codicon codicon-check-all me-2"></i> Eval Int Number
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 p-0">
+                            <select ng-model="$.property.EvalType" class="b-input form-select text-center ps-0 pe-0" ng-options="eval.Value as eval.Text for eval in $.evalTypes" required>
+                                <option value="">Operator</option>
+                            </select>
+                        </div>
+                        <div class="col-5">
+                            <div class="d-flex">
+                                <div class="col-10">
+                                    <div monaco-editor ng-model="$.property.RightExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true" required></div>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="codicon codicon-kebab-vertical me-0"></i>
+                                </button>
+                                    <div class="dropdown-menu b-dropdown-menu">
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType=''">
+                                            <i ng-if="!$.property.ExpressionParsingType" class="codicon codicon-check-all me-2"></i> Parse Standard Expression
+                                        </a>
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='parse-string'">
+                                            <i ng-if="$.property.ExpressionParsingType=='parse-string'" class="codicon codicon-check-all me-2"></i> Parse String
+                                        </a>
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='static-expression'">
+                                            <i ng-if="$.property.ExpressionParsingType=='static-expression'" class="codicon codicon-check-all me-2"></i>Static Expression
+                                        </a>
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='eval-int-number'">
+                                            <i ng-if="$.property.ExpressionParsingType=='eval-int-number'" class="codicon codicon-check-all me-2"></i> Eval Int Number
+                                        </a>
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='eval-expression'">
+                                            <i ng-if="$.property.ExpressionParsingType=='eval-expression'" class="codicon codicon-check-all me-2"></i> Eval Expression
+                                        </a>
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='custom-server-method'">
+                                            <i ng-if="$.property.ExpressionParsingType=='custom-server-method'" class="codicon codicon-check-all me-2"></i> Custom Server Method
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 my-auto">
+                    <div class="b-multi-btns">
+                        <button type="button" class="p-0" ng-click="$.onDoneClick()">
+                        <i class="codicon codicon-check"></i>
+                    </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 my-auto">
+                    <b-condition-list ng-model="$.property.Conditions" class="m-b-0" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields"></b-condition-list>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-footer">
+        <div ng-if="!$.properties.length" class="b-notify notify-warning mb-4">
+            <i class="codicon codicon-info b-icon-2"></i>
+            <div class="text">
+                <h4 class="label">no Properties.</h4>
+            </div>
+        </div>
+        <button type="button" class="b-btn btn-action" ng-click="$.onAddPropertyClick()">
+            <i class="codicon codicon-plus me-0"></i>
+        </button>
+    </div>
+</div>

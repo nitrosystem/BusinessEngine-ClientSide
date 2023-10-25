@@ -1,0 +1,426 @@
+<div ng-controller="extensionsController as $" class="extensions">
+    <!------------------------------------>
+    <!--Sidebar-->
+    <!------------------------------------>
+    <div class="mb-sidebar" b-custom-sidebar="extensions">
+        <!------------------------------------>
+        <!--Extensions List-->
+        <!------------------------------------>
+        <div class="b-extensions">
+            <div class="header-sections">
+                <!------------------------------------>
+                <!--Top Tools-->
+                <!------------------------------------>
+                <div class="top-tools">
+                    <label class="label">Extension Marketplace</label>
+                    <div class="tools-items">
+                        <div class="tools-item">
+                            <button type="button" ng-click="$.onFilterItemsClick()" b-custom-tooltip title="Filter & Find Extensions">
+                                <i class="codicon codicon-filter"></i>
+                            </button>
+                        </div>
+                        <div class="tools-item">
+                            <button type="button" ng-click="$.onRefreshItemsClick()" b-custom-tooltip title="Refresh & Reload Extensions">
+                                <i class="codicon codicon-refresh"></i>
+                             </button>
+                        </div>
+                        <div class="tools-item">
+                            <button type="button" ng-click="$.onFilterItemsClick()" b-custom-tooltip title="More Actions">
+                                <i class="codicon codicon-ellipsis"></i>
+                             </button>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Search Extensions-->
+                <!------------------------------------>
+                <div class="search-wrapper">
+                    <div class="b-input-group">
+                        <input type="text" ng-model="filter.SearchText" class="b-input" placeholder="Search Installed & Marketplace Extensions" />
+                        <span><i class="codicon codicon-search"></i></span>
+                    </div>
+                </div>
+                <ul class="extension-types">
+                    <li class="extension-type service-extensions">
+                        <i class="codicon codicon-versions"></i> Services
+                    </li>
+                    <li class="extension-type actionextensions">
+                        <i class="codicon codicon-github-action"></i> Actions
+                    </li>
+                    <li class="extension-type field-extensions">
+                        <i class="codicon codicon-notebook-template"></i> Fields
+                    </li>
+                    <li class="extension-type skin-extensions">
+                        <i class="codicon codicon-editor-layout"></i> Skins
+                    </li>
+                </ul>
+            </div>
+            <!------------------------------------>
+            <!--Extensions Online Marketplace-->
+            <!------------------------------------>
+            <div class="online-market-wrapper">
+                <a href="https://bengine.com/extensions" class="online-market-button">
+                    <i class="codicon codicon-package"></i> Online Marketplace
+                </a>
+            </div>
+            <!------------------------------------>
+            <!--Top & New Extensions on market place-->
+            <!------------------------------------>
+            <div class="extension-list">
+                <!------------------------------------>
+                <!--Popular Extensions-->
+                <!------------------------------------>
+                <div class="b-group group-sm mb-4">
+                    <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpExistsExtensions">
+                        <h3 class="group-label">
+                            <span class="group-icon">
+                        <i class="codicon codicon-server-process"></i>
+                    </span> Popular Extensions
+                        </h3>
+                        <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
+                    </div>
+                    <div id="grpExistsExtensions" class="group-content collapse show">
+                        <div class="extension-items">
+                            <div class="extension-item">
+                                <div class="left-box">
+                                    <div class="image-wrapper">
+                                        <img src="http://dnndev.me/portals/0/images/1.png" />
+                                    </div>
+                                    <h5 class="category">Field Component</h5>
+                                </div>
+                                <div class="content-wrapper">
+                                    <div class="top-info">
+                                        <h3 class="title">Advanced Grid</h3>
+                                        <div class="star-wrapper">
+                                            5
+                                            <i class="codicon codicon-star-full"></i>
+                                        </div>
+                                    </div>
+                                    <p class="summary">
+                                        This field is advanced and powerfull grid for display data.Beautiful and user friendly component with more advanced options.
+                                    </p>
+                                    <div class="more-info">
+                                        <label class="price-label">1$</label>
+                                        <button type="button" class="b-btn btn-action btn-sm">Buy & Install</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="left-box">
+                                    <div class="image-wrapper">
+                                        <img src="http://dnndev.me/portals/0/images/2.png" />
+                                    </div>
+                                    <h5 class="category">Skin & Template</h5>
+                                </div>
+                                <div class="content-wrapper">
+                                    <div class="top-info">
+                                        <h3 class="title">Nitro Skin Blue</h3>
+                                        <div class="star-wrapper">
+                                            1
+                                            <i class="codicon codicon-star-empty"></i>
+                                        </div>
+                                    </div>
+                                    <p class="summary">
+                                        This skin is very important and very nic and very
+                                    </p>
+                                    <div class="more-info">
+                                        <label class="price-label">5$</label>
+                                        <button type="button" class="b-btn btn-action btn-sm">Buy & Install</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="extension-item">
+                                <div class="left-box">
+                                    <div class="image-wrapper">
+                                        <img src="http://dnndev.me/portals/0/images/3.png" />
+                                    </div>
+                                    <h5 class="category">Module Package</h5>
+                                </div>
+                                <div class="content-wrapper">
+                                    <div class="top-info">
+                                        <h3 class="title">Login&Register Package</h3>
+                                        <div class="star-wrapper">
+                                            3
+                                            <i class="codicon codicon-star-half"></i>
+                                        </div>
+                                    </div>
+                                    <p class="summary">
+                                        Login and Register package for dnn platform designed by business engine tools
+                                    </p>
+                                    <div class="more-info">
+                                        <label class="price-label">10$</label>
+                                        <button type="button" class="b-btn btn-action btn-sm">Buy & Install</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Content Panel Installed Extensions group by type-->
+    <!------------------------------------>
+    <b-content-widget data-title="Installed Extensions" data-icon="extensions" data-module-type="extensions" data-subtitle="components, skins, services, actions, packages, ..." data-await-extension="$.awaitExtension" data-module="$" data-reload-method="onPageLoad"
+        data-close-method="onCloseWindow">
+        <div class="d-flex mb-4">
+            <div class="col-3 me-3">
+                <div class="b-input-group">
+                    <input type="text" ng-model="$.filter.ActionName" class="b-input form-control" placeholder="Search by action name" />
+                    <span><i class="codicon codicon-bell"></i></span>
+                </div>
+            </div>
+            <div class="col-3 me-3">
+                <div class="b-input-group">
+                    <input type="text" ng-model="$.filter.ActionName" class="b-input form-control" placeholder="Search by action name" />
+                    <span><i class="codicon codicon-circuit-board"></i></span>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="b-input-group">
+                    <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()" ng-disabled="$.column">
+                        <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="ms-auto">
+                <div class="b-btn-group">
+                    <!------------------------------------>
+                    <!--Install New Extenions-->
+                    <!------------------------------------>
+                    <button type="button" class="b-btn btn-action" ng-click="$.onInstallExtensionClick()" ng-disabled="$.column">
+                        <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                        Install New Extension
+                    </button>
+                    <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu b-dropdown-menu"> </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Field Extensions-->
+        <!------------------------------------>
+        <div class="b-group">
+            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldTypeExtensions">
+                <h3 class="group-label">
+                    <span class="group-icon">
+                        <i class="codicon codicon-server-process"></i>
+                    </span>Installed Extensions
+                </h3>
+                <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
+            </div>
+            <div id="grpFieldTypeExtensions" class="group-content collapse show">
+                <div class="b-table theme-gray">
+                    <div class="table-body pt-3">
+                        <div class="d-flex columns-name">
+                            <div class="col-2">
+                                <i class="bi bi-image fs2-rem"></i>
+                            </div>
+                            <div class="col-3 my-auto">Extension Name</div>
+                            <div class="col-3 my-auto">Summary</div>
+                            <div class="col-3 my-auto">More Data</div>
+                            <div class="col-1 my-auto">
+                                <i class="codicon codicon-ellipsis"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex table-row" ng-repeat="item in $.extensions" role="button">
+                            <div class="col-2 my-auto">
+                                <i class="{{item.ExtensionIcon}} fs2-rem"></i>
+                            </div>
+                            <div class="col-3 my-auto text-light">
+                                {{item.ExtensionName}}
+                                <br>
+                                <span class="text-muted fs08-rem">{{item.Title}}</span>
+                            </div>
+                            <div class="col-3 my-auto fs08-rem p-1">
+                                {{item.Summary}}
+                            </div>
+                            <div class="col-3 my-auto">
+                                Version {{item.Version}}
+                                <br>
+                                <span class="text-muted small"> Installed in
+                                    <span b-custom-date="{{item.CreatedOnDate}}" data-relative="true"></span>
+                                </span>
+                            </div>
+                            <div class=" col-1">
+                                <div class="b-multi-btns">
+                                    <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                        <i class="codicon codicon-output"></i>
+                                    </button>
+                                    <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                        <i class="codicon codicon-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+
+    <!------------------------------------>
+    <!--Install New Extension Panel->
+    <!------------------------------------>
+    <b-right-widget ng-if="$.workingMode=='install-extension'" data-title="Install New Extension Wizard" data-icon="extensions" data-subtitle="select and upload extension package" data-await-action="$.awaitAction" class="b-install-extensions-wizard" data-module="$"
+        data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--Install Wizard->
+        <!------------------------------------>
+        <div class="wizard-steps artin">
+            <div class="wz-steps">
+                <div class="wz-step"><span></span>Upload Extension </div>
+                <div class="wz-step"><span></span>Extension Info </div>
+                <div class="wz-step"><span></span>Install Extension </div>
+                <div class="wz-step"><span></span>Finish & Use! </div>
+            </div>
+            <div class="step-content">
+                <!--Wizard Loading-->
+                <div class="pre-loader theme-default" ng-hide="$.hideStepPreloader">
+                    <div class="lines"></div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 1 (Select & Upload Extension File)-->
+                <!------------------------------------>
+                <div ng-if="$.step==1">
+                    <div class="b-upload-box">
+                        <input type="file" class="form-control" accept=".zip" ngf-select="$.onUploadExtensionPackage($files,$file, $newFiles, $duplicateFiles, $invalidFiles, $event)" ngf-max-size="103809024" ngf-fix-orientation="true" />
+                        <p>Click to open browse files and select one zip file for install extension.</p>
+                        <i class="codicon codicon-extensions"></i>
+                    </div>
+                    <div class="b-notify notify-warning mb-4">
+                        <i class="codicon codicon-shield b-icon-2"></i>
+                        <div class="text">
+                            <h4 class="label">Important.</h4>
+                            <p class="subtext">the extension file size must be standard size that define in web.config. </p>
+                            <a href="#" class="card-link">More info</a>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 2 (Show Extension Info)-->
+                <!------------------------------------>
+                <div ng-if="$.step==2">
+                    <div class="extension-details">
+                        <div class="ext-row ext-splitter">
+                            <div class="image-wrapper">
+                                <img ng-if="$.extension.ExtensionImage" ng-src="{{$.extension.ExtensionImage}}">
+                                <i ng-if="!$.extension.ExtensionImage" class="codicon codicon-preview"></i>
+                            </div>
+                            <div class="extension-top-info">
+                                <h1 class="ext-name">{{$.extension.ExtensionName}}</h1>
+                                <h4 class="ext-title">{{$.extension.Title}}</h4>
+                                <span class="ext-type">{{$.extension.ExtensionType}}</span>
+                            </div>
+                            <div class="ext-is-commercial">
+                                <div class="form-label">Is Commercial</div>
+                                <label class="b-switch">
+                                    <input type="checkbox" ng-model="$.extension.IsCommercial" ng-disabled="true">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="ext-row ext-splitter">
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 3 (Install Extension)-->
+                <!------------------------------------>
+                <div ng-if="$.step==3">
+
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 4 (Action Builder)-->
+                <!------------------------------------>
+                <div ng-show="$.step==4">
+
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 5 (Post Script)-->
+                <!------------------------------------>
+                <div ng-if="$.step==5">
+                    <!--Pre Script-->
+                    <div class="b-field">
+                        <div monaco-editor ng-model="$.action.PostScript" data-language="javascript" data-height="350px" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" required></div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Wizard Step 6 (Result & Consitions)-->
+                <!------------------------------------>
+                <div ng-if="$.step==6">
+                    <div class="b-group mb-4">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpActionResults{{$.action.ActionID}}">
+                            <h3 class="group-label">
+                                <span class="group-icon">
+                                    <i class="codicon codicon-server-process"></i>
+                                </span> Action Results
+                            </h3>
+                            <span class="group-collapse">
+                                <i class="codicon codicon-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div id="grpActionResults{{$.action.ActionID}}" class="group-content collapse show">
+                            <b-property-list ng-model="$.action.Results" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-action-params="$.action.Params"></b-property-list>
+                        </div>
+                    </div>
+                    <div class="b-group">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpActionConditions{{$.action.ActionID}}">
+                            <h3 class="group-label">
+                                <span class="group-icon">
+                                    <i class="codicon codicon-server-process"></i>
+                                </span> Action Conditions
+                            </h3>
+                            <span class="group-collapse">
+                                <i class="codicon codicon-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div id="grpActionConditions{{$.action.ActionID}}" class="group-content collapse show">
+                            <b-condition-list ng-model="$.action.Conditions" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-action-params="$.action.Params"></b-condition-list>
+                        </div>
+                    </div>
+                    <div class="b-group mb-4">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpActionParams{{$.action.ActionID}}">
+                            <h3 class="group-label">
+                                <span class="group-icon">
+                                    <i class="codicon codicon-server-process"></i>
+                                </span> Action Params
+                            </h3>
+                            <span class="group-collapse">
+                                <i class="codicon codicon-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div id="grpActionParams{{$.action.ActionID}}" class="group-content collapse show">
+                            <b-action-param-list params="$.action.Params" data-action-id="$.action.ActionID" data-actions="$.actions" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields"
+                                data-action-params="$.action.Params"></b-action-param-list>
+                        </div>
+                    </div>
+
+                </div>
+                <hr class="mb-4" />
+                <div class="mb-1 d-flex">
+                    <div class="ms-auto">
+                        <button type="button" class="b-btn me-2" ng-if="$.step>1 && $.step<4" ng-click="$.onNextInstallExtensionStepClick()" ng-disabled="$.running">
+                            Next
+                            <i class="codicon codicon-arrow-right ms-2 me-0"></i>
+                        </button>
+                        <button type="button" class="b-btn btn-submit me-2" ng-if="$.step>=4" ng-click="$.onDoneInstallExtensionClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+                            Done
+                        </button>
+                        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelInstallExtensionClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-circle-slash"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-right-widget>
+</div>

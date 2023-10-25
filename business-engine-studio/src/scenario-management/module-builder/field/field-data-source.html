@@ -1,0 +1,141 @@
+<b-right-widget ng-if="$.workingMode=='field-data-source'" data-title="Data Source" data-icon="notebook-template" data-subtitle="{{$.currentField.FieldName}} data source" data-await-action="$.awaitAction" data-module="$" data-reload-method="onRefreshDataSource"
+    data-close-method="onCancelFieldDataSourceClick">
+    <div class="b-field">
+        <label class="form-label">Data Source Type</label>
+        <div class="b-radio radio-inline">
+            <label class="radio-item">
+                <input type="radio" name="fieldDataSource" ng-value="0"
+                    ng-model="$.currentField.Settings.DataSource.Type" ng-change="$.onFieldDataSourceTypeChange()"
+                    required />
+                <i class="input-helper"></i>
+                Standard(Static items)
+            </label>
+            <label class="radio-item">
+                <input type="radio" name="fieldDataSource" ng-value="1"
+                    ng-model="$.currentField.Settings.DataSource.Type" ng-change="$.onFieldDataSourceTypeChange()"
+                    required />
+                <i class="input-helper"></i>
+                Use Defined List
+            </label>
+            <label class="radio-item">
+                <input type="radio" name="fieldDataSource" ng-value="2"
+                    ng-model="$.currentField.Settings.DataSource.Type" ng-change="$.onFieldDataSourceTypeChange()" />
+                <i class="input-helper"></i>
+                Data Source Service
+            </label>
+        </div>
+    </div>
+    <!--Module Static Options-->
+    <div ng-if="$.currentField.Settings.DataSource.Type==0">
+        <div class="b-field" ng-if="!$.definedList.ListID">
+            <button type="button" class="btn btn-primary" ng-click="$.onCreateFieldDataSourceClick()" ng-disabled="waiting">
+                Create Field Data Source
+            </button>
+        </div>
+        <div ng-if="$.definedList.ListID">
+            <div class="b-field">
+                <label class="form-label">List Name</label>
+                <div class="b-input-group">
+                    <input type="text" class="b-input form-control" ng-model="$.definedList.ListName" placeholder="Enter List Name" />
+                    <span><i class="bi bi-card-checklist"></i></span>
+                </div>
+            </div>
+            <div class="b-field">
+                <label class="form-label">List Items</label>
+                <table class="table table-bordered table-dark table-columns-vmiddle">
+                    <thead>
+                        <tr>
+                            <th>Item Text</th>
+                            <th>Item Value</th>
+                            <th>View Order</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in $.definedList.Items">
+                            <td>
+                                <input type="text" ng-model="item.Text" class="b-input form-control" />
+                            </td>
+                            <td>
+                                <input type="text" ng-model="item.Value" class="b-input form-control" />
+                            </td>
+                            <td>
+                                <input type="number" ng-model="item.ViewOrder" class="b-input form-control" />
+                            </td>
+                            <td>
+                                <button type="button" class="b-btn btn-action btn-sm" ng-click="$.definedList.Items.splice($index,1)">
+                                    <i class="codicon codicon-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="5">
+                                <button class="b-btn btn-action" ng-click="$.definedList.Items.push({})">
+                                    <i class="codicon codicon-plus"></i>
+                                </button>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!-- Data Source Service-->
+    <!------------------------------------>
+    <div ng-if="$.currentField.Settings.DataSource.Type==2">
+        <div class="d-flex mb-3">
+            <div class="col-6 b-splitter border-end pe-3">
+                <div class="b-field">
+                    <label class="form-label">Data Source Service</label>
+                    <div class="b-input-group">
+                        <select ng-model="$.currentField.Settings.DataSource.ServiceID" class="b-input form-select" ng-options="service.ServiceID as service.ServiceName for service in $.services | filter:{HasResult:true, ResultType:2}" ng-change="$.onFieldDataSourceServiceChange()"
+                            ng-disabled="waiting" chosen placeholder-text-single="'Select a service as data source'" required></select>
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label d-block">Run service after page load(client side)</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.currentField.Settings.DataSource.RunServiceClientSide">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-6 ps-3">
+                <div class="b-field">
+                    <label class="form-label">Text Field</label>
+                    <div class="b-input-group">
+                        <input type="text" ng-model="$.currentField.Settings.DataSource.TextField" class="b-input form-control" placeholder="Enter text field" required />
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Value Field</label>
+                    <div class="b-input-group">
+                        <input type="text" ng-model="$.currentField.Settings.DataSource.ValueField" class="b-input form-control" placeholder="Enter text field" required />
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="b-field">
+            <b-service-param-list controller="$" params="$.currentField.Settings.DataSource.ServiceParams" data-service-id="$.currentField.Settings.DataSource.ServiceID" data-services="$.services" data-source="['fields','form','variables']" data-variables="$.variables"
+                data-fields="$.fields">
+            </b-service-param-list>
+        </div>
+    </div>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveFieldDataSourceClick($event)" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+            Save
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelFieldDataSourceClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

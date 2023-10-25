@@ -1,0 +1,46 @@
+<div class="b-content-widget" ng-class="{'is-waiting':$.awaitAction,'is-error':$.awaitAction.isError}">
+    <div ng-if="$.awaitAction && !$.awaitAction.isError" class="loading-frame"></div>
+    <div class="widget-header d-flex">
+        <div class="col-10">
+            <div class="widget-title" ng-if="!$.awaitAction">
+                <i class="codicon codicon-{{$.icon}} b-{{$.moduleType}}-icon"></i>
+                <h2>{{$.title}}</h2>
+                <p ng-if="$.subtitle">({{$.subtitle}})</p>
+            </div>
+            <div class="widget-title shimmer" ng-if="$.awaitAction">
+                <div ng-if="!$.awaitAction.isError" class="loading-circle me-2"></div>
+                <i ng-if="$.awaitAction.isError" class="codicon codicon-warning"></i>
+                <h2>{{$.awaitAction.title}}</h2>
+                <p ng-if="$.awaitAction.subtitle">({{$.awaitAction.subtitle}})</p>
+                <i ng-if="$.awaitAction.isError" class="ms-2 codicon codicon-unverified" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Error Details" data-bs-html="true" data-bs-content="{{$.awaitAction.desc}}"></i>
+            </div>
+        </div>
+        <div class="col">
+            <ul class="widget-tools" ng-if="!$.hideToolbar">
+                <li ng-if="$.extraIcon1">
+                    <a b-custom-tooltip data-bs-placement="left" title="{{$.extraIcon1Title}}" ng-click="$.onExtraIcon1Click()">
+                        <i class="{{$.extraIcon1}}"></i></a>
+                </li>
+                <li ng-if="$.extraIcon2">
+                    <a b-custom-tooltip data-bs-placement="left" title="{{$.extraIcon2Title}}" ng-click="$.onExtraIcon2Click()">
+                        <i class="{{$.extraIcon2}}"></i></a>
+                </li>
+                <li>
+                    <a b-custom-tooltip data-bs-placement="left" title="Minimize" ng-click="$.onToggleAdvancedSearch()">
+                        <i class="codicon codicon-chevron-down"></i>
+                    </a>
+                </li>
+                <li>
+                    <a b-custom-tooltip data-bs-placement="left" title="Refresh" ng-click="$.onReloadClick()">
+                        <i class="codicon codicon-refresh"></i>
+                    </a>
+                </li>
+                <li>
+                    <a b-custom-tooltip data-bs-placement="left" title="Close" ng-click="$.onCloseClick()">
+                        <i class="codicon codicon-close"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="widget-body" ng-transclude></div>
+</div>

@@ -1,0 +1,575 @@
+<div ng-controller="createEntityController as $" class="create-entity" ng-class="{'was-validated':$.form.validated}">
+    <b-content-widget data-title="Create Entity" data-icon="table" data-module-type="create-entity" data-subtitle="Add or edit scenario entity" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--Entity-->
+        <!------------------------------------>
+        <div class="entity">
+            <!------------------------------------>
+            <!--Left Side-->
+            <!------------------------------------>
+            <div class="col-7 b-splitter border-end pe-5">
+                <div class="b-field">
+                    <label class="form-label">Scenario</label>
+                    <div class="b-input-group">
+                        <select id="drpScenarioID" ng-model="$.entity.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-change="$.onScenarioChange()" ng-disabled="$.running" chosen placeholder-text-single="'Select entity scenario'"
+                            required>
+                        </select>
+                        <span><i class="codicon codicon-activate-breakpoints"></i></span>
+                    </div>
+                </div>
+                <div class="b-field" ng-if="!$.entity.EntityID && $.databases.length">
+                    <label class="form-label">Database</label>
+                    <div class="b-input-group">
+                        <select ng-model="$.entity.DatabaseID" class="b-input form-select" ng-options="db.DatabaseID as db.Title for db in $.databases" ng-change="$.onDatabaseChange()" chosen placeholder-text-single="'Select a database'">
+                            <option value="">Current Database(DNN)</option>
+                        </select>
+                        <span><i class="codicon codicon-database"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Entity Name</label>
+                    <div class="b-input-group">
+                        <input type="text" id="txtEntityName" ng-model="$.entity.EntityName" class="b-input form-control" placeholder="Enter entity name" autocomplete="off" required />
+                        <span><i class="codicon codicon-account"></i></span>
+                    </div>
+                    <p class="b-invalid">{{$.form.error.EntityName}}</p>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">View Order</label>
+                    <div class="b-input-group">
+                        <input type="number" ng-model="$.entity.ViewOrder" class="b-input form-control" placeholder="Enter table view order" autocomplete="off" />
+                        <span><i class="codicon codicon-list-ordered"></i></span>
+                    </div>
+                </div>
+            </div>
+            <!------------------------------------>
+            <!--Right Side-->
+            <!------------------------------------>
+            <div class="col ps-5 d-flex flex-column">
+                <div class="b-field">
+                    <label class="form-label d-block">Is Readonly</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.entity.IsReadonly" ng-change="$.onEntityIsReadOnlyChange()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="b-field">
+                    <label class="form-label d-block">Entity Type</label>
+                    <div class="b-radio radio-inline">
+                        <label class="radio-item">
+                            <input type="radio" id="rdEntityType" name="entityType{{$.entity.EntityID}}" value="table"
+                                ng-model="$.entity.EntityType" required />
+                            <i class="input-helper"></i>
+                            Table
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="entityType{{$.entity.EntityID}}" value="view"
+                                ng-model="$.entity.EntityType" required />
+                            <i class="input-helper"></i>
+                            View
+                        </label>
+                    </div>
+                    <p class="b-invalid">{{$.form.error.EntityType}}</p>
+                </div>
+                <div class="b-field" ng-if="!$.entity.IsReadonly">
+                    <label class="form-label">
+                        <span ng-show="$.entity.EntityType=='table'">Table</span>
+                        <span ng-show="$.entity.EntityType=='view'">View</span>
+                        Name
+                    </label>
+                    <div class="b-input-group">
+                        <div class="b-input form-control d-flex">
+                            <div class="col-4">
+                                <input type="text" id="txtTablePrefix" ng-model="$.entity.Settings.DatabaseObjectPrefixName" class="b-input-nobg" placeholder="Table prefix" autocomplete="off" required />
+                            </div>
+                            <div class="col-8">
+                                <input type="text" id="txtTablePostfix" ng-model="$.entity.Settings.DatabaseObjectPostfixName" class="b-input-nobg" ng-change="$.entity.Settings.DatabaseObjectNameModified=true" placeholder="Enter table name" autocomplete="off" required />
+                            </div>
+                        </div>
+                        <span><i class="codicon codicon-table"></i></span>
+                    </div>
+                    <p class="b-invalid">{{$.form.error.Settings.DatabaseObjectPrefixName}}</p>
+                    <p class="b-invalid">{{$.form.error.Settings.DatabaseObjectPostfixName}}</p>
+                </div>
+                <div class="b-field" ng-if="$.entity.IsReadonly && $.entity.EntityType=='table'">
+                    <label class="form-label">Table</label>
+                    <div class="b-input-group">
+                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select" ng-options="table for table in $.dataBaseObjects.Tables" ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen placeholder-text-single="'Select database table'"
+                            required>
+                        </select>
+                        <span><i class="codicon codicon-activate-breakpoints"></i></span>
+                    </div>
+                </div>
+                <div class="b-field" ng-if="$.entity.IsReadonly && $.entity.EntityType=='view'">
+                    <label class="form-label">Table</label>
+                    <div class="b-input-group">
+                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select" ng-options="view for view in $.dataBaseObjects.Views" ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen placeholder-text-single="'Select database table'"
+                            required>
+                        </select>
+                        <span><i class="codicon codicon-activate-breakpoints"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Description</label>
+                    <div class="b-input-group">
+                        <textarea ng-model="$.entity.Description" class="b-input form-control" rows="4" placeholder="Enter entity description"></textarea>
+                        <span class="my-auto"><i class="codicon codicon-debug-stackframe-active"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Entity Relationships-->
+        <!------------------------------------>
+        <div class="b-group mb-4">
+            <div class="group-header collapsed" data-bs-toggle="collapse" data-bs-target="#grpEntityRelationships">
+                <h3 class="group-label">
+                    <span class="group-icon">
+                        <i class="codicon codicon-references"></i>
+                    </span> Entity Relationships
+                </h3>
+                <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
+            </div>
+            <div id="grpEntityRelationships" class="group-content collapse">
+                <div class="b-table theme-gray mb-3" ng-repeat="relationship in $.entity.Relationships">
+                    <div class="table-header mb-0">
+                        <div class="d-flex flex-wrap align-items-center w-100">
+                            <div class="col-7 border-end b-splitter pe-5">
+                                <div class="b-field">
+                                    <label class="form-label">Relationship Name</label>
+                                    <div class="b-input-group">
+                                        <input type="text" ng-model="relationship.RelationshipName" class="b-input" placeholder="Enter relationship name" autocomplete="off" required />
+                                        <span><i class="codicon codicon-account"></i></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="col-6">
+                                        <div class="b-field mb-0">
+                                            <label class="form-label">Parent Entity(Primary Key)</label>
+                                            <div class="b-input-group">
+                                                <select ng-model="relationship.ParentEntityTableName" class="b-input" ng-options="entity.TableName as entity.EntityName+'('+entity.TableName+')' for entity in $.entities | orderBy:'EntityName'" ng-change="$.onParentEntityChange(relationship)" ng-disabled="$.running"
+                                                    required>
+                                                    <option disabled value="">Select parent entity</option>
+                                                </select>
+                                                <span><i class="codicon codicon-table"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="b-field mb-0">
+                                            <label class="form-label">Child Entity(Foreign Key Table)</label>
+                                            <div class="b-input-group">
+                                                <input type="button" class="b-input text-start" readonly value="{{$.entity.EntityName}}({{$.entity.TableName}})" />
+                                                <span><i class="codicon codicon-table"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col ps-5">
+                                <div class="b-field mb-1">
+                                    <label class="form-label d-block">Enforce For Replication</label>
+                                    <label class="b-switch">
+                                        <input type="checkbox" ng-model="relationship.EnforceForReplication">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="b-field mb-1">
+                                    <label class="form-label d-block">Enforce Foreign Key Constraint</label>
+                                    <label class="b-switch">
+                                        <input type="checkbox" ng-model="relationship.EnforceForeignKeyConstraint">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-body">
+                        <div class="d-flex" role="button" ng-style="{'order':($index+1)}">
+                            <div class="col-7 border-end b-splitter pe-5">
+                                <div class="d-flex" ng-repeat="column in relationship.Columns">
+                                    <div class="col-6 my-auto">
+                                        <div class="b-input-group">
+                                            <select ng-model="column.PrimaryKey" class="b-input" ng-options="column.ColumnName as column.ColumnName for column in relationship.ParentEntityColumns" chosen>
+                                                <option value="">None</option>
+                                            </select>
+                                            <span><i class="codicon codicon-table"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 my-auto">
+                                        <div class="b-input-group">
+                                            <select ng-model="column.ForeignKey" class="b-input" ng-options="column.ColumnName as column.ColumnName for column in $.entity.Columns" chosen>
+                                                <option value="">None</option>
+                                            </select>
+                                            <span><i class="codicon codicon-table"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-1  my-auto">
+                                        <button type="button" class="b-btn btn-cancel p-2" ng-click="relationship.Columns.splice($index,1)" ng-disabled="$.running">
+                                            <i class="codicon codicon-trash me-0"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col ps-5">
+                                <div class="d-flex">
+                                    <div class="col-6">
+                                        <div class="b-field mb-1">
+                                            <label class="form-label d-block">DELETE Specification</label>
+                                            <div class="b-input-group">
+                                                <select ng-model="relationship.DELETESpecification" class="b-input" chosen>
+                                                    <option value="NO_ACTION">No Action</option>
+                                                    <option value="CASCADE">Cascade</option>
+                                                    <option value="SET_NULL">Set Null</option>
+                                                    <option value="SET_DEFAULT">Set Default</option>
+                                                </select>
+                                                <span><i class="codicon codicon-table"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="b-field mb-1">
+                                            <label class="form-label d-block">UPDATE Specification</label>
+                                            <div class="b-input-group">
+                                                <select ng-model="relationship.UPDATESpecification" class="b-input" chosen>
+                                                    <option value="NO_ACTION">No Action</option>
+                                                    <option value="CASCADE">Cascade</option>
+                                                    <option value="SET_NULL">Set Null</option>
+                                                    <option value="SET_DEFAULT">Set Default</option>
+                                                </select>
+                                                <span><i class="codicon codicon-table"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-footer">
+                        <button type="button" class="b-btn btn-action btn-sm mb-3" ng-click="relationship.Columns.push({})">
+                            <i class="codicon codicon-plus me-0"></i>
+                        </button>
+                        <button type="button" class="b-btn btn-cancel d-flex ms-auto" ng-click="$.entity.Relationships.splice($index,1)" ng-disabled="$.running">
+                            <i class="codicon codicon-trash me-0"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="b-btn btn-action ms-auto" ng-click="$.onAddRelationshipClick()" ng-disabled="$.running">
+                    <i class="codicon codicon-plus" ></i>
+                    Add Relationship
+                </button>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Advanced Options-->
+        <!------------------------------------>
+        <div class="b-group mb-4">
+            <div class="group-header collapsed" data-bs-toggle="collapse" data-bs-target="#grpEntityAdvancedOptions">
+                <h3 class="group-label">
+                    <span class="group-icon">
+                        <i class="codicon codicon-server-process"></i>
+                    </span> Advanced Options
+                </h3>
+                <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
+            </div>
+            <div id="grpEntityAdvancedOptions" class="group-content collapse">
+                <div class="pt-3 pb-3">
+                    <div class="b-field">
+                        <label class="form-label d-block">Multiple Columns For Primary Key</label>
+                        <label class="b-switch">
+                            <input type="checkbox" ng-model="$.entity.IsMultipleColumnsForPK">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Entity Columns Table-->
+        <!------------------------------------>
+        <div class="entity-columns">
+            <div class="b-table theme-gray">
+                <div class="table-header">
+                    <div class="header-label">
+                        <h4 class="header-title">Entity Columns</h4>
+                        <span class="header-subtitle">Columns of Table or view on database</span>
+                    </div>
+                    <div class="header-tools">
+                        <div class="b-btn-group">
+                            <button type="button" class="b-btn btn-action" ng-click="$.onAddColumnClick()" ng-disabled="$.column">
+                                <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                                Add Column
+                            </button>
+                            <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu b-dropdown-menu">
+                                <a class="dropdown-item" href="" ng-if="!$.entity.IsReadonly" ng-click="$.onSyncColumns()">Sync Columns With Database</a>
+                                <a class="dropdown-item" href="" ng-if="$.entity.IsReadonly" ng-click="$.onRefreshColumns()">Refresh Columns</a>
+                                <a class="dropdown-item" href="">Import columns from excel file</a>
+                                <a class="dropdown-item" href="">Import columns from text file</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-body">
+                    <div class="d-flex columns-name">
+                        <div class="col-3">Column Name</div>
+                        <div class="col-3">Column Type</div>
+                        <div class="col-2">Allow Nulls</div>
+                        <div class="col-2" ng-if="!$.entity.IsReadonly">
+                            <i class="codicon codicon-arrow-up d-inline-block"></i>
+                            <i class="codicon codicon-arrow-down d-inline-block"></i>
+                        </div>
+                        <div class="col-2" ng-if="!$.entity.IsReadonly">
+                            <i class="codicon codicon-ellipsis"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex table-row" ng-repeat="column in $.entity.Columns | orderBy:'ViewOrder'" ng-if="!column.IsEdited" role="button" ng-style="{'order':($index+1)}">
+                        <div class="col-3 my-auto" ng-click="$.onRowItemClick(column,$index)">
+                            {{column.ColumnName}}
+                        </div>
+                        <div class="col-3 my-auto" ng-click="$.onRowItemClick(column,$index)">
+                            {{column.ColumnType}}
+                        </div>
+                        <div class="col-2 my-auto" ng-click="$.onRowItemClick(column,$index)">
+                            <i ng-if="!column.AllowNulls" class="codicon codicon-chrome-maximize fs-4 text-start"></i>
+                            <i ng-if="column.AllowNulls" class="codicon codicon-check fs-4 text-start"></i>
+                        </div>
+                        <div class="col-2 my-auto" ng-if="!$.entity.IsReadonly">
+                            <button type="button" class="b-clean text-light" ng-disabled="$.column || $index==0">
+                                <i class="codicon codicon-arrow-up d-inline-block me-1"
+                                    ng-click="$.onColumnSwapClick($index,$index-1)"></i>
+                            </button>
+                            <button type="button" class="b-clean text-light" ng-disabled="$.column || $index==$.entity.Columns.length-1">
+                                <i class="codicon codicon-arrow-down d-inline-block"
+                                    ng-click="$.onColumnSwapClick($index,$index+1)"></i>
+                            </button>
+                        </div>
+                        <div class=" col-2" ng-if="!$.entity.IsReadonly">
+                            <div class="b-multi-btns">
+                                <button type="button" ng-click="$.onColumnPropertiesClick(column,false,$index)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                    <i class="codicon codicon-gear"></i>
+                                </button>
+                                <button type="button" ng-click="$.entity.Columns.splice($index,1)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                    <i class="codicon codicon-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!------------------------------------>
+                    <!-- Edit Column -->
+                    <!------------------------------------>
+                    <div ng-if="$.column.IsEdited" class="d-flex table-row edit-row" ng-style="{'order':$.column.ViewOrder}">
+                        <div class="col-3 me-2">
+                            <input type="text" id="txtColumnName" ng-model="$.column.ColumnName" class="b-input form-control" b-custom-focus="onEditColumn" placeholder="Enter column name" autocomplete="off" required />
+                            <p class="b-invalid">{{$.columnForm.error.ColumnName}}</p>
+                        </div>
+                        <div class="col-3 me-2">
+                            <input type="text" id="txtColumnType" ng-model="$.column.ColumnType" class="b-input form-control" placeholder="Enter column type" required />
+                            <p class="b-invalid">{{$.columnForm.error.ColumnType}}</p>
+                        </div>
+                        <div class="col-2 me-2 d-flex align-items-center">
+                            <label class="b-switch">
+                                <input type="checkbox" ng-model="$.column.AllowNulls">
+                                <span class="slider"></span>
+                            </label>
+                            <p class="b-invalid">{{$.columnForm.error.AllowNulls}}</p>
+                        </div>
+                        <div class="col-2"></div>
+                        <div class="col-2 ">
+                            <div class="b-multi-btns">
+                                <button type="button" ng-click="$.onSaveColumnClick()" b-custom-tooltip data-bs-placement="bottom" title="Save Column">
+                                    <i class="codicon codicon-save"></i>
+                                </button>
+                                <button type="button" ng-click="$.onCancelColumnClick()" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                    <i class="codicon codicon-circle-slash"></i>
+                                </button>
+                                <button type="button" ng-click="$.onColumnPropertiesClick($.column,true)" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                    <i class="codicon codicon-gear"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <button type="button" class="b-btn btn-action btn-sm mb-3" ng-click="$.onAddColumnClick()" ng-disabled="$.column">
+                        <i class="codicon codicon-plus me-0" ng-disabled="$.running"></i>
+                    </button>
+                    <div ng-if="!$.entity.Columns.length" class="b-notify notify-warning mb-4">
+                        <i class="codicon codicon-info b-icon-2"></i>
+                        <div class="text">
+                            <h4 class="label">Entity has no columns.</h4>
+                            <span class="subtext">
+                                Click
+                                Add Column
+                                to add a column!.
+                            </span>
+                        </div>
+                    </div>
+                    <p class="b-invalid">{{$.form.error.Columns}}</p>
+                    <div class="mt-3 mb-1 d-flex">
+                        <div class="me-auto" ng-if="$.entity.EntityID">
+                            <button type="button" class="b-btn btn-danger" ng-click="$.onDeleteEntityClick()" ng-disabled="$.running">
+                                <i class="codicon codicon-trash"></i>
+                                Remove Entity
+                            </button>
+                        </div>
+                        <div class="ms-auto">
+                            <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveEntityClick()" ng-disabled="$.running || $.column">
+                                <i class="codicon codicon-save"
+                                    ng-class="{'loading-circle mini':$.running=='save-entity'}"></i>
+                                Save Entity
+                            </button>
+                            <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelEntityClick()" ng-disabled="$.running || $.column">
+                                <i class="codicon codicon-circle-slash"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!-- Column Properties Modal-->
+        <!------------------------------------>
+        <div id="wnColumnProperties" b-custom-modal class="modal fade b-modal-dark" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            {{$.column.ColumnName}} Column Properties
+                        </h5>
+                        <button type="button" class="btn-close" aria-label="Close" ng-click="$.onCancelColumnPropertiesClick()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!------------------------------------>
+                        <!-- General-->
+                        <!------------------------------------>
+                        <div class="b-group mb-4">
+                            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpColumnPropsGeneral">
+                                <h3 class="group-label">
+                                    <span class="group-icon">
+                                        <i class="codicon codicon-azure-devops"></i>
+                                    </span> General
+                                </h3>
+                                <span class="group-collapse">
+                                    <i class="codicon codicon-chevron-up"></i>
+                                </span>
+                            </div>
+                            <div id="grpColumnPropsGeneral" class="group-content collapse show">
+                                <div class="d-flex">
+                                    <div class="col-7 b-splitter border-end pe-3">
+                                        <div class="b-field">
+                                            <label class="form-label d-block">Is Primary Key</label>
+                                            <label class="b-switch">
+                                                <input type="checkbox" ng-model="$.column.IsPrimary"
+                                                    ng-click="$.onColumnPrimaryKeyChange()">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="b-field">
+                                            <label class="form-label">Default Value</label>
+                                            <div class="b-input-group">
+                                                <input type="text" ng-model="$.column.DefaultValue" class="b-input bg-2 form-control" placeholder="Enter column default value" autocomplete="off" />
+                                                <span><i class="codicon codicon-diff-ignored"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="b-field">
+                                            <label class="form-label">Description</label>
+                                            <div class="b-input-group">
+                                                <textarea type="text" ng-model="$.column.Description" class="b-input bg-2 form-control" rows="2" placeholder="Enter column description"></textarea>
+                                                <span><i class="codicon codicon-book"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="b-field">
+                                            <label class="form-label">Column ID</label>
+                                            <div class="b-input-group">
+                                                <label class="b-input bg-2 form-control">{{$.column.ColumnID||'00000000-0000-0000-0000-000000000000'}}</label>
+                                                <span><i class="codicon codicon-arrow-swap"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 ps-3">
+                                        <div class="b-alert">
+                                            <span class="alert-title">Column Settings</span>
+                                            <p>
+                                                Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.
+                                            </p>
+                                            <hr>
+                                            <p>
+                                                Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!------------------------------------>
+                        <!-- Table Designer-->
+                        <!------------------------------------>
+                        <div class="b-group light-gray">
+                            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpColumnPropsTableDesigner">
+                                <h3 class="group-label">
+                                    <span class="group-icon">
+                                        <i class="codicon codicon-calendar"></i>
+                                    </span> Table Designer
+                                </h3>
+                                <span class="group-collapse">
+                                    <i class="codicon codicon-chevron-up"></i>
+                                </span>
+                            </div>
+                            <div id="grpColumnPropsTableDesigner" class="group-content collapse show">
+                                <div class="d-flex">
+                                    <div class="col-7 b-splitter border-end pe-3">
+                                        <div class="b-field">
+                                            <label class="form-label d-block">Is Identity</label>
+                                            <label class="b-switch">
+                                                <input type="checkbox" ng-model="$.column.IsIdentity"
+                                                    ng-disabled="$.entity.EntityID">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="b-field">
+                                            <label class="form-label d-block">Is Computed Column</label>
+                                            <label class="b-switch">
+                                                <input type="checkbox" ng-model="$.column.IsComputedColumn">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="b-field" ng-if="$.column.IsComputedColumn">
+                                            <label class="form-label">Formula</label>
+                                            <div class="b-input-group">
+                                                <input type="text" ng-model="$.column.Formula" class="b-input bg-2 form-control" placeholder="Enter formula" autocomplete="off" required />
+                                                <span><i class="codicon codicon-symbol-operator"></i></span>
+                                            </div>
+                                            <p class="b-invalid">{{$.columnForm.error.IsComputedColumn}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 ps-3">
+                                        <div class="b-alert">
+                                            <b>Column Settings</b> Dar sorati ke mayelid entity faghat khandani bashad in tik ro bezanid
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveColumnPropertiesClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-save"></i>
+                            Save
+                        </button>
+                        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelColumnPropertiesClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-circle-slash"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+</div>
