@@ -7,6 +7,7 @@ import fieldSettingsWidget from "./field/field-settings.html";
 import fieldShowConditionsWidget from "./field/field-show-conditions.html";
 import fieldConditionalValuesWidget from "./field/field-conditional-values.html";
 import fieldDataSourceWidget from "./field/field-data-source.html";
+import { GlobalSettings } from "../../../../common/configs/global.settings";
 
 export class ModuleBuilderController {
     constructor(
@@ -233,7 +234,6 @@ export class ModuleBuilderController {
                 (data) => {
                     this.module = data.Module;
                     this.skins = data.Skins;
-                    this.fieldTypes = data.FieldTypes;
                     this.fields = data.Fields;
                     this.actions = data.Actions;
                     this.services = data.Services;
@@ -242,6 +242,11 @@ export class ModuleBuilderController {
                     this.roles = data.Roles;
                     this.customResources = data.CustomResources;
                     this.field = {};
+
+                    data.FieldTypes.forEach(ft => {
+                        ft.Icon = (ft.Icon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+                    });
+                    this.fieldTypes = data.FieldTypes;
 
                     /*-----------------------------------------------------------------------
                         the First step for creating your module,

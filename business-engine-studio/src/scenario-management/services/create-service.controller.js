@@ -54,8 +54,12 @@ export class CreateServiceController {
                 this.scenarios = data.Scenarios;
                 this.databases = data.Databases;
                 this.roles = data.Roles;
-                this.serviceTypes = data.ServiceTypes;
                 this.service = data.Service;
+
+                data.ServiceTypes.forEach(st => {
+                    st.Icon = (st.Icon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+                });
+                this.serviceTypes = data.ServiceTypes;
 
                 if (!this.service) {
                     this.isNewService = true;

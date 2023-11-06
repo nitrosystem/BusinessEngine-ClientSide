@@ -13,8 +13,8 @@ export class ModuleController {
         actionService
     ) {
         this.$scope = $scope;
-        this.timeout = $timeout;
-        this.parse = $parse;
+        this.$timeout = $timeout;
+        this.$parse = $parse;
         this.$q = $q;
         this.$compile = $compile;
         this.uploadService = Upload;

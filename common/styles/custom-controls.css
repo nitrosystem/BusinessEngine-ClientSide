@@ -180,7 +180,7 @@
   flex-direction: row;
 }
 
-.b-radio .radio-item {
+.b-radio .b-radio-list-inline .radio-item {
   margin-right: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -236,6 +236,107 @@
   -webkit-transform: scale(1);
   -ms-transform: scale(1);
   -o-transform: scale(1);
+  transform: scale(1);
+}
+
+/* --------------------------------------------------------
+         Radio Button List
+    -----------------------------------------------------------*/
+
+.b-radio-list-inline {
+  display: flex;
+}
+
+.b-radio-list-inline > .b-radio {
+  margin-left: 1.5rem;
+}
+
+.b-radio-list-inline .b-radio > label {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.b-radio-list-inline .b-radio > label > input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  opacity: 0;
+}
+
+.b-radio-list-inline .b-radio > label > i {
+  font-size: 1.5rem;
+  margin-left: 0.3rem;
+}
+
+/* --------------------------------------------------------
+         Radio List
+    -----------------------------------------------------------*/
+
+.b-radio-list-inline {
+  margin-top: 0.4rem;
+}
+
+.b-radio-list-inline .radio-item {
+  margin-right: 1.5rem;
+}
+
+.b-radio-list-inline .radio-item [type="radio"] {
+  display: none;
+}
+
+.b-radio-list-inline .radio-item + .b-radio-list-inline .radio-item {
+  margin-top: 15px;
+}
+
+.b-radio-list-inline .radio-item label {
+  display: block;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding-left: 1.6rem;
+  white-space: nowrap;
+  position: relative;
+  transition: 0.4s ease-in-out 0s;
+}
+
+.b-radio-list-inline .radio-item label:after {
+  content: "";
+  border: 0.15rem solid silver;
+  border-radius: 50%;
+  height: 1.2rem;
+  width: 1.2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.b-radio-list-inline .radio-item label:before {
+  content: "";
+  background-color: silver;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  left: 0;
+  top: calc(50%-5px);
+  transform: scale(5);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.4s ease-in-out 0s;
+}
+
+.b-radio-list-inline .radio-item [type="radio"]:checked ~ label {
+  border-color: silver;
+}
+
+.b-radio-list-inline .radio-item [type="radio"]:checked ~ label::before {
+  opacity: 1;
+  visibility: visible;
   transform: scale(1);
 }
 

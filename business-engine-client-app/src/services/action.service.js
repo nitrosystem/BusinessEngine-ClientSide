@@ -6,8 +6,7 @@ export class ActionService {
         $window,
         globalService,
         apiService,
-        expressionService,
-        basicActionService
+        expressionService
     ) {
         this.$timeout = $timeout;
         this.$q = $q;
@@ -16,7 +15,6 @@ export class ActionService {
         this.globalService = globalService;
         this.apiService = apiService;
         this.expressionService = expressionService;
-        this.basicActionService = basicActionService;
     }
 
     callActions(actions, moduleID, fieldID, eventName, $scope) {
@@ -211,7 +209,7 @@ export class ActionService {
             const isValid = this.expressionService.checkConditions(action.Conditions, $scope);
             if (isValid) {
                 //run pre script after applying the conditions 
-                this.basicActionService.RunPrescript(action, params, $scope).then((data) => {
+                runPrescript(action, params, $scope).then((data) => {
                     if (!action.IsServerSide) {
                         //proccess and set the action params for example one row in the condition list is "_CurrentUser:UserID > 0"
                         this.proccessActionParams(params, $scope);
@@ -220,7 +218,7 @@ export class ActionService {
                     // call the action with filled the action params
                     actionMethod.apply(this, [$scope, action, params]).then((data) => {
                             //run post script after performed the action
-                            this.basicActionService.RunPostscript(action, params, $scope).then(() => {
+                            runPostscript(action, params, $scope).then(() => {
                                 defer.resolve(data);
                             });
                         },
@@ -233,7 +231,7 @@ export class ActionService {
                 defer.resolve({ invalidConditions: true });
             }
         } else {
-            this.basicActionService.RunPrescript(action, params, $scope).then((data) => {
+            runPrescript(action, params, $scope).then((data) => {
                 if (!action.IsServerSide) {
                     this.proccessActionParams(params, $scope);
                 }
@@ -241,7 +239,7 @@ export class ActionService {
                 const isValid = this.expressionService.checkConditions(action.Conditions, $scope);
                 if (isValid) {
                     actionMethod.apply(this, [$scope, action, params]).then((data) => {
-                        this.basicActionService.RunPostscript(action, params, $scope).then(() => {
+                        runPostscript(action, params, $scope).then(() => {
                             defer.resolve(data);
                         });
                     }, (error) => {
@@ -260,15 +258,27 @@ export class ActionService {
     callClientAction($scope, action, params) {
         const defer = this.$q.defer();
 
-        this.basicActionService[action.ActionType](action, params, $scope).then((data) => {
-            //after running the action and now fill variables with the action results 
-            this.setActionResults(action, data, $scope);
+        try {
+            const actionFunction = eval(`${action.ActionType}ActionController`);
+            const actionController = new actionFunction(this, $scope);
+            if (typeof eval("actionController.execute") == "function") {
+                actionController.execute(action, params, defer).then((data) => {
+                    //after running the action and now fill variables with the action results 
+                    this.setActionResults(action, data, $scope);
 
-            defer.resolve(data);
-        }, (error) => {
-            this.setActionResults(action, error, $scope);
-            defer.reject(error.data);
-        })
+                    defer.resolve(data);
+                }, (error) => {
+                    this.setActionResults(action, error, $scope);
+                    defer.reject(error.data);
+                })
+            } else {
+                throw new Error('');
+            }
+        } catch (error) {
+            console.error('the action controller not found!.');
+
+            defer.reject({ error: 'the action controller not found!.' });
+        }
 
         return defer.promise;
     }
@@ -356,5 +366,88 @@ export class ActionService {
         } else result = this.expressionService.parseExpression(expression, $scope);
 
         return result;
+    }
+
+    runPrescript(action, params, $scope) {
+        const defer = this.$q.defer();
+
+        if (action.HasPreScript)
+            return this.runScript(
+                $scope,
+                action,
+                params,
+                action.PreScript,
+                "Prescript_"
+            );
+        else defer.resolve();
+
+        return defer.promise;
+    }
+
+    runPostscript(action, params, $scope) {
+        const defer = this.$q.defer();
+
+        if (action.HasPostScript)
+            return this.runScript(
+                $scope,
+                action,
+                params,
+                action.PostScript,
+                "Postscript_"
+            );
+        else defer.resolve();
+
+        return defer.promise;
+    }
+
+    runScript($scope, action, params, actionScript, type) {
+        const defer = this.$q.defer();
+        const actionName = type + action.ActionName;
+
+        actionScript = actionScript || '';
+
+        var scriptStr = `function ${actionName}ControllerAction($scope, moduleController,action,_ActionParam) { 
+            const defer = moduleController.$q.defer(); 
+            
+            try { 
+                ${actionScript}
+
+                //{SCRIPT-DONE} 
+            } catch (e) { 
+                defer.resolve(0,e); 
+            } 
+
+            return defer.promise; 
+        }`;
+
+        if (actionScript.indexOf("//{SCRIPT-DONE}") >= 0)
+            scriptStr = scriptStr.replace("//{SCRIPT-DONE}", "");
+        scriptStr = scriptStr.replace("//{SCRIPT-DONE}", "defer.resolve()");
+
+        var newScript = document.createElement("script");
+        newScript.innerHTML = scriptStr;
+        $("body").append(newScript);
+
+        var actionParam = {};
+        _.map(action.Params, (param) => {
+            var filledParam = _.find(params, (p) => {
+                return p.ParamName == param.ParamName;
+            });
+            actionParam[param.ParamName] = !filledParam ?
+                filledParam.ParamValue :
+                param.ParamValue;
+        });
+
+        const actionFunction = eval(`${actionName}ControllerAction`);
+        new actionFunction(
+            $scope,
+            $scope.moduleController,
+            action,
+            actionParam
+        ).then((data) => {
+            defer.resolve();
+        });
+
+        return defer.promise;
     }
 }

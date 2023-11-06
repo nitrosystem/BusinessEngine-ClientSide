@@ -60,12 +60,12 @@
                                 <div class="row">
                                     <!--Select Action Subtype-->
                                     <div class="col" ng-repeat="actionType in value | toArray:false | orderBy:'ViewOrder'">
-                                        <div class="card b-custom-selective mb-4" ng-click="$.onSelectActionTypeClick(actionType)" ng-class="{'selected':$.action.ActionType==actionType.ActionType}">
+                                        <div class="card action-type" ng-click="$.onSelectActionTypeClick(actionType)" ng-class="{'selected':$.action.ActionType==actionType.ActionType}">
                                             <div class="card-body text-center">
-                                                <i class="fs-1 {{actionType.Icon}} text-muted mb-4 d-block"></i>
-                                                <h5 class="card-title text-nowrap">{{actionType.Title}}</h5>
-                                                <p class="card-text text-muted">{{actionType.Description}}
-                                                </p>
+                                                <i ng-if="!actionType.IconType" class="fs-1 {{actionType.Icon}} text-muted mb-4 d-block"></i>
+                                                <img ng-if="actionType.IconType" class="action-image" ng-src="{{actionType.Icon}}" />
+                                                <h5 class="service-title">{{actionType.Title}}</h5>
+                                                <p class="service-summary">{{actionType.Description}}</p>
                                             </div>
                                         </div>
                                     </div>

@@ -23,7 +23,7 @@
                 <!------------------------------------>
                 <div ng-if="$.step==1">
                     <div ng-model="$.service.ServiceSubtype" class="b-required" required>
-                        <div class="b-group mb-5" ng-repeat="(key,value) in $.serviceTypes | groupBy:'ServiceType'">
+                        <div class="b-group" ng-repeat="(key,value) in $.serviceTypes | groupBy:'ServiceType'">
                             <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpServiceType{{$.service.ServiceID}}_{{$index}}">
                                 <h3 class="group-label">
                                     <span class="group-icon">
@@ -38,12 +38,12 @@
                                 <div class="row">
                                     <!--Select Service Subtype-->
                                     <div class="col" ng-repeat="serviceType in value | toArray:false | orderBy:'ViewOrder'">
-                                        <div class="card b-custom-selective mb-4" ng-click="$.onSelectServiceSubtypeClick(serviceType)" ng-class="{'selected':$.service.ServiceSubtype==serviceType.ServiceSubtype}">
+                                        <div class="card service-type" ng-click="$.onSelectServiceSubtypeClick(serviceType)" ng-class="{'active':$.service.ServiceSubtype==serviceType.ServiceSubtype}">
                                             <div class="card-body text-center">
-                                                <i class="fs-1 {{serviceType.Icon}} text-muted mb-4 d-block"></i>
-                                                <h5 class="card-title text-nowrap">{{serviceType.Title}}</h5>
-                                                <p class="card-text text-muted">{{serviceType.Description}}
-                                                </p>
+                                                <i ng-if="!serviceType.IconType" class="fs-1 {{serviceType.Icon}} text-muted mb-4 d-block"></i>
+                                                <img ng-if="serviceType.IconType" class="service-image" ng-src="{{serviceType.Icon}}" />
+                                                <h5 class="service-title">{{serviceType.Title}}</h5>
+                                                <p class="service-summary">{{serviceType.Description}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -89,10 +89,15 @@
                         </div>
                     </div>
                     <div class="col ps-5">
+                        <div class="b-field service-type-selected" ng-click="$.step=1">
+                            <label>{{$.service.ServiceSubtype}}</label>
+                            <i ng-if="!$.serviceType.IconType" class="{{$.serviceType.Icon}}"></i>
+                            <img ng-if="$.serviceType.IconType" class="service-image" ng-src="{{$.serviceType.Icon}}" />
+                        </div>
                         <div class="b-field">
                             <label class="form-label">Description</label>
                             <div class="b-input-group">
-                                <textarea ng-model="$.service.Description" class="b-input form-control" rows="4" placeholder="Enter service description(for better development)"></textarea>
+                                <textarea ng-model="$.service.Description" class="b-input form-control" rows="2" placeholder="Enter service description(for better development)"></textarea>
                                 <span class="my-auto"><i class="codicon codicon-debug-stackframe-active"></i></span>
                             </div>
                         </div>
@@ -105,12 +110,11 @@
                         </div>
                         <div class="b-field" ng-if="$.service.HasResult">
                             <label class="form-label">Result Type</label>
-                            <select ng-model="$.service.ResultType" class="b-input form-select" required>
-                                <option value="">Select service type</option>
-                                <option ng-value="0">Scaler</option>
-                                <option ng-value="1">Data Row</option>
-                                <option ng-value="2">List</option>
-                            </select>
+                            <div class="b-radio-list-inline">
+                                <div class="radio-item"><input ng-model="$.service.ResultType" ng-value="0" name="rdServiceResultType" id="rdServiceResultTypeScaler" type="radio"><label for="rdServiceResultTypeScaler">Scaler</label></div>
+                                <div class="radio-item"><input ng-model="$.service.ResultType" ng-value="1" name="rdServiceResultType" id="rdServiceResultTypeDataRow" type="radio"><label for="rdServiceResultTypeDataRow">Data Row</label></div>
+                                <div class="radio-item"><input ng-model="$.service.ResultType" ng-value="2" name="rdServiceResultType" id="rdServiceResultTypeList" type="radio"><label for="rdServiceResultTypeList">List</label></div>
+                            </div>
                         </div>
                         <div class="b-field">
                             <label class="b-checkbox">
@@ -135,7 +139,7 @@
                             Remove Service
                         </button>
                     </div>
-                    <div class="ms-auto">
+                    <div class="ms-auto d-flex">
                         <button type="button" class="b-btn btn-action me-2" ng-if="$.step>1" ng-click="$.onPrevStepClick()" ng-disabled="$.running">
                             <i class="codicon codicon-arrow-left"></i>
                             Previous

@@ -50,7 +50,8 @@
                             <div class="row">
                                 <div class="col-6" ng-repeat="fieldType in value | toArray:false | orderBy:'ViewOrder'">
                                     <div class="field-type" jqyoui-draggable="{animate:true,onStop:'$.onStopDrag($index)'}" jqyoui-options="{appendTo: 'body',revert: 'invalid',helper: 'clone'}" data-drag="true" data-new-field="true" data-field-type="{{fieldType.FieldType}}">
-                                        <i class="{{fieldType.Icon}}"></i>
+                                        <i ng-if="!fieldType.IconType" class="{{fieldType.Icon}}"></i>
+                                        <img ng-if="fieldType.IconType" class="field-image" ng-src="{{fieldType.Icon}}" />
                                         <label class="title">{{fieldType.Title}}</label>
                                     </div>
                                 </div>

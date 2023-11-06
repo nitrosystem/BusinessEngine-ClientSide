@@ -2,5 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/.vs
+/business-engine-client-app/node_modules
+/business-engine-client-app/dist
 /business-engine-studio/node_modules
+/business-engine-studio/dist
 /node_modules

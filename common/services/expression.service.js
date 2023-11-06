@@ -118,7 +118,7 @@ export class ExpressionService {
             }
         });
 
-        if (!foundExpression && expressionParsingType == "get-value") {
+        if ( /*!foundExpression && */ expressionParsingType == "get-value") {
             try {
                 expression = eval(expression);
             } catch (e) {

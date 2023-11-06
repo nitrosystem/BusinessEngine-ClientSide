@@ -1,3 +1,5 @@
+import { GlobalSettings } from "../../../../common/configs/global.settings";
+
 export class CreateActionController {
     constructor(
         $scope,
@@ -80,10 +82,14 @@ export class CreateActionController {
                     this.variables = data.Variables;
                     this.paymentMethods = data.PaymentMethods;
                     this.paymentGateways = data.PaymentGateways;
-                    this.actionTypes = data.ActionTypes;
                     this.actions = data.Actions;
                     this.moduleActions = data.AllActions;
                     this.action = data.Action;
+
+                    data.ActionTypes.forEach(at => {
+                        at.Icon = (at.Icon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+                    });
+                    this.actionTypes = data.ActionTypes;
 
                     this.events.push(...data.CustomEvents);
                     if (isFieldActions) {
