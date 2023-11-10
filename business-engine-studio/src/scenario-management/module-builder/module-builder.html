@@ -138,7 +138,7 @@
                 </button>
                 <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onAddActionClick('module',$.module.ModuleID)">
-                        New Action
+                        <i class="codicon codicon-github-action me-2"></i> New Action
                     </a>
                 </div>
             </div>
@@ -151,7 +151,7 @@
                 </button>
                 <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="">
-                        Module Settings
+                        <i class="codicon codicon-gear me-2"></i> Module Settings
                     </a>
                 </div>
             </div>
@@ -164,10 +164,10 @@
                 </button>
                 <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onShowModuleSkinClick()">
-                        Module Skin
+                        <i class="codicon codicon-preview me-2"></i> Module Skin
                     </a>
                     <a class="dropdown-item" href="" ng-click="$.onShowCustomResourceClick()">
-                        Add Custom Resources To the Module
+                        <i class="codicon codicon-expand-all me-2"></i> Add Custom Resources To the Module
                     </a>
                 </div>
             </div>
@@ -176,14 +176,20 @@
             <!------------------------------------>
             <div class="b-btn-group" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
                 <button type="button" class="b-btn btn-submit" ng-click="$.onRenderModuleClick()">
-                    <i class="codicon codicon-play"></i>
-                    Render Module
+                    <i class="codicon codicon-screen-normal"></i>
+                    Build Module
                 </button>
                 <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
-                    <a class="dropdown-item" href="" ng-click="$.onRebuildModuleClick()">Rebuild Module</a>
-                    <a class="dropdown-item" href="" ng-click="$.onRenderModuleClick(true)">Render Dashboard Modules Scripts & Styles</a>
-                    <a class="dropdown-item" target="_blank" ng-href="{{$.moduleViewLinkUrl}}">Show Module Output</a>
+                    <a class="dropdown-item" href="" ng-click="$.onRenderModuleClick(true)">
+                        <i class="codicon codicon-code me-2"></i> Build Scripts & Styles
+                    </a>
+                    <a class="dropdown-item" href="" ng-click="$.onRebuildModuleClick()">
+                        <i class="codicon codicon-notebook-template me-2"></i> Redesign Board
+                    </a>
+                    <a class="dropdown-item" target="_blank" ng-href="{{$.moduleViewLinkUrl}}">
+                        <i class="codicon codicon-output me-2"></i> Show Module Output
+                    </a>
                 </div>
             </div>
             <!------------------------------------>

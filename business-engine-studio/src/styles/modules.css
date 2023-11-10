@@ -431,8 +431,7 @@
   color: rgb(144, 122, 255);
 }
 
-.module-builder .mb-sidebar .field-type,
-.field-type > img {
+.module-builder .mb-sidebar .field-type > img {
   margin-bottom: 0.5rem;
 }
 

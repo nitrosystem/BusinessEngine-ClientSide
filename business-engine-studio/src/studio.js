@@ -1,3 +1,6 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle'
+
 import "@vscode/codicons/dist/codicon.css";
 import "./styles/bootstrap-custom.css";
 import "./styles/font.css";

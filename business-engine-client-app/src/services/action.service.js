@@ -209,7 +209,7 @@ export class ActionService {
             const isValid = this.expressionService.checkConditions(action.Conditions, $scope);
             if (isValid) {
                 //run pre script after applying the conditions 
-                runPrescript(action, params, $scope).then((data) => {
+                this.runPrescript(action, params, $scope).then((data) => {
                     if (!action.IsServerSide) {
                         //proccess and set the action params for example one row in the condition list is "_CurrentUser:UserID > 0"
                         this.proccessActionParams(params, $scope);
@@ -218,7 +218,7 @@ export class ActionService {
                     // call the action with filled the action params
                     actionMethod.apply(this, [$scope, action, params]).then((data) => {
                             //run post script after performed the action
-                            runPostscript(action, params, $scope).then(() => {
+                            this.runPostscript(action, params, $scope).then(() => {
                                 defer.resolve(data);
                             });
                         },
@@ -231,7 +231,7 @@ export class ActionService {
                 defer.resolve({ invalidConditions: true });
             }
         } else {
-            runPrescript(action, params, $scope).then((data) => {
+            this.runPrescript(action, params, $scope).then((data) => {
                 if (!action.IsServerSide) {
                     this.proccessActionParams(params, $scope);
                 }
@@ -239,7 +239,7 @@ export class ActionService {
                 const isValid = this.expressionService.checkConditions(action.Conditions, $scope);
                 if (isValid) {
                     actionMethod.apply(this, [$scope, action, params]).then((data) => {
-                        runPostscript(action, params, $scope).then(() => {
+                        this.runPostscript(action, params, $scope).then(() => {
                             defer.resolve(data);
                         });
                     }, (error) => {

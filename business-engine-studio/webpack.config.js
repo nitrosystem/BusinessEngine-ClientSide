@@ -74,9 +74,8 @@ module.exports = (env) => {
             },
         },
         externals: {
-            bootstrap: "bootstrap",
             jquery: "jQuery",
-            lodash: "_",
+            jqueryui: "jquery-ui"
         },
     };
 };

@@ -508,6 +508,22 @@ export class ModuleBuilderController {
         });
     }
 
+    setFieldsDragingUi() {
+        $("#board" + this.module.ModuleID)
+            .find("*[field-drop]")
+            .droppable({
+                greedy: true,
+                accept: '*[data-drag="true"]',
+                drop: ($event, ui) => {
+                    var args = [$event, ui];
+                    this.$scope.$apply(() => {
+                        this.onFieldDrop.apply(this, args);
+                    });
+                },
+                over: this.onFieldDragOver,
+                out: this.onFieldDragOut,
+            });
+    }
 
     saveModule() {
         const defer = this.$q.defer();

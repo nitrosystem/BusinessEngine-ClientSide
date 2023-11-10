@@ -1,6 +1,8 @@
 import angular from "angular";
 import "angular-filter/dist/angular-filter";
 import "angular-dragdrop/src/angular-dragdrop";
+import * as _ from 'lodash';
+
 import "./directives/chosen.directive";
 import "ng-file-upload/dist/ng-file-upload";
 
