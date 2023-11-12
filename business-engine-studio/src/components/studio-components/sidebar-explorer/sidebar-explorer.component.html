@@ -20,7 +20,7 @@
             </a>
         </div>
         <div class="search-box">
-            <input type="text" class="search-input" ng-model="$.searchComponent" placeholder="Search by title" />
+            <input type="text" class="search-input" ng-model="$.searchItem" placeholder="Search by title" />
         </div>
     </div>
     <div class="list-explorer b-scrollbar">
@@ -34,7 +34,7 @@
                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                     <i class="codicon codicon-combine"></i> Entities
                 </a>
-                <ul class="exp-sub-items collapse" id="expEntityItems" data-items="'entities','create-entity'" ng-class="{'show': $.isExpanded('entities','create-entity')}">
+                <ul class="exp-sub-items collapse" id="expEntityItems" data-items="'entities','create-entity'" ng-class="{'show':$.searchItem || $.isExpanded('entities','create-entity')}">
                     <li class="exp-item">
                         <a class="exp-label" ng-click="$.onItemClick($event,'entities')" ng-class="{'active':$.$rootScope.explorerCurrentItem=='entities'}">
                             <i class="codicon codicon-table"></i> Entities
@@ -52,7 +52,7 @@
                     <!------------------------------------>
                     <!--Entity noGroup Items-->
                     <!------------------------------------>
-                    <li class="exp-item" id="{{item.ItemID}}" ng-repeat="item in $.entities | filter:{GroupID:null}">
+                    <li class="exp-item" id="{{item.ItemID}}" ng-repeat="item in $.entities | filter:{GroupID:null} | fuzzyBy: 'Title': $.searchItem">
                         <a class="exp-label" ng-click="$.onItemClick($event,'create-entity',null,item.ItemID,item.Title)" ng-class="{'active':$.$rootScope.explorerCurrentItem==item.ItemID}" jqyoui-draggable="{animate:true,onDrag:'$.onDrag()',onStop:'$.onStopDrag($index)'}" jqyoui-options="{revert: 'invalid'}"
                             data-drag="true" data-item="{{item.ItemID}}" data-type="Entity">
                             <i class="codicon codicon-table"></i> {{item.Title}}
@@ -69,7 +69,7 @@
                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                     <i class="codicon codicon-references"></i> View Models
                 </a>
-                <ul class="exp-sub-items collapse" id="expViewModelItems" data-items="'view-models','create-view-model'" ng-class="{'show': $.isExpanded('view-models','create-view-model')}">
+                <ul class="exp-sub-items collapse" id="expViewModelItems" data-items="'view-models','create-view-model'" ng-class="{'show':$.searchItem || $.isExpanded('view-models','create-view-model')}">
                     <li class="exp-item">
                         <a class="exp-label" ng-click="$.onItemClick($event,'view-models')" ng-class="{'active':$.$rootScope.explorerCurrentItem=='view-models'}">
                             <i class="codicon codicon-table"></i> View Models
@@ -87,7 +87,7 @@
                     <!------------------------------------>
                     <!--View Model noGroup Items-->
                     <!------------------------------------>
-                    <li class="exp-item" id="{{item.ItemID}}" ng-repeat="item in $.viewModels | filter:{GroupID:null}">
+                    <li class="exp-item" id="{{item.ItemID}}" ng-repeat="item in $.viewModels | fuzzyBy: 'Title': $.searchItem | filter:{GroupID:null}">
                         <a class="exp-label" ng-click="$.onItemClick($event,'create-view-model',null,item.ItemID,item.Title)" ng-class="{'active':$.$rootScope.explorerCurrentItem==item.ItemID}" jqyoui-draggable="{animate:true,onDrag:'$.onDrag()',onStop:'$.onStopDrag($index)'}"
                             jqyoui-options="{revert: 'invalid'}" data-drag="true" data-item="{{item.ItemID}}" data-type="ViewModel">
                             <i class="codicon codicon-output"></i> {{item.Title}}
@@ -99,12 +99,12 @@
             <!--Services-->
             <!------------------------------------>
             <li class="exp-item exp-has-childs exp-services">
-                <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expServiceItems" ng-class="{'collapsed':!$.isExpanded('services','create-service')}" data-drop="true" jqyoui-droppable="{onOver:'$.onItemDragOver()',onOut:'$.onItemDragOut()',onDrop:'$.onItemDrop(null)'}"
+                <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expServiceItems" ng-class="{'collapsed':!$.searchItem && !$.isExpanded('services','create-service')}" data-drop="true" jqyoui-droppable="{onOver:'$.onItemDragOver()',onOut:'$.onItemDragOut()',onDrop:'$.onItemDrop(null)'}"
                     data-type="Service">
                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                     <i class="codicon codicon-versions"></i> Services
                 </a>
-                <ul class="exp-sub-items collapse" id="expServiceItems" data-items="'services','create-service'" ng-class="{'show':$.isExpanded('services','create-service')}">
+                <ul class="exp-sub-items collapse" id="expServiceItems" data-items="'services','create-service'" ng-class="{'show':$.searchItem || $.isExpanded('services','create-service')}">
                     <li class="exp-item">
                         <a class="exp-label" ng-click="$.onItemClick($event,'services')" ng-class="{'active':$.$rootScope.explorerCurrentItem=='services'}">
                             <i class="codicon codicon-versions"></i> Services
@@ -122,7 +122,7 @@
                     <!------------------------------------>
                     <!--Service noGroup Items-->
                     <!------------------------------------>
-                    <li class="exp-item" id="{{item.ItemID}}" ng-repeat="item in $.services | filter:{GroupID:null}">
+                    <li class="exp-item" id="{{item.ItemID}}" ng-repeat="item in $.services | fuzzyBy: 'Title': $.searchItem | filter:{GroupID:null}">
                         <a class="exp-label" ng-click="$.onItemClick($event,'create-service',null,item.ItemID,item.Title)" ng-class="{'active':$.$rootScope.explorerCurrentItem==item.ItemID}" jqyoui-draggable="{animate:true,onDrag:'$.onDrag()',onStop:'$.onStopDrag($index)'}"
                             jqyoui-options="{revert: 'invalid'}" data-drag="true" data-item="{{item.ItemID}}" data-type="Service">
                             <i class="codicon codicon-ruby"></i> {{item.Title}}
@@ -139,12 +139,12 @@
                     <i class="codicon codicon-layout-sidebar-left"></i> Dashboards
                 </a>
                 <ul class="exp-sub-items collapse" id="expDashboardItems" ng-class="{'show': $.isExpanded('dashboards')}">
-                    <li class="exp-item" ng-repeat="item in $.dashboards">
+                    <li class="exp-item" ng-repeat="item in $.dashboards | fuzzyBy: 'Title': $.searchItem">
                         <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expDashboardItem{{$index}}" ng-class="{'collapsed':!$.isExpanded(item.ItemID)}">
                             <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                             <i class="codicon codicon-window"></i> {{item.Title}}
                         </a>
-                        <ul class="exp-sub-items collapse" id="expDashboardItem{{$index}}" ng-class="{'show': $.isExpanded(item.ItemID)}">
+                        <ul class="exp-sub-items collapse" id="expDashboardItem{{$index}}" ng-class="{'show':$.searchItem || $.isExpanded(item.ItemID)}">
                             <li class="exp-item" id="d-{{item.ItemID}}">
                                 <a class="exp-label" ng-click="$.onItemClick($event,'create-dashboard',null,item.ItemID,item.Title)" ng-class="{'active':$.$rootScope.explorerCurrentItem=='d-'+item.ItemID}">
                                     <i class="codicon codicon-layout-menubar"></i> Dashboard Settings
@@ -163,7 +163,7 @@
                                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                                     <i class="codicon codicon-copy"></i> Pages
                                 </a>
-                                <ul class="exp-sum-items collapse" id="expDashboardPages{{item.ItemID}}" ng-class="{'show': $.isExpanded('pages-'+item.ItemID)}">
+                                <ul class="exp-sum-items collapse" id="expDashboardPages{{item.ItemID}}" ng-class="{'show':$.searchItem || $.isExpanded('pages-'+item.ItemID)}">
                                     <li class="exp-item" id="pages-{{item.ItemID}}">
                                         <a class="exp-label" ng-click="$.onItemClick($event,'dashboard-pages',item.ParentID  ,null,item.Title + ' Pages')" ng-class="{'active':$.$rootScope.explorerCurrentItem=='pages-'+item.ItemID}">
                                             <i class="codicon codicon-copy"></i> Pages
@@ -174,7 +174,7 @@
                                             <i class="codicon codicon-new-file"></i> New Page
                                         </a>
                                     </li>
-                                    <li class="exp-item" ng-repeat="page in item.Pages" ng-include="'sidebarExplorerDashboardPages.html'"></li>
+                                    <li class="exp-item" ng-repeat="page in item.Pages | fuzzyBy: 'Title': $.searchItem" ng-include="'sidebarExplorerDashboardPages.html'"></li>
                                 </ul>
                             </li>
                         </ul>
@@ -189,8 +189,8 @@
                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                     <i class="codicon codicon-multiple-windows"></i> Form Modules
                 </a>
-                <ul class="exp-sub-items collapse" id="expFormModuleItems" ng-class="{'show':$.isExpanded('form-modules')}">
-                    <li class="exp-item" ng-repeat="item in $.formModules">
+                <ul class="exp-sub-items collapse" id="expFormModuleItems" ng-class="{'show':$.searchItem || $.isExpanded('form-modules')}">
+                    <li class="exp-item" ng-repeat="item in $.formModules | fuzzyBy: 'Title': $.searchItem">
                         <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expFormModuleItem{{$index}}">
                             <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                             <i class="codicon codicon-window"></i> {{item.Title}}
@@ -218,8 +218,8 @@
                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                     <i class="codicon codicon-multiple-windows"></i> List Modules
                 </a>
-                <ul class="exp-sub-items collapse" id="expListModuleItems" ng-class="{'show':$.isExpanded('list-modules')}">
-                    <li class="exp-item" ng-repeat="item in $.listModules">
+                <ul class="exp-sub-items collapse" id="expListModuleItems" ng-class="{'show':$.searchItem || $.isExpanded('list-modules')}">
+                    <li class="exp-item" ng-repeat="item in $.listModules | fuzzyBy: 'Title': $.searchItem">
                         <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expListModuleItem{{$index}}">
                             <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                             <i class="codicon codicon-window"></i> {{item.Title}}
@@ -247,8 +247,8 @@
                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                     <i class="codicon codicon-multiple-windows"></i> Details Modules
                 </a>
-                <ul class="exp-sub-items collapse" id="expDetailsModuleItems" ng-class="{'show':$.isExpanded('details-modules')}">
-                    <li class="exp-item" ng-repeat="item in $.detailsModules">
+                <ul class="exp-sub-items collapse" id="expDetailsModuleItems" ng-class="{'show':$.searchItem || $.isExpanded('details-modules')}">
+                    <li class="exp-item" ng-repeat="item in $.detailsModules | fuzzyBy: 'Title': $.searchItem">
                         <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expDetailsModuleItem{{$index}}">
                             <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                             <i class="codicon codicon-window"></i> {{item.Title}}
@@ -276,8 +276,8 @@
                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                     <i class="codicon codicon-multiple-windows"></i> Providers
                 </a>
-                <ul class="exp-sub-items collapse" id="expProviderItems" ng-class="{'show':$.isExpanded('providers')}">
-                    <li class="exp-item" ng-repeat="item in $.providers">
+                <ul class="exp-sub-items collapse" id="expProviderItems" ng-class="{'show':$.searchItem || $.isExpanded('providers')}">
+                    <li class="exp-item" ng-repeat="item in $.providers | fuzzyBy: 'Title': $.searchItem">
                         <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expProviderItem{{$index}}">
                             <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
                             <i class="codicon codicon-window"></i> {{item.Title}}
@@ -382,7 +382,7 @@
         <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
         <i class="codicon codicon-copy"></i> {{page.Title}}
     </a>
-    <ul class="exp-sum-items collapse" id="expDashboardPages{{page.ItemID}}" ng-class="{'show': $.isExpanded(page.ItemID)}">
+    <ul class="exp-sum-items collapse" id="expDashboardPages{{page.ItemID}}" ng-class="{'show':$.searchItem || $.isExpanded(page.ItemID)}">
         <li class="exp-item" id="{{page.ItemID}}">
             <a class="exp-label" ng-click="$.onItemClick($event,'create-dashboard-page',item.ItemID,page.ItemID,page.Title)" ng-class="{'active':$.$rootScope.explorerCurrentItem==page.ItemID}">
                 <i class="codicon codicon-new-file"></i> Page Settings
@@ -393,7 +393,7 @@
                 <i class="codicon codicon-new-file"></i> Module Builder
             </a>
         </li>
-        <li class="exp-item" ng-repeat="page in page.Pages" ng-include="'sidebarExplorerDashboardPages.html'"></li>
+        <li class="exp-item" ng-repeat="page in page.Pages | fuzzyBy: 'Title': $.searchItem" ng-include="'sidebarExplorerDashboardPages.html'"></li>
     </ul>
 </script>
 
@@ -414,8 +414,8 @@
         <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
         <i class="codicon codicon-folder"></i> {{group.GroupName}}
     </a>
-    <ul class="exp-sub-items collapse" id="expGroupItems_{{group.GroupID}}" ng-class="{'show': $.isExpandedGroup(group)}">
-        <li class="exp-item" id="{{item.ItemID}}" ng-repeat="item in group.Items | orderBy:'Title'" ng-if="item.GroupID">
+    <ul class="exp-sub-items collapse" id="expGroupItems_{{group.GroupID}}" ng-class="{'show':$.searchItem || $.isExpandedGroup(group)}">
+        <li class="exp-item" id="{{item.ItemID}}" ng-repeat="item in group.Items | fuzzyBy: 'Title': $.searchItem | orderBy:'Title'" ng-if="item.GroupID">
             <a class="exp-label" ng-click="$.onItemClick($event,group.ObjectType,null,item.ItemID,item.Title)" ng-class="{'active':$.$rootScope.explorerCurrentItem==item.ItemID}" jqyoui-draggable="{animate:true,onDrag:'$.onDrag()',onStop:'$.onStopDrag($index)'}"
                 jqyoui-options="{revert: 'invalid'}" data-drag="true" data-item="{{item.ItemID}}" data-type="{{group.ObjectType}}">
                 <i class="codicon codicon-table"></i> {{item.Title}}
