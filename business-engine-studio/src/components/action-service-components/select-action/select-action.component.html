@@ -7,8 +7,8 @@
         <div class="header-tools me-3 col-4">
             <div class="col-10 me-2">
                 <div class="b-input-group">
-                    <select ng-model="$.model.ActionID" class="b-input form-select b-btn btn-action text-start" ng-options="action.ActionID as action.ActionName for action in $.actions | filter:{ActionSubtype:$.actionType}" ng-change="$.onActionChange()" chosen placeholder-text-single="'Select action'"
-                        required>
+                    <select ng-model="$.model.ActionID" class="b-input form-select b-btn btn-action text-start" ng-options="action.ActionID as action.ActionName for action in $.actions | filter:{ActionSubtype:$.actionType}" ng-change="$.onActionChange()" chosen inherit-select-classes="true"
+                        placeholder-text-single="'Select action'" required>
                         <option disabled></option>
                     </select>
                     <span><i class="codicon codicon-ruby"></i></span>

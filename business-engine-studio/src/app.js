@@ -3,7 +3,8 @@ import "angular-filter/dist/angular-filter";
 import "angular-dragdrop/src/angular-dragdrop";
 import * as _ from 'lodash';
 
-import "./directives/chosen.directive";
+import "chosen-js/chosen.jquery";
+import "angular-chosen-localytics/dist/angular-chosen";
 import "ng-file-upload/dist/ng-file-upload";
 
 //Configs
@@ -28,7 +29,6 @@ import {
     CustomModalDirective,
     CustomFocusDirective,
     CustomSidebarDirective,
-    CustomSelectDirective,
     EsckeyDirective,
 } from "./directives/custom.directive";
 import { MonacoEditor } from "./directives/monaco-editor.directive";
@@ -97,7 +97,6 @@ const app = angular
     .directive("bCustomModal", CustomModalDirective)
     .directive("bCustomFocus", CustomFocusDirective)
     .directive("bCustomSidebar", CustomSidebarDirective)
-    .directive("bCustomSelect", CustomSelectDirective)
     .directive("bEscKey", EsckeyDirective)
     .directive("monacoEditor", MonacoEditor)
     .component("bSidebarExplorer", SidebarExplorerComponent)

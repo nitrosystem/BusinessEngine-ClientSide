@@ -60,8 +60,8 @@
                         <div class="b-field">
                             <label class="form-label">Scenario</label>
                             <div class="b-input-group">
-                                <select id="drpScenarioID{{$.service.ServiceID}}" ng-model="$.service.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen placeholder-text-single="'Select service scenario'"
-                                    required>
+                                <select id="drpScenarioID{{$.service.ServiceID}}" ng-model="$.service.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen inherit-select-classes="true"
+                                    placeholder-text-single="'Select service scenario'" required>
                                 </select>
                                 <span><i class="codicon codicon-activate-breakpoints"></i></span>
                             </div>
@@ -76,7 +76,7 @@
                         <div class="b-field">
                             <label class="form-label">Authorization Run Service</label>
                             <div class="b-input-group">
-                                <select ng-model="$.service.AuthorizationRunService" class="b-input form-select" ng-options="role for role in $.roles" chosen multiple placeholder-text-multiple="'Authorization run service'"></select>
+                                <select ng-model="$.service.AuthorizationRunService" class="b-input form-select" ng-options="role for role in $.roles" chosen inherit-select-classes="true" multiple placeholder-text-multiple="'Authorization run service'"></select>
                                 <span><i class="codicon codicon-bookmark"></i></span>
                             </div>
                         </div>

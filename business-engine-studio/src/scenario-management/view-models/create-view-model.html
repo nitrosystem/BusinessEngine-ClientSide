@@ -11,8 +11,8 @@
                 <div class="b-field">
                     <label class="form-label">Scenario</label>
                     <div class="b-input-group">
-                        <select id="drpScenarioID" ng-model="$.viewModel.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-change="onScenarioChange()" ng-disabled="$.running" chosen placeholder-text-single="'Select viewModel scenario'"
-                            required>
+                        <select id="drpScenarioID" ng-model="$.viewModel.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-change="onScenarioChange()" ng-disabled="$.running" chosen inherit-select-classes="true"
+                            placeholder-text-single="'Select viewModel scenario'" required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
                     </div>
@@ -20,7 +20,7 @@
                 <div class="b-field" ng-if="!$.viewModel.ViewModelID && $.databases.length">
                     <label class="form-label">Database</label>
                     <div class="b-input-group">
-                        <select ng-model="$.viewModel.DatabaseID" class="b-input form-select" ng-options="db.DatabaseID as db.Title for db in $.databases" ng-change="onDatabaseChange()" chosen placeholder-text-single="'Select a database'">
+                        <select ng-model="$.viewModel.DatabaseID" class="b-input form-select" ng-options="db.DatabaseID as db.Title for db in $.databases" ng-change="onDatabaseChange()" chosen inherit-select-classes="true" placeholder-text-single="'Select a database'">
                             <option value="">Current Database(DNN)</option>
                         </select>
                         <span><i class="codicon codicon-database"></i></span>
@@ -130,10 +130,10 @@
                             <p class="b-invalid">{{$.propertyForm.error.PropertyName}}</p>
                         </div>
                         <div class="col-4 me-2">
-                            <select id="drpPropertyType" ng-model="$.property.PropertyType" class="b-input form-select" ng-options="type.Value as type.Text for type in $.propertyTypes" chosen placeholder-text-single="'Select property type'" required>
+                            <select id="drpPropertyType" ng-model="$.property.PropertyType" class="b-input form-select" ng-options="type.Value as type.Text for type in $.propertyTypes" chosen inherit-select-classes="true" placeholder-text-single="'Select property type'" required>
                             </select>
                             <select ng-if="$.property.PropertyType=='viewModel' || $.property.PropertyType=='listOfViewModel'" id="drpPropertyTypeID" ng-model="$.property.PropertyTypeID" class="b-input form-select" ng-options="vm.ViewModelID as vm.ViewModelName for vm in $.viewModels"
-                                chosen placeholder-text-single="'Select view model'">
+                                chosen inherit-select-classes="true" placeholder-text-single="'Select view model'">
                             </select>
                             <p class="b-invalid">{{$.propertyForm.error.PropertyType}}</p>
                             <p class="b-invalid">{{$.propertyForm.error.PropertyTypeID}}</p>

@@ -5,7 +5,7 @@
                 <div class="b-field">
                     <label class="form-label">Scenario</label>
                     <div class="b-input-group">
-                        <select id="drpScenarioID" ng-model="$.detailsModule.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen placeholder-text-single="'Select details scenario'"
+                        <select id="drpScenarioID" ng-model="$.detailsModule.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select details scenario'"
                             required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
@@ -30,7 +30,7 @@
                 <div class="b-field">
                     <label class="form-label">Module Builder Type</label>
                     <div class="b-input-group">
-                        <select id="drpScenarioID" ng-model="$.detailsModule.ModuleBuilderType" class="b-input form-select" ng-disabled="$.running" chosen placeholder-text-single="'Select module builder type'" required>
+                        <select id="drpScenarioID" ng-model="$.detailsModule.ModuleBuilderType" class="b-input form-select" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select module builder type'" required>
                         <option value="FormDesigner">Form Designer</option>
                         <option value="HtmlEditor">Html Editor</option>
                         </select>

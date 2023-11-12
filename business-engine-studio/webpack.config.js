@@ -15,21 +15,21 @@ module.exports = (env) => {
             path: path.resolve(__dirname, "dist"),
             clean: true,
         },
-        // optimization: {
-        //   minimizer: [
-        //     new TerserPlugin({
-        //       parallel: true,
-        //       terserOptions: {
-        //         mangle: false,
-        //         keep_fnames: true,
-        //         keep_classnames: true,
-        //       },
-        //     }),
-        //   ],
-        // },
         optimization: {
-            minimize: false,
+            minimizer: [
+                new TerserPlugin({
+                    parallel: true,
+                    terserOptions: {
+                        mangle: false,
+                        keep_fnames: true,
+                        keep_classnames: true,
+                    },
+                }),
+            ],
         },
+        // optimization: {
+        //     minimize: false,
+        // },
         plugins: [
             new MiniCssExtractPlugin(),
             new webpack.ProvidePlugin({
@@ -75,7 +75,8 @@ module.exports = (env) => {
         },
         externals: {
             jquery: "jQuery",
-            jqueryui: "jquery-ui"
+            jqueryui: "jquery-ui",
+            bootstrap: 'bootstrap'
         },
     };
 };

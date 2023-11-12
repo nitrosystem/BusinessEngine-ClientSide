@@ -66,7 +66,7 @@
                 <div class="b-field" ng-if="!$.page.InheritPermissionFromDashboard">
                     <label class="form-label">Authorization View Page</label>
                     <div class="b-input-group">
-                        <select ng-model="$.page.AuthorizationViewPage" class="b-input form-select" ng-options="role for role in $.roles" chosen multiple placeholder-text-multiple="'Authorization view page roles'" required>
+                        <select ng-model="$.page.AuthorizationViewPage" class="b-input form-select" ng-options="role for role in $.roles" chosen inherit-select-classes="true" multiple placeholder-text-multiple="'Authorization view page roles'" required>
                             <option disabled></option>
                         </select>
                         <span><i class="codicon codicon-shield-lock"></i></span>
@@ -106,7 +106,7 @@
                     <div class="b-field">
                         <label class="form-label">Module Type</label>
                         <div class="b-input-group">
-                            <select id="drpModuleType" ng-model="$.page.Module.ModuleType" class="b-input form-select" chosen required>
+                            <select id="drpModuleType" ng-model="$.page.Module.ModuleType" class="b-input form-select" chosen inherit-select-classes="true" required>
                                 <option value="" disabled>Select module type</option>
                                 <option value="Form">Form</option>
                                 <option value="List">List</option>
@@ -117,7 +117,7 @@
                     <div class="b-field">
                         <label class="form-label">Module Builder Type</label>
                         <div class="b-input-group">
-                            <select id="drpScenarioID" ng-model="$.page.Module.ModuleBuilderType" class="b-input form-select" ng-disabled="$.running" chosen placeholder-text-single="'Select module builder type'" required>
+                            <select id="drpScenarioID" ng-model="$.page.Module.ModuleBuilderType" class="b-input form-select" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select module builder type'" required>
                             <option value="FormDesigner">Form Designer</option>
                             <option value="HtmlEditor">Html Editor</option>
                             </select>

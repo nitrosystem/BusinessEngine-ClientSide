@@ -136,7 +136,8 @@
                     <div class="b-field">
                         <label class="form-label">Scenario</label>
                         <div class="b-input-group">
-                            <select ng-model="$.scenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen placeholder-text-single="'Select scenario'" required>
+                            <select ng-model="$.scenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select scenario'"
+                                required>
                             </select>
                             <span><i class="codicon codicon-activate-breakpoints"></i></span>
                         </div>

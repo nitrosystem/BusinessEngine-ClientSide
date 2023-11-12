@@ -64,8 +64,8 @@
                                             <div class="card-body text-center">
                                                 <i ng-if="!actionType.IconType" class="fs-1 {{actionType.Icon}} text-muted mb-4 d-block"></i>
                                                 <img ng-if="actionType.IconType" class="action-image" ng-src="{{actionType.Icon}}" />
-                                                <h5 class="service-title">{{actionType.Title}}</h5>
-                                                <p class="service-summary">{{actionType.Description}}</p>
+                                                <h5 class="action-title">{{actionType.Title}}</h5>
+                                                <p class="action-summary">{{actionType.Description}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -117,7 +117,8 @@
                         <div class="b-field">
                             <label class="form-label">Event</label>
                             <div class="b-input-group">
-                                <select id="drpEvent{{$.action.ActionID}}" ng-model="$.action.Event" class="b-input form-select" ng-options="event.Value as event.Text for event in $.events" ng-change="onEventChange()" chosen placeholder-text-single="'Select action event'" required>
+                                <select id="drpEvent{{$.action.ActionID}}" ng-model="$.action.Event" class="b-input form-select" ng-options="event.Value as event.Text for event in $.events" ng-change="onEventChange()" chosen inherit-select-classes="true" placeholder-text-single="'Select action event'"
+                                    required>
                                     <option disabled></option>
                                 </select>
                                 <span><i class="codicon codicon-bookmark"></i></span>
@@ -127,7 +128,7 @@
                         <div class="b-field" ng-if="$.action.Event == 'OnActionCompleted'">
                             <label class="form-label">Action</label>
                             <div id="drpParentID{{$.action.ActionID}}" class="b-input-group">
-                                <select ng-model="$.action.ParentID" class="b-input form-select" ng-options="ac.ActionID as ac.ActionName for ac in $.actions" chosen placeholder-text-single="'Select an action'" required>
+                                <select ng-model="$.action.ParentID" class="b-input form-select" ng-options="ac.ActionID as ac.ActionName for ac in $.actions" chosen inherit-select-classes="true" placeholder-text-single="'Select an action'" required>
                                     <option disabled></option>
                                 </select>
                                 <span><i class="codicon codicon-clippy"></i></span>
@@ -137,7 +138,7 @@
                         <div class="b-field" ng-if="$.action.Event == 'OnActionCompleted'">
                             <label class="form-label">Result Mode</label>
                             <div class="b-input-group">
-                                <select id="drpParentResultStatus{{$.action.ActionID}}" ng-model="$.action.ParentResultStatus" class="b-input form-select" chosen placeholder-text-single="'Select action result mode'" required>
+                                <select id="drpParentResultStatus{{$.action.ActionID}}" ng-model="$.action.ParentResultStatus" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Select action result mode'" required>
                                     <option disabled></option>
                                     <option ng-value="0">All Mode</option>
                                     <option ng-value="1">On Completed Success</option>
@@ -150,7 +151,7 @@
                         <div class="b-field" ng-if="$.action.Event == 'OnPaymentCompleted'">
                             <label class="form-label">Payment Method Name</label>
                             <div class="b-input-group">
-                                <select id="drpPaymentMethodID{{$.action.ActionID}}" ng-model="$.action.PaymentMethodID" class="b-input form-select" ng-options="payment.PaymentMethodID as payment.PaymentName for payment in $.paymentMethods" chosen placeholder-text-single="'Select payment method'"
+                                <select id="drpPaymentMethodID{{$.action.ActionID}}" ng-model="$.action.PaymentMethodID" class="b-input form-select" ng-options="payment.PaymentMethodID as payment.PaymentName for payment in $.paymentMethods" chosen inherit-select-classes="true" placeholder-text-single="'Select payment method'"
                                     required>
                                     <option disabled></option>
                                 </select>
@@ -161,7 +162,7 @@
                         <div class="b-field" ng-if="$.action.Event == 'OnPaymentCompleted'">
                             <label class="form-label">Result Mode</label>
                             <div class="b-input-group">
-                                <select id="drpPaymentResultStatus{{$.action.ActionID}}" ng-model="$.action.PaymentResultStatus" class="b-input form-select" chosen placeholder-text-single="'Select payment result mode'" required>
+                                <select id="drpPaymentResultStatus{{$.action.ActionID}}" ng-model="$.action.PaymentResultStatus" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Select payment result mode'" required>
                                     <option disabled></option>
                                     <option ng-value="0">All Mode</option>
                                     <option ng-value="1">On Payment Success</option>

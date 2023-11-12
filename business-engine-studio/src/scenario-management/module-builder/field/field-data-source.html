@@ -92,7 +92,7 @@
                     <label class="form-label">Data Source Service</label>
                     <div class="b-input-group">
                         <select ng-model="$.currentField.Settings.DataSource.ServiceID" class="b-input form-select" ng-options="service.ServiceID as service.ServiceName for service in $.services | filter:{HasResult:true, ResultType:2}" ng-change="$.onFieldDataSourceServiceChange()"
-                            ng-disabled="waiting" chosen placeholder-text-single="'Select a service as data source'" required></select>
+                            ng-disabled="waiting" chosen inherit-select-classes="true" placeholder-text-single="'Select a service as data source'" required></select>
                         <span><i class="codicon codicon-gear"></i></span>
                     </div>
                 </div>

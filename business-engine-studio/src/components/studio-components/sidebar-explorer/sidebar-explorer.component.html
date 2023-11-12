@@ -336,7 +336,7 @@
                 <div class="b-field">
                     <label class="form-label">Group Type</label>
                     <div class="b-input-group">
-                        <select id="drpGroupType" ng-model="$.group.ObjectType" class="b-input form-select" ng-disabled="$.group.GroupID || $.running" chosen placeholder-text-single="'Select group type'" required>
+                        <select id="drpGroupType" ng-model="$.group.ObjectType" class="b-input form-select" ng-disabled="$.group.GroupID || $.running" chosen inherit-select-classes="true" placeholder-text-single="'Select group type'" required>
                             <option value="Entity">Entity</option>
                             <option value="ViewModel">View Model</option>
                             <option value="Service">Service</option>

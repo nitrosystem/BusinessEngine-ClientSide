@@ -19,7 +19,8 @@
             <div class="b-field">
                 <label class="form-label">Field Type</label>
                 <div class="b-input-group">
-                    <select ng-model="$.currentField.FieldType" class="b-input form-select" ng-options="fieldType.FieldType as fieldType.Title for fieldType in $.fieldTypes" ng-change="onChangeFieldType($event)" chosen placeholder-text-multiple="'Select field type'" required>
+                    <select ng-model="$.currentField.FieldType" class="b-input form-select" ng-options="fieldType.FieldType as fieldType.Title for fieldType in $.fieldTypes" ng-change="onChangeFieldType($event)" chosen inherit-select-classes="true" placeholder-text-multiple="'Select field type'"
+                        required>
                         <option disabled></option>
                     </select>
                     <span><i class="codicon codicon-gear"></i></span>
@@ -116,7 +117,7 @@
             </div>
             <div class="b-field">
                 <label class="form-label">Authorization View Field </label>
-                <select ng-model="$.currentField.AuthorizationViewField" class="b-input form-select" ng-options="role for role in $.roles" chosen multiple placeholder-text-multiple="'Authorization view field roles'" required>
+                <select ng-model="$.currentField.AuthorizationViewField" class="b-input form-select" ng-options="role for role in $.roles" chosen inherit-select-classes="true" multiple placeholder-text-multiple="'Authorization view field roles'" required>
                     <option disabled></option>
                 </select>
             </div>
@@ -181,7 +182,7 @@
         <div id="grpAppearanceSettings" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
             <div class="b-field">
                 <label class="form-label">Field Template</label>
-                <select id="drpTemplate" ng-model="$.currentField.Template" class="b-input form-select" ng-options="template.TemplateName as template.TemplateName for template in $.currentField.FieldTypeObject.Templates" chosen placeholder-text-single="'Select Template'"
+                <select id="drpTemplate" ng-model="$.currentField.Template" class="b-input form-select" ng-options="template.TemplateName as template.TemplateName for template in $.currentField.FieldTypeObject.Templates" chosen inherit-select-classes="true" placeholder-text-single="'Select Template'"
                     required>
                 </select>
             </div>

@@ -15,21 +15,21 @@ module.exports = (env) => {
             path: path.resolve(__dirname, "dist"),
             clean: true,
         },
-        // optimization: {
-        //   minimizer: [
-        //     new TerserPlugin({
-        //       parallel: true,
-        //       terserOptions: {
-        //         mangle: false,
-        //         keep_fnames: true,
-        //         keep_classnames: true,
-        //       },
-        //     }),
-        //   ],
-        // },
         optimization: {
-            minimize: false,
+            minimizer: [
+                new TerserPlugin({
+                    parallel: true,
+                    terserOptions: {
+                        mangle: false,
+                        keep_fnames: true,
+                        keep_classnames: true,
+                    },
+                }),
+            ],
         },
+        // optimization: {
+        //     minimize: false,
+        // },
         plugins: [
             new MiniCssExtractPlugin(),
             new webpack.ProvidePlugin({
@@ -74,10 +74,13 @@ module.exports = (env) => {
             },
         },
         externals: {
-            //bootstrap: "bootstrap",
+            bootstrap: "bootstrap",
             jquery: "jQuery",
-            // angular: "anular",
-            //lodash: "_",
+            lodash: "_",
+            angular: "anular",
+            angularfilter: "angular-filter",
+            angularsanitize: "angular-sanitize",
+            ngfileupload: "ng-file-upload"
         },
     };
 };

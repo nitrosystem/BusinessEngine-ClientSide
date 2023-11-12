@@ -11,8 +11,8 @@
                 <div class="b-field">
                     <label class="form-label">Scenario</label>
                     <div class="b-input-group">
-                        <select id="drpScenarioID" ng-model="$.entity.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-change="$.onScenarioChange()" ng-disabled="$.running" chosen placeholder-text-single="'Select entity scenario'"
-                            required>
+                        <select id="drpScenarioID" ng-model="$.entity.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-change="$.onScenarioChange()" ng-disabled="$.running" chosen inherit-select-classes="true"
+                            placeholder-text-single="'Select entity scenario'" required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
                     </div>
@@ -20,7 +20,7 @@
                 <div class="b-field" ng-if="!$.entity.EntityID && $.databases.length">
                     <label class="form-label">Database</label>
                     <div class="b-input-group">
-                        <select ng-model="$.entity.DatabaseID" class="b-input form-select" ng-options="db.DatabaseID as db.Title for db in $.databases" ng-change="$.onDatabaseChange()" chosen placeholder-text-single="'Select a database'">
+                        <select ng-model="$.entity.DatabaseID" class="b-input form-select" ng-options="db.DatabaseID as db.Title for db in $.databases" ng-change="$.onDatabaseChange()" chosen inherit-select-classes="true" placeholder-text-single="'Select a database'">
                             <option value="">Current Database(DNN)</option>
                         </select>
                         <span><i class="codicon codicon-database"></i></span>
@@ -94,7 +94,7 @@
                 <div class="b-field" ng-if="$.entity.IsReadonly && $.entity.EntityType=='table'">
                     <label class="form-label">Table</label>
                     <div class="b-input-group">
-                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select" ng-options="table for table in $.dataBaseObjects.Tables" ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen placeholder-text-single="'Select database table'"
+                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select" ng-options="table for table in $.dataBaseObjects.Tables" ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select database table'"
                             required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
@@ -103,7 +103,7 @@
                 <div class="b-field" ng-if="$.entity.IsReadonly && $.entity.EntityType=='view'">
                     <label class="form-label">Table</label>
                     <div class="b-input-group">
-                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select" ng-options="view for view in $.dataBaseObjects.Views" ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen placeholder-text-single="'Select database table'"
+                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select" ng-options="view for view in $.dataBaseObjects.Views" ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select database table'"
                             required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>

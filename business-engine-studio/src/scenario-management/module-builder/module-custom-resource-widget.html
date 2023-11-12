@@ -13,14 +13,14 @@
                 </div>
                 <div class="d-flex table-row" ng-repeat="resource in $.customResources" role="button" ng-style="{'order':($index+1)}">
                     <div class="col-2 my-auto">
-                        <select ng-model="resource.ResourceType" class="b-input form-select" chosen placeholder-text-single="'Select resource type'" required>
+                        <select ng-model="resource.ResourceType" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Select resource type'" required>
                             <option disabled></option>
                             <option value="css">Css</option>
                             <option value="js">Js</option>
                         </select>
                     </div>
                     <div class="col-2 my-auto">
-                        <select ng-model="resource.UrlType" class="b-input form-select" chosen placeholder-text-single="'Select url address type'" required>
+                        <select ng-model="resource.UrlType" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Select url address type'" required>
                             <option disabled></option>
                             <option value="internal">Internal</option>
                             <option value="global">Global(External)</option>

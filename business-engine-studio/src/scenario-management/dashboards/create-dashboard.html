@@ -8,7 +8,7 @@
                 <div class="b-field">
                     <label class="form-label">Scenario</label>
                     <div class="b-input-group">
-                        <select id="drpScenarioID" ng-model="$.dashboard.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen placeholder-text-single="'Select dashboard scenario'"
+                        <select id="drpScenarioID" ng-model="$.dashboard.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select dashboard scenario'"
                             required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
@@ -31,7 +31,7 @@
                 <div class="b-field">
                     <label class="form-label">Authorization View Dashboard</label>
                     <div class="b-input-group">
-                        <select ng-model="$.dashboard.AuthorizationViewDashboard" class="b-input form-select" ng-options="role for role in $.roles" chosen multiple placeholder-text-multiple="'Authorization run dashboard'"></select>
+                        <select ng-model="$.dashboard.AuthorizationViewDashboard" class="b-input form-select" ng-options="role for role in $.roles" chosen inherit-select-classes="true" multiple placeholder-text-multiple="'Authorization run dashboard'"></select>
                         <span><i class="codicon codicon-bookmark"></i></span>
                     </div>
                 </div>
