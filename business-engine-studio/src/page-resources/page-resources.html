@@ -1,0 +1,318 @@
+<div ng-controller="pageResourcesController as $" class="page-resources">
+    <!------------------------------------>
+    <!--Sidebar-->
+    <!------------------------------------>
+    <div class="mb-sidebar" b-custom-sidebar="page-resources">
+        <!------------------------------------>
+        <!--Page List-->
+        <!------------------------------------>
+        <div class="b-page-resources b-scrollbar">
+            <div class="search-box">
+                <input type="text" class="search-input" ng-model="$.searchItem" placeholder="Search by page name" />
+            </div>
+            <ul class="exp-items">
+                <li class="exp-item">
+                    <a class="exp-label">
+                        <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
+                        <i class="codicon codicon-combine"></i> Scenario Pages
+                    </a>
+                    <ul class="exp-sub-items">
+                        <li class="exp-item" ng-repeat="page in $.pages | fuzzyBy: 'TabName': $.searchItem">
+                            <a class="exp-label" ng-click="$.onPageItemClick(page)" ng-class="{'active':page.TabID==$.page.TabID}">
+                                <i class="codicon codicon-browser"></i> {{page.TabName}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <b-content-widget data-title="Page {{$.page.TabName}} Resources" data-icon="multiple-windows" data-module-type="page-resources" data-subtitle="the Dnn page libraries & resources" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad"
+        data-close-method="onCloseWindow">
+        <!------------------------------------>
+        <!--Modules in page-->
+        <!------------------------------------>
+        <div class="b-group" ng-repeat="module in $.page.Resources">
+            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModules{{$index}}">
+                <h3 class="group-label">
+                    <span class="group-icon">
+                        <i class="codicon codicon-server-process"></i>
+                    </span> Module {{module[0].ModuleName}} - Version {{module[0].Version}}
+                </h3>
+                <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
+            </div>
+            <div id="grpModules{{$index}}" class="group-content collapse show">
+                <!------------------------------------>
+                <!--Module Base Resources (angular&lodash&...)-->
+                <!------------------------------------>
+                <div class="b-group group-sm theme-red">
+                    <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpBaseLibraries">
+                        <h3 class="group-label">
+                            <span class="group-icon">
+                                <i class="codicon codicon-server-process"></i>
+                            </span>Base Libraries & Resource
+                        </h3>
+                        <span class="group-collapse">
+                            <i class="codicon codicon-chevron-up"></i>
+                        </span>
+                    </div>
+                    <div id="grpBaseLibraries" class="group-content collapse show">
+                        <div class="b-table theme-gray">
+                            <div class="table-body pt-3">
+                                <div class="d-flex columns-name">
+                                    <div class="col-1 my-auto">Load</div>
+                                    <div class="col-1 my-auto">Logo</div>
+                                    <div class="col-3 my-auto">Library</div>
+                                    <div class="col-1 my-auto">Version</div>
+                                    <div class="col-1 my-auto">Type</div>
+                                    <div class="col-4 my-auto">File Path</div>
+                                    <div class="col-1 my-auto">
+                                        <i class="codicon codicon-ellipsis"></i>
+                                    </div>
+                                </div>
+                                <div class="d-flex table-row" ng-repeat="item in module  | filter:{IsBaseResource:true} | orderBy:'LoadOrder'" role="button">
+                                    <div class="col-1 my-auto text-light">
+                                        <label class="b-switch switch-sm" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Important Note" data-bs-html="true" data-bs-content="If this library is loaded with the specified version by another module on this page, it is better to disable the loading of the library.">
+                                            <input type="checkbox" ng-model="item.IsActive" ng-change="$.setResourceStatus(item.ResourceID,item.IsActive)">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        <img ng-src="{{item.LibraryLogo}}" style="width: 32px;;" />
+                                    </div>
+                                    <div class="col-3 my-auto text-light">
+                                        {{item.LibraryName}}
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        {{item.LibraryVersion}}
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        {{item.ResourceType}}
+                                    </div>
+                                    <div class="col-4 my-auto fs08-rem p-1">
+                                        {{item.FilePath}}
+                                    </div>
+                                    <div class=" col-1">
+                                        <div class="b-multi-btns">
+                                            <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                                <i class="codicon codicon-output"></i>
+                                            </button>
+                                            <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                                <i class="codicon codicon-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Module Builded Content (Field & More...)-->
+                <!------------------------------------>
+                <div class="b-group group-sm theme-red">
+                    <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModuleSystemResources">
+                        <h3 class="group-label">
+                            <span class="group-icon">
+                                <i class="codicon codicon-server-process"></i>
+                            </span>Module System Resources
+                        </h3>
+                        <span class="group-collapse">
+                            <i class="codicon codicon-chevron-up"></i>
+                        </span>
+                    </div>
+                    <div id="grpModuleSystemResources" class="group-content collapse show">
+                        <div class="b-notify notify-warning mb-4">
+                            <i class="codicon codicon-info b-icon-2"></i>
+                            <div class="text">
+                                <h4 class="label">Module Builded Content.</h4>
+                                <p>the output of module include many fields and styles and scripts that module builder in studio make them.</p>
+                            </div>
+                        </div>
+                        <div class="b-table theme-gray">
+                            <div class="table-body pt-3">
+                                <div class="d-flex columns-name">
+                                    <div class="col-1 my-auto">Type</div>
+                                    <div class="col-7 my-auto">File Path</div>
+                                    <div class="col-2 my-auto">Load Order</div>
+                                    <div class="col-1 my-auto">
+                                        <i class="codicon codicon-ellipsis"></i>
+                                    </div>
+                                </div>
+                                <div class="d-flex table-row" ng-repeat="item in module | filter:{IsSystemResource:true} | orderBy:'LoadOrder'" role="button">
+                                    <div class="col-1 my-auto text-light">
+                                        {{item.ResourceType}}
+                                    </div>
+                                    <div class="col-7 my-auto fs08-rem p-1">
+                                        {{item.FilePath}}
+                                    </div>
+                                    <div class="col-2 my-auto">
+                                        {{item.LoadOrder}}
+                                    </div>
+                                    <div class=" col-1">
+                                        <div class="b-multi-btns">
+                                            <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                                <i class="codicon codicon-output"></i>
+                                            </button>
+                                            <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                                <i class="codicon codicon-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Field Type Used Libraries-->
+                <!------------------------------------>
+                <div class="b-group group-sm theme-red">
+                    <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldTypeLibraries">
+                        <h3 class="group-label">
+                            <span class="group-icon">
+                                <i class="codicon codicon-server-process"></i>
+                            </span>Field Types Use of Libraries & Resource
+                        </h3>
+                        <span class="group-collapse">
+                            <i class="codicon codicon-chevron-up"></i>
+                        </span>
+                    </div>
+                    <div id="grpFieldTypeLibraries" class="group-content collapse show">
+                        <div class="b-table theme-gray">
+                            <div class="table-body pt-3">
+                                <div class="d-flex columns-name">
+                                    <div class="col-1 my-auto">Load</div>
+                                    <div class="col-1 my-auto">Logo</div>
+                                    <div class="col-3 my-auto">Field & Library</div>
+                                    <div class="col-1 my-auto">Version</div>
+                                    <div class="col-1 my-auto">Type</div>
+                                    <div class="col-4 my-auto">File Path</div>
+                                    <div class="col-1 my-auto">
+                                        <i class="codicon codicon-ellipsis"></i>
+                                    </div>
+                                </div>
+                                <div class="d-flex table-row" ng-repeat="item in module  | orderBy:'LoadOrder'" ng-if="item.FieldType" role="button">
+                                    <div class="col-1 my-auto text-light">
+                                        <label class="b-switch switch-sm" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Important Note" data-bs-html="true" data-bs-content="If this library is loaded with the specified version by another module on this page, it is better to disable the loading of the library.">
+                                            <input type="checkbox" ng-model="item.IsActive">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        <img ng-src="{{item.LibraryLogo}}" style="width: 32px;;" />
+                                    </div>
+                                    <div class="col-3 my-auto text-light">
+                                        {{item.LibraryName}}
+                                        <br> {{item.FieldType}}
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        {{item.LibraryVersion}}
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        {{item.ResourceType}}
+                                    </div>
+                                    <div class="col-4 my-auto fs08-rem p-1">
+                                        {{item.FilePath}}
+                                    </div>
+                                    <div class=" col-1">
+                                        <div class="b-multi-btns">
+                                            <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                                <i class="codicon codicon-output"></i>
+                                            </button>
+                                            <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                                <i class="codicon codicon-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!------------------------------------>
+                <!--Custom Libraries & Resource -->
+                <!------------------------------------>
+                <div class="b-group group-sm theme-red">
+                    <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpCustomResources">
+                        <h3 class="group-label">
+                            <span class="group-icon">
+                                <i class="codicon codicon-server-process"></i>
+                            </span>Module Custom Resources
+                        </h3>
+                        <span class="group-collapse">
+                            <i class="codicon codicon-chevron-up"></i>
+                        </span>
+                    </div>
+                    <div id="grpCustomResources" class="group-content collapse show">
+                        <div class="b-table theme-gray">
+                            <div class="table-body pt-3 mb-2">
+                                <div class="d-flex columns-name">
+                                    <div class="col-1 my-auto">Load</div>
+                                    <div class="col-1 my-auto">Logo</div>
+                                    <div class="col-3 my-auto">Field & Library</div>
+                                    <div class="col-1 my-auto">Version</div>
+                                    <div class="col-1 my-auto">Type</div>
+                                    <div class="col-4 my-auto">File Path</div>
+                                    <div class="col-1 my-auto">
+                                        <i class="codicon codicon-ellipsis"></i>
+                                    </div>
+                                </div>
+                                <div class="d-flex table-row" ng-repeat="item in module | filter:{IsCustomResource:true} | orderBy:'LoadOrder'" role="button">
+                                    <div class="col-1 my-auto text-light">
+                                        <label class="b-switch switch-sm" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Important Note" data-bs-html="true" data-bs-content="If this library is loaded with the specified version by another module on this page, it is better to disable the loading of the library.">
+                                            <input type="checkbox" ng-model="item.IsActive">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        <img ng-src="{{item.LibraryLogo}}" style="width: 32px;;" />
+                                    </div>
+                                    <div class="col-3 my-auto text-light">
+                                        {{item.LibraryName}}
+                                        <br> {{item.FieldType}}
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        {{item.LibraryVersion}}
+                                    </div>
+                                    <div class="col-1 my-auto text-light">
+                                        {{item.ResourceType}}
+                                    </div>
+                                    <div class="col-4 my-auto fs08-rem p-1">
+                                        {{item.FilePath}}
+                                    </div>
+                                    <div class=" col-1">
+                                        <div class="b-multi-btns">
+                                            <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                                <i class="codicon codicon-output"></i>
+                                            </button>
+                                            <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                                <i class="codicon codicon-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-footer">
+                                <div class="b-notify notify-warning mb-4">
+                                    <i class="codicon codicon-info b-icon-2"></i>
+                                    <div class="text">
+                                        <span class="subtext">
+                                            Click 
+                                            <button type="button" class="b-btn btn-sm ms-2 me-2" ng-click="$.onAddCustomResourceClick()">
+                                                Module Builder
+                                            </button>
+                                            for goto module builder and add a new custom resource to module.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+</div>

@@ -19,6 +19,8 @@ import createActionTemplate from "./scenario-management/actions/create-action.ht
 import moduleBuilderTemplate from "./scenario-management/module-builder/module-builder.html";
 import providerSettingsTemplate from "./scenario-management/providers/provider-settings.html";
 import extensionsTemplate from "./extensions/extensions.html";
+import pageResourcesTemplate from "./page-resources/page-resources.html";
+import librariesTemplate from "./libraries/libraries.html";
 
 export class StudioController {
     constructor($scope, $rootScope, $timeout, $q, $compile, globalService, apiService) {
@@ -295,6 +297,14 @@ export class StudioController {
         this.$scope.$emit("onGotoPage", { page: "extensions", activityBar: "extensions" });
     }
 
+    onGotoPageResources() {
+        this.$scope.$emit("onGotoPage", { page: "page-resources", activityBar: "page-resources" });
+    }
+
+    onGotoLibraries() {
+        this.$scope.$emit("onGotoPage", { page: "libraries", activityBar: "libraries" });
+    }
+
     onSelectScenarioClick() {
         _.filter(this.scenarios, (s) => {
             return s.ScenarioID == this.scenarioID;
@@ -455,6 +465,16 @@ export class StudioController {
                 result.title = "Extensions";
                 result.icon = "extensions";
                 result.content = extensionsTemplate;
+                break;
+            case "page-resources":
+                result.title = "Page Resources";
+                result.icon = "multiple-windows";
+                result.content = pageResourcesTemplate;
+                break;
+            case "libraries":
+                result.title = "Libraries";
+                result.icon = "library";
+                result.content = librariesTemplate;
                 break;
         }
 

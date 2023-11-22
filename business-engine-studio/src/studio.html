@@ -52,7 +52,8 @@
         <!-- Sidebar Explorer Widget-->
         <!------------------------------------>
         <b-sidebar-explorer ng-if="$.$rootScope.currentActivityBar=='explorer' && $.$rootScope.explorerItems"></b-sidebar-explorer>
-        <b-extensions ng-if="$.$rootScope.currentActivityBar=='extensions'"></b-extensions>
+        <div ng-if="$.$rootScope.currentActivityBar=='extensions'"></div>
+        <div ng-if="$.$rootScope.currentActivityBar=='libraries'"></div>
     </div>
     <!------------------------------------>
     <!--End Side Bar-->

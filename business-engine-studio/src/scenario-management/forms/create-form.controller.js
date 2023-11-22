@@ -1,4 +1,4 @@
-import { BasicSettings } from "../../../../common/configs/global.settings";
+import { GlobalSettings } from "../../../../common/configs/global.settings";
 
 export class CreateFormController {
     constructor(

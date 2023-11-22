@@ -324,6 +324,121 @@ body {
 }
 
 /* --------------------------------------------------------
+        Page Resources
+    -----------------------------------------------------------*/
+
+.b-page-resources {
+  height: calc(100vh - 4rem);
+  width: 100%;
+}
+
+.b-page-resources .search-box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  margin: 0.4rem 0.4rem 0.1rem;
+}
+
+.b-page-resources .search-box > .search-input {
+  background-color: #363636;
+  border: solid 0.1rem #5a5151;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+  color: #fff;
+  display: flex;
+  flex-grow: 2;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.7rem;
+  outline: none;
+}
+
+.b-page-resources .exp-items {
+  padding-left: 2rem;
+  margin: 0;
+}
+
+.b-page-resources .exp-items .exp-item {
+  color: #cccccc;
+  cursor: pointer;
+  list-style-type: none;
+  position: relative;
+}
+
+.b-page-resources .exp-items .exp-item::before,
+.b-page-resources .exp-items .exp-item::after {
+  content: "";
+  left: -1.45rem;
+  position: absolute;
+  right: auto;
+}
+
+.b-page-resources .exp-items .exp-item::before {
+  border-left: 0.1rem solid #999;
+  height: 100%;
+  top: 0;
+  width: 0.1rem;
+}
+
+.b-page-resources .exp-items .exp-item::after {
+  border-top: 0.1rem solid #999;
+  height: 1rem;
+  top: 0.9rem;
+  width: 1.2rem;
+}
+
+.b-page-resources .exp-items .exp-item:last-child::before {
+  height: 1rem;
+}
+
+.b-page-resources .exp-items .exp-item .exp-label {
+  color: #cccccc;
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 300;
+  margin: 0;
+  padding: 0.15rem 0.3rem 5px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.b-page-resources .exp-items .exp-item .exp-label.active {
+  color: #fff;
+  background-color: #094771;
+  border: solid 1px #007fd4;
+}
+
+.b-page-resources .exp-items .exp-item .exp-label.action-1.active {
+  display: inline-flex;
+}
+
+.b-page-resources {
+  padding: 0.8rem;
+  color: #ddd;
+  overflow: auto;
+  height: 100vh;
+}
+
+.b-page-resources::-webkit-scrollbar {
+  width: 0.4rem;
+}
+
+.b-page-resources::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+
+.b-page-resources::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 6px;
+}
+
+.b-page-resources .header-sections {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+/* --------------------------------------------------------
         Extensions
     -----------------------------------------------------------*/
 

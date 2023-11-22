@@ -9,6 +9,9 @@
         </a>
         <!-- Explorer Action Items -->
         <div class="exp-actions">
+            <a class="action-item" title="Search" b-custom-tooltip data-bs-placement="bottom" ng-click="$.showHideSearch=!$.showHideSearch">
+                <i class="codicon codicon-search"></i>
+            </a>
             <a class="action-item" title="New Group" b-custom-tooltip data-bs-placement="bottom" ng-click="$.onAddGroupClick()">
                 <i class="codicon codicon-new-folder"></i>
             </a>
@@ -19,7 +22,7 @@
                 <i class="codicon codicon-collapse-all"></i>
             </a>
         </div>
-        <div class="search-box">
+        <div class="search-box" ng-class="{'d-none':!$.showHideSearch}">
             <input type="text" class="search-input" ng-model="$.searchItem" placeholder="Search by title" />
         </div>
     </div>

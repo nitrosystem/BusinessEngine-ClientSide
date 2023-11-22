@@ -14,19 +14,16 @@ export const activityBarItems = [{
         icon: "symbol-color",
     },
     {
-        name: "performance",
-        title: "Performance",
-        icon: "rocket",
+        name: "page-resources",
+        title: "Site Page Resources",
+        icon: "multiple-windows",
+        callback: "onGotoPageResources"
     },
     {
-        name: "logs",
-        title: "Logs",
+        name: "libraries",
+        title: "Libraries",
         icon: "library",
-    },
-    {
-        name: "widgets",
-        title: "Widgets",
-        icon: "slayers",
+        callback: "onGotoLibraries"
     },
     {
         name: "extensions",

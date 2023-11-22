@@ -47,6 +47,7 @@ import SelectActionComponent from "./components/action-service-components/select
 //Controllers
 import { StudioController } from "./studio.controller";
 import { CreateScenarioController } from "./scenario-management/scenarios/create-scenario.controller";
+import { PageResourcesController } from "./page-resources/page-resources.controller";
 import { ExtensionsController } from "./extensions/extensions.controller";
 import { EntitiesController } from "./scenario-management/entities/entities.controller";
 import { CreateEntityController } from "./scenario-management/entities/create-entity.controller";
@@ -110,6 +111,7 @@ const app = angular
     .component("bSelectAction", SelectActionComponent)
     .controller("studioController", StudioController)
     .controller("createScenarioController", CreateScenarioController)
+    .controller("pageResourcesController", PageResourcesController)
     .controller("extensionsController", ExtensionsController)
     .controller("entitiesController", EntitiesController)
     .controller("createEntityController", CreateEntityController)

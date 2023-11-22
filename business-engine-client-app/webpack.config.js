@@ -77,10 +77,9 @@ module.exports = (env) => {
             bootstrap: "bootstrap",
             jquery: "jQuery",
             lodash: "_",
-            angular: "anular",
+            angular: "angular",
             angularfilter: "angular-filter",
-            angularsanitize: "angular-sanitize",
-            ngfileupload: "ng-file-upload"
+            angularsanitize: "angular-sanitize"
         },
     };
 };
