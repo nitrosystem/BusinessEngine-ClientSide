@@ -3,7 +3,6 @@ import "./styles/global.css"
 import * as _ from 'lodash';
 
 import angular from "angular";
-import "angular-filter/dist/angular-filter";
 import "ng-file-upload/dist/ng-file-upload-shim";
 import "ng-file-upload/dist/ng-file-upload";
 
