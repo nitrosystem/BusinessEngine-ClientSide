@@ -1,5 +1,8 @@
-import studioTemplate from "../studio.html";
 import moment from "moment";
+import $ from "jquery";
+import * as bootstrap from 'bootstrap';
+
+import studioTemplate from "../studio.html";
 
 export function StudioDirective() {
     return {

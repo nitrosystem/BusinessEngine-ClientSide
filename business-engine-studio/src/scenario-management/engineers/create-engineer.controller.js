@@ -1,5 +1,5 @@
 import pluralize from "pluralize";
-import { GlobalSettings } from "../../../../common/configs/global.settings";
+import { GlobalSettings } from "../../configs/global.settings";
 
 export class CreateEntityController {
     constructor(

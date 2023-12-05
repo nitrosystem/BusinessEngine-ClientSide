@@ -72,11 +72,6 @@ module.exports = (env) => {
             static: {
                 directory: path.join(__dirname, "dist"),
             },
-        },
-        externals: {
-            jquery: "jQuery",
-            jqueryui: "jquery-ui",
-            bootstrap: 'bootstrap'
-        },
+        }
     };
 };

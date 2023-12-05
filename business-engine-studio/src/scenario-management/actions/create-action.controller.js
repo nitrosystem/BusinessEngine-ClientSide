@@ -1,4 +1,4 @@
-import { GlobalSettings } from "../../../../common/configs/global.settings";
+import { GlobalSettings } from "../../configs/global.settings";
 
 export class CreateActionController {
     constructor(
@@ -466,31 +466,3 @@ export class CreateActionController {
         this.$scope.$emit('onCloseModule');
     }
 }
-
-// this.$ocLazyLoad
-//   .load([
-//     "/DesktopModules/ClientTest/dist/basic.bundle.js" +
-//       "?ver" +
-//       GlobalSettings.version,
-//   ])
-//   .then(function () {
-//     var polo = new window["Person1"]("negar", "arya");
-//     polo.person1("zahra");
-//   });
-
-// async raiseActionBuilder() {
-//   await import(
-//     `../../../../basic-components/b-actions/${this.actionType.ESModule}`
-//   ).then((module) => {
-//     $$controllerProvider.register(
-//       this.actionType.Controller,
-//       module[this.actionType.ControllerClass]
-//     );
-//     this.$scope.$apply();
-//   });
-// }
-
-// fetch("field-base-layout.html")
-//   .then((stream) => stream.text())
-//   .then((text) => {
-//   });

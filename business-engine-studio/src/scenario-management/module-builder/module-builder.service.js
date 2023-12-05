@@ -1,5 +1,3 @@
-import { GlobalSettings } from "../../../../common/configs/global.settings";
-
 export class moduleBuilderService {
     constructor(
         $filter,
@@ -327,7 +325,7 @@ export class moduleBuilderService {
               <div class="col-3">
                 <span ng-if="$.currentField.FieldID!='${field.FieldID}'" class="d-flex justify-content-end mt-1 text-white-50">{{$.field.${field.FieldName}.FieldType}}</span>   
                 <select ng-if="$.currentField.FieldID=='${field.FieldID}'"ng-model="$.field.${field.FieldName}.FieldType" class="b-input form-select"
-                        ng-options="ft.FieldType as ft.Title for ft in $.fieldTypes" 
+                        ng-options="ft.FieldType as ft.Title for ft in $.fieldTypes" ng-change="$.onFieldTypeChange($event,'${field.FieldID}')"
                         placeholder-text-single="'Select field Type'">
                 </select>
               </div>
@@ -482,7 +480,7 @@ export class moduleBuilderService {
             <div class="col-3">
               <span ng-if="$.currentField.FieldID!='${field.FieldID}'" class="d-flex justify-content-end mt-1 text-white-50">{{$.field.${field.FieldName}.FieldType}}</span>   
               <select ng-if="$.currentField.FieldID=='${field.FieldID}'"ng-model="$.field.${field.FieldName}.FieldType" class="b-input form-select"
-                      ng-options="ft.FieldType as ft.Title for ft in $.fieldTypes" 
+                      ng-options="ft.FieldType as ft.Title for ft in $.fieldTypes" ng-change="$.onFieldTypeChange($event,'${field.FieldID}')"
                       placeholder-text-single="'Select field Type'">
               </select>
             </div>

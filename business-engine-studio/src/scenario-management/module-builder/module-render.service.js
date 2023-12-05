@@ -1,4 +1,4 @@
-import { GlobalSettings } from "../../../../common/configs/global.settings";
+import { GlobalSettings } from "../../configs/global.settings";
 
 export class moduleRenderService {
     constructor($filter, $q, $compile, $timeout, $deferredBroadcast, globalService, apiService, notificationService) {

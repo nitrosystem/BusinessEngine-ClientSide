@@ -1,4 +1,4 @@
-import { GlobalSettings } from "../../common/configs/global.settings";
+import { GlobalSettings } from "./configs/global.settings";
 import { activityBarItems } from "./configs/activity-bar.config";
 
 import createScenarioTemplate from "./scenario-management/scenarios/create-scenario.html";
@@ -87,6 +87,7 @@ export class StudioController {
         this.activityBarItems = activityBarItems;
         this.onActivityBarItemClick("explorer");
         this.$rootScope.explorerExpandedItems = [];
+
 
         this.onPageLoad();
     }

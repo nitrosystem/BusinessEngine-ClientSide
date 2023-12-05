@@ -18,9 +18,9 @@ import {
 } from "./providers/deferred-events.provider";
 
 //Services
-import { GlobalService } from "../../common/services/global.service";
-import { ApiService } from "../../common/services/api.service";
-import { ExpressionService } from "../../common/services/expression.service";
+import { GlobalService } from "./services/global.service";
+import { ApiService } from "./services/api.service";
+import { ExpressionService } from "./services/expression.service";
 import { ActionService } from "./services/action.service";
 
 //Directives

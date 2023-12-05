@@ -1,3 +1,5 @@
+import { GlobalSettings } from "../../configs/global.settings";
+
 import moduleVariablesWidget from "./module-variables.html";
 import moduleSkinWidget from "./module-skin.html";
 import moduleLayoutTemplateWidget from "./module-layout-template.html";
@@ -7,7 +9,6 @@ import fieldSettingsWidget from "./field/field-settings.html";
 import fieldShowConditionsWidget from "./field/field-show-conditions.html";
 import fieldConditionalValuesWidget from "./field/field-conditional-values.html";
 import fieldDataSourceWidget from "./field/field-data-source.html";
-import { GlobalSettings } from "../../../../common/configs/global.settings";
 
 export class ModuleBuilderController {
     constructor(
@@ -851,6 +852,13 @@ export class ModuleBuilderController {
         this.currentField.Theme = theme;
     }
 
+    onModuleSettingsClick() {
+        this.$scope.$emit("onGotoPage", {
+            page: "create-" + this.module.ModuleType.toLowerCase(),
+            id: this.module.ModuleID,
+        });
+    }
+
     /*------------------------------------*/
     /* Actions & Conditions Methods  */
     /*------------------------------------*/
@@ -1151,6 +1159,8 @@ export class ModuleBuilderController {
     /*  Field Methods */
     /*------------------------------------*/
     onRefreshFieldClick($event, fieldID) {
+        const defer = this.$q.defer();
+
         this.running = "refresh-field";
         this.awaitAction = {
             title: "Refresh Field",
@@ -1158,16 +1168,22 @@ export class ModuleBuilderController {
         };
 
         this.apiService.get("Studio", "GetModuleField", { fieldID: fieldID }).then((data) => {
+                defer.resolve();
+
                 this.notifyService.success("Field refreshed has been successfully");
 
                 var field = this.getFieldByID(fieldID);
                 this.fields[this.fields.indexOf(field)] = data;
                 this.field[field.FieldName] = data;
+                this.currentField = field;
 
                 delete this.awaitAction;
                 delete this.running;
+
             },
             (error) => {
+                defer.resolve();
+
                 this.awaitAction.isError = true;
                 this.awaitAction.subtitle = error.statusText;
                 this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
@@ -1177,6 +1193,8 @@ export class ModuleBuilderController {
                 delete this.running;
             }
         );
+
+        return defer.promise;
     }
 
     onFieldItemClick($event, fieldID) {
@@ -1190,9 +1208,7 @@ export class ModuleBuilderController {
 
             this.$scope.$broadcast("onFocusField_" + this.currentFieldBackup.FieldName);
         } else {
-            const field = _.find(this.fields, (field) => {
-                return field.FieldID == fieldID;
-            });
+            const field = this.getFieldByID(fieldID);
 
             this.currentFieldBackup = _.clone(field);
             this.currentField = field;
@@ -1215,10 +1231,29 @@ export class ModuleBuilderController {
         if ($event) $event.stopPropagation();
     }
 
-    onCancelEditFieldClick($event) {
-        const field = _.find(this.fields, (field) => {
-            return field.FieldID == this.currentField.FieldID;
+    onFieldTypeChange($event, fieldID) {
+        swal({
+            title: "Are you sure change field type?",
+            text: "Some settings may be lost after the field type is changed",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((agree) => {
+            if (agree) {
+                this.saveCurrentField().then(() => {
+                    this.onRefreshFieldClick($event, fieldID).then(() => {
+                        this.currentField.FieldTypeObject = _.find(this.fieldTypes, (ft) => {
+                            return ft.FieldType == this.currentField.FieldType;
+                        });
+                        console.log(this.currentField)
+                    });
+                })
+            }
         });
+    }
+
+    onCancelEditFieldClick($event) {
+        const field = this.getFieldByID(this.currentField.FieldID);
 
         this.field[this.currentFieldBackup.FieldName] = this.fields[
             this.fields.indexOf(field)
@@ -1467,10 +1502,7 @@ export class ModuleBuilderController {
     }
 
     getFieldByID(fieldID) {
-        var result;
-
-        _.filter(this.fields, (field) => { return field.FieldID == fieldID; }).map((field) => (result = field));
-
+        var result = _.find(this.fields, (field) => { return field.FieldID == fieldID; });
         return result;
     }
 
@@ -1575,164 +1607,3 @@ export class ModuleBuilderController {
         this.disposeWorkingMode();
     }
 }
-
-// onDragOverField($event, ui) {
-//   $($event.target).addClass("drag");
-// }
-
-// onDragOutField($event, ui) {
-//   $($event.target).removeClass("drag");
-// }
-
-// onDropField($event, ui, beforeField) {
-//   $($event.target).removeClass("drag");
-
-//   var isNewField = false;
-//   var fieldType;
-//   var movedField;
-
-//   if ($(ui.draggable[0]).data("new-field")) {
-//     isNewField = true;
-//     fieldType = $(ui.draggable[0]).data("fieldtype");
-//   } else
-//     movedField = this.getFieldByName($(ui.draggable[0]).data("move-field"));
-
-//   var viewOrder = beforeField.ViewOrder;
-
-//   this.sortFields(
-//     beforeField.PaneName,
-//     beforeField.ViewOrder,
-//     movedField ? movedField.FieldName : ""
-//   );
-
-//   if (isNewField) {
-//     var fieldTypeObject = _.filter(this.fieldTypes, (ft) => {
-//       return ft.FieldType == fieldType;
-//     })[0];
-
-//     this.addField(
-//       beforeField.PaneName,
-//       beforeField.ParentID,
-//       fieldTypeObject,
-//       viewOrder,
-//       beforeField
-//     );
-//   } else {
-//     this.currentField = movedField;
-//     if (this.currentField.FieldID == beforeField.ParentID) return;
-//     this.currentField.PaneName = beforeField.PaneName;
-//     this.currentField.ParentID = beforeField.ParentID;
-//     this.currentField.ViewOrder = viewOrder;
-
-//     this.moveField("", this.currentField, beforeField);
-
-//     this.onSaveFieldClick();
-//   }
-
-//   this.dragOnField = false;
-// }
-
-// updateFieldInPane(field, fieldName) {
-//   if (field.IsGroup) {
-//     this.onRebuildFormClick();
-//   } else {
-//     const $fieldInBoardPane = $("#board").find(
-//       '*[data-field="' + fieldName + '"]'
-//     );
-
-//     this.moduleBuilderService
-//       .getFieldUI($scope.module, field, $scope)
-//       .then(($ui) => {
-//         const $field = this.$compile($ui.$forAdmin)(this.$scope);
-
-//         $fieldInBoardPane.replaceWith($field);
-
-//         // this.moduleBuilderService.saveModuleTemplates(
-//         //   $scope.module,
-//         //   $scope.fields,
-//         //   $adminTemplate,
-//         //   $userTemplate
-//         // );
-//       });
-//   }
-// }
-
-// moveField(paneName, field, beforeField) {
-//   if (field.IsGroup) {
-//     $scope.onRebuildFormClick();
-//   } else {
-//     var $fieldInBoardPane = $("#board").find(
-//       '*[data-field="' + field.FieldName + '"]'
-//     );
-
-//     if (beforeField) {
-//       $fieldInBoardPane.insertBefore(
-//         $("#board").find(
-//           '*[data-field="' + beforeField.FieldName + '"]'
-//         )
-//       );
-//     } else {
-//       var $boardPane = $("#board").find(
-//         '*[data-pane="' + paneName + '"]'
-//       );
-//       var $adminPane = $adminTemplate.find('*[data-pane="' + paneName + '"]');
-//       var $pane = $userTemplate.find('*[data-pane="' + paneName + '"]');
-
-//       $fieldInBoardPane.appendTo($boardPane);
-//     }
-
-//     //moduleBuilderService.saveModuleTemplates($scope.module, $scope.fields, $adminTemplate, $userTemplate);
-//   }
-// }
-
-// onRebuildFormClick(module, fields) {
-//     $scope.waiting = true;
-
-//     moduleBuilderService
-//       .rebuildModule($scope.module, $scope.fields, $scope)
-//       .then((data) => {
-//         delete $scope.waiting;
-
-//         $adminTemplate = data.$adminTemplate;
-//         $userTemplate = data.$userTemplate;
-
-//         $("#board").html("");
-//         $("#board").append($compile($adminTemplate.html())($scope));
-
-//         $timeout(() => {
-//           $("#board").find("*[field-drop]").droppable({
-//             greedy: true,
-//             accept: '*[data-drag="true"]',
-//             drop: this.onDropPane,
-//             over: this.onDragOverPane,
-//             out: this.onDragOutPane,
-//           });
-//         });
-//       });
-//   }
-
-// onRebuildFormClick(module, fields) {
-//   $scope.waiting = true;
-
-//   moduleBuilderService
-//     .rebuildModule($scope.module, $scope.fields, $scope)
-//     .then((data) => {
-//       delete $scope.waiting;
-
-//       $adminTemplate = data.$adminTemplate;
-//       $userTemplate = data.$userTemplate;
-
-//       $("#board").html("");
-//       $("#board").append($compile($adminTemplate.html())($scope));
-
-//       $timeout(() => {
-//         $("#board").find("*[field-drop]").droppable({
-//           greedy: true,
-//           accept: '*[data-drag="true"]',
-//           drop: this.onDropPane,
-//           over: this.onDragOverPane,
-//           out: this.onDragOutPane,
-//         });
-//       });
-//     });
-// }

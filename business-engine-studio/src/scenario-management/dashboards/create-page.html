@@ -12,7 +12,7 @@
                 <div class="b-field">
                     <label class="form-label">Page Parent</label>
                     <div class="b-input-group">
-                        <select ng-model="$.page.ParentID" class="b-input form-select" placeholder-text-single="'None'" ng-options="page.PageID as page.LevelTitle for page in $.allPages" chosen></select>
+                        <select ng-model="$.page.ParentID" class="b-input form-select" placeholder-text-single="'None'" ng-options="page.PageID as page.LevelTitle for page in $.allPages" chosen inherit-select-classes="true"></select>
                         <span><i class="codicon codicon-files"></i></span>
                     </div>
                 </div>

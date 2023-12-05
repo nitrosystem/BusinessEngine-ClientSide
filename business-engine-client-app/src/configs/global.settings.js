@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 export class GlobalSettings {
     static scenarioName = window.bEngineGlobalSettings.scenarioName;
     static portalID = window.bEngineGlobalSettings.portalID;

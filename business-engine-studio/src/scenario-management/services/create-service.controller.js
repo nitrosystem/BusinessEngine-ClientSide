@@ -1,4 +1,4 @@
-import { GlobalSettings } from "../../../../common/configs/global.settings";
+import { GlobalSettings } from "../../configs/global.settings";
 
 export class CreateServiceController {
     constructor(
@@ -51,6 +51,7 @@ export class CreateServiceController {
 
         this.apiService.get("Studio", "GetService", { serviceID: id || null }).then(
             (data) => {
+
                 this.scenarios = data.Scenarios;
                 this.databases = data.Databases;
                 this.roles = data.Roles;

@@ -1,5 +1,5 @@
 import swal from "sweetalert";
-import { GlobalSettings } from "../../../common/configs/global.settings";
+import { GlobalSettings } from "../configs/global.settings";
 
 export class PageResourcesController {
     constructor($scope, $timeout, studioService, Upload, globalService, apiService, notificationService) {

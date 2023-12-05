@@ -1,19 +1,16 @@
 import angular from "angular";
 import "angular-filter/dist/angular-filter";
 import "angular-dragdrop/src/angular-dragdrop";
-import * as _ from 'lodash';
-
-import "chosen-js/chosen.jquery";
-import "angular-chosen-localytics/dist/angular-chosen";
 import "ng-file-upload/dist/ng-file-upload";
+import "./directives/chosen.directive"
 
 //Configs
 import { config as appConfig } from "./configs/app.config";
 
 //Services
-import { GlobalService } from "../../common/services/global.service";
-import { ApiService } from "../../common/services/api.service";
-import { ValidationService } from "../../common/services/validation.service";
+import { GlobalService } from "./services/global.service";
+import { ApiService } from "./services/api.service";
+import { ValidationService } from "./services/validation.service";
 import { NotificationService } from "./services/notification.service";
 import { StudioService } from "./services/studio.service";
 import { moduleBuilderService } from "./scenario-management/module-builder/module-builder.service";
