@@ -614,6 +614,16 @@ export class CreateEntityController {
         });
     }
 
+    onAddViewModelClick() {
+        this.$scope.$emit("onGotoPage", {
+            page: "create-view-model",
+            id: this.entity.EntityID,
+            subParams: {
+                mode: 'entity-view-model',
+            }
+        });
+    }
+
     onCloseWindow() {
         this.$scope.$emit('onCloseModule');
     }

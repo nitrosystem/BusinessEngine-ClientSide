@@ -1,4 +1,5 @@
 import swal from "sweetalert";
+import { GlobalSettings } from "../../configs/global.settings";
 
 export class ServicesController {
     constructor(
@@ -30,7 +31,16 @@ export class ServicesController {
         };
 
         this.apiService.get("Studio", "GetServices").then((data) => {
+            data.Services.forEach(s => {
+                s.ServiceTypeIcon = (s.ServiceTypeIcon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+            });
             this.services = data.Services;
+
+            this.serviceTypes = data.ServiceTypes;
+
+            this.serviceTypesForFilters = _.uniqBy(this.serviceTypes, (st) => {
+                return st.ServiceType;
+            });
 
             this.onFocusModule();
 
@@ -42,6 +52,37 @@ export class ServicesController {
     onFocusModule() {
         this.$rootScope.explorerExpandedItems.push(...["services"]);
         this.$rootScope.explorerCurrentItem = "services";
+    }
+
+    onTableModeClick() {
+        this.displayMode = 'table';
+    }
+
+    onBoxModeClick() {
+        this.displayMode = 'box';
+    }
+
+    onServiceNameChange($event) {
+        if ($event.key == 'Enter')
+            this.filterItems();
+    }
+
+    filterItems() {
+        if (!this.servicesBackup)
+            this.servicesBackup = _.cloneDeep(this.services);
+        else
+            this.services = _.cloneDeep(this.servicesBackup);
+
+        this.services = _.filter(this.services, (s) => {
+            return (!this.filter.ServiceName || s.ServiceName.indexOf(this.filter.ServiceName) >= 0) &&
+                (!this.filter.ServiceType || s.ServiceType == this.filter.ServiceType) &&
+                (!this.filter.ServiceSubtype || s.ServiceSubtype == this.filter.ServiceSubtype)
+        });
+    }
+
+    onClearFilterClick() {
+        if (this.servicesBackup) this.services = _.cloneDeep(this.servicesBackup);
+        this.filter = {};
     }
 
     onAddServiceClick() {

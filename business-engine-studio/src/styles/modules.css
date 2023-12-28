@@ -288,6 +288,10 @@
   cursor: pointer;
 }
 
+/* --------------------------------------------------------
+        Actions - Action List
+    -----------------------------------------------------------*/
+
 .module-builder .mb-sidebar .action-list {
   padding: 0;
   margin: 0 0 1.5rem 0;
@@ -1058,6 +1062,79 @@ body > .b-field-item .field-toolbar {
 }
 
 /* --------------------------------------------------------
+        Services
+    -----------------------------------------------------------*/
+
+.services {
+  position: relative;
+}
+
+.services .service-item .item-wrapper {
+  background-color: #3c3c3e;
+  box-shadow: 1px 1px 1px hsla(var(--shadow), 0.12),
+    3px 3px 3px hsla(var(--shadow), 0.11), 5px 5px 5px hsla(var(--shadow), 0.1),
+    7px 7px 7px hsla(var(--shadow), 0.09),
+    11px 11px 11px hsla(var(--shadow), 0.08),
+    13px 13px 13px hsla(var(--shadow), 0.07),
+    17px 17px 17px hsla(var(--shadow), 0.06),
+    19px 19px 19px hsla(var(--shadow), 0.05),
+    23px 23px 23px hsla(var(--shadow), 0.04),
+    29px 29px 29px hsla(var(--shadow), 0.03);
+  background-clip: border-box;
+  color: #eee;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.services .service-item .service-move-top {
+  color: #fff;
+  cursor: pointer;
+  position: absolute;
+  left: 1rem;
+  top: 0.5rem;
+}
+
+.services .service-item .service-move-top:disabled {
+  cursor: not-allowed;
+}
+
+.services .service-item .service-move-bottom {
+  color: #fff;
+  cursor: pointer;
+  position: absolute;
+  left: 1rem;
+  bottom: 0.2rem;
+}
+
+.services .service-item .service-move-bottom:disabled {
+  cursor: not-allowed;
+}
+
+.services .service-item .service-type-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.services .service-item .service-options {
+  padding-top: 1rem;
+}
+
+.services .service-item .service-options .option-name {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.services .service-item .service-options .option-item {
+  background-color: #252526;
+  border-bottom: solid 0.1rem #535357;
+  margin-bottom: 0.7rem;
+  padding: 0.7rem;
+  color: #ccc;
+  font-size: 0.85rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+/* --------------------------------------------------------
         Actions
     -----------------------------------------------------------*/
 
@@ -1146,15 +1223,16 @@ body > .b-field-item .field-toolbar {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
 }
 
 .extension-details .image-wrapper {
   margin-right: 0.6rem;
-  width: 8rem;
-  height: 8rem;
+  width: 4rem;
+  height: 4rem;
   overflow: hidden;
+  margin-right: 1rem;
 }
 
 .extension-details .image-wrapper > img {
@@ -1164,7 +1242,8 @@ body > .b-field-item .field-toolbar {
 }
 
 .extension-details .image-wrapper > i {
-  font-size: 8rem;
+  font-size: 4rem;
+  color: #d2a401c7;
 }
 
 .extension-details .extension-top-info {
@@ -1172,21 +1251,19 @@ body > .b-field-item .field-toolbar {
   flex-direction: column;
   flex-wrap: wrap;
   margin-right: 0.5rem;
-  padding-top: 0.7rem;
 }
 
 .extension-details .extension-top-info .ext-name {
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   font-weight: 600;
   letter-spacing: 0.12rem;
   margin-bottom: 0.9rem;
-  color: #d3a502;
+  color: #eee;
 }
 
 .extension-details .extension-top-info .ext-title {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #b7b0b0;
-  margin-bottom: 0.8rem;
 }
 
 .extension-details .extension-top-info .ext-type {
@@ -1203,6 +1280,249 @@ body > .b-field-item .field-toolbar {
 
 .extension-details .ext-is-commercial .form-label {
   margin-right: 0.6rem;
+  font-size: 1.15rem;
+  display: flex;
+}
+
+.monitor-install-extension {
+  color: #bbb;
+  padding: 1rem;
+  border: dotted.15rem #000000f7;
+  height: calc(100vh - 15rem);
+  overflow: auto;
+  white-space: pre-wrap;
+  line-height: 1.9rem;
+  --scrollbarBG: rgb(37, 37, 38);
+  --thumbBG: #59595a;
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+.monitor-install-extension::-webkit-scrollbar {
+  width: 0.4rem;
+}
+
+.monitor-install-extension::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+
+.monitor-install-extension::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 6px;
+}
+
+/* --------------------------------------------------------
+        Libraries
+    -----------------------------------------------------------*/
+
+.libraries {
+  position: relative;
+}
+
+.libraries .library-item .item-wrapper {
+  background-color: #3c3c3e;
+  box-shadow: 1px 1px 1px hsla(var(--shadow), 0.12),
+    3px 3px 3px hsla(var(--shadow), 0.11), 5px 5px 5px hsla(var(--shadow), 0.1),
+    7px 7px 7px hsla(var(--shadow), 0.09),
+    11px 11px 11px hsla(var(--shadow), 0.08),
+    13px 13px 13px hsla(var(--shadow), 0.07),
+    17px 17px 17px hsla(var(--shadow), 0.06),
+    19px 19px 19px hsla(var(--shadow), 0.05),
+    23px 23px 23px hsla(var(--shadow), 0.04),
+    29px 29px 29px hsla(var(--shadow), 0.03);
+  background-clip: border-box;
+  color: #eee;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.libraries .library-item.library-has-childs {
+  border-left: solid 0.1rem #525257;
+}
+
+.libraries .library-item .library-logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.libraries .library-item .library-logo-wrapper > img {
+  width: 7rem;
+  max-height: 7rem;
+}
+
+.libraries .library-item .library-name {
+  color: #fea620;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+  text-shadow: -1px -1px 3px #020202, 2px 2px 4px #1b1b1b;
+}
+
+.libraries .library-item .library-desc {
+  color: #ccc;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  font-style: italic;
+  margin-bottom: 0.1rem;
+}
+
+.libraries .library-item a {
+  text-decoration: none;
+}
+
+.libraries .library-item .action-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.libraries .library-item .action-btns.level-2 {
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+.libraries .library-item .library-options {
+  padding-top: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.libraries .library-item .library-options .option-name {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.libraries .library-item .library-options .option-item {
+  background-color: #252526;
+  border-bottom: solid 0.1rem #535357;
+  margin-bottom: 0.7rem;
+  padding: 0.7rem;
+  color: #ccc;
+  font-size: 0.85rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.top-libraries {
+  height: 100vh;
+  margin-bottom: 5rem;
+}
+
+.top-libraries .library-list {
+  margin: 0;
+  padding: 0.5rem 0 0 1rem;
+}
+
+.top-libraries .library-list .library-item {
+  margin-bottom: 1rem;
+  position: relative;
+  list-style: none;
+}
+
+.top-libraries .library-list .library-item .library-version {
+  background: #94aa2a;
+  border-color: #94aa2a;
+  color: #fff !important;
+  text-align: left;
+  border-radius: 0.28571429rem 0 0 0.28571429rem;
+  padding-left: 10px;
+  padding-right: 22px;
+  position: absolute;
+  line-height: 2;
+  font-size: 13px;
+  right: -0.2rem;
+  top: -0.4rem;
+  min-width: -webkit-max-content;
+  box-shadow: 0 3px 10px -5px rgb(0 0 0);
+  min-width: -moz-max-content;
+  min-width: max-content;
+  z-index: 99;
+}
+
+.top-libraries .library-list .library-item .library-version:after {
+  left: auto;
+  right: 0;
+  border-style: solid;
+  border-width: 1em 1em 0 0;
+  border-color: transparent;
+  border-top-color: inherit;
+  position: absolute;
+  content: "";
+  top: 100%;
+  background-color: transparent !important;
+  width: 0;
+  height: 0;
+}
+
+.top-libraries .library-list .library-item .library-wrapper {
+  position: relative;
+  padding: 0.7rem 0.3rem;
+  background-color: #444;
+  color: #eee;
+  display: flex;
+  flex-direction: row;
+  width: 97%;
+}
+
+.top-libraries .library-list .library-item .logo-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.8rem;
+  display: flex;
+  align-self: center;
+}
+
+.top-libraries .library-list .library-item .logo-wrapper > img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.top-libraries .library-list .library-item .library-data {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  max-width: 15.5rem;
+}
+
+.top-libraries .library-list .library-item .library-name {
+  color: #ddd;
+  font-size: 0.8rem;
+  margin-bottom: 0.1rem;
+}
+
+.top-libraries .library-list .library-item .library-type {
+  color: #bbb;
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+  font-style: italic;
+}
+
+.top-libraries .library-list .library-item .library-desc {
+  color: #aaa;
+  font-size: 0.7rem;
+  margin-bottom: 0.3rem;
+  text-align: justify;
+  text-decoration: none;
+  font-style: normal;
+  overflow: hidden;
+  max-height: 3rem;
+}
+
+.top-libraries .library-list .library-item .github-link {
+  color: #ccc;
+  font-size: 0.8rem;
+  display: flex;
+}
+
+.top-libraries .library-list .library-item .github-link > i {
+  margin-right: 0.5rem;
   font-size: 1.2rem;
   display: flex;
 }

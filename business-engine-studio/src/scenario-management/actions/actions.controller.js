@@ -59,6 +59,14 @@ export class ActionsController {
         this.$rootScope.explorerCurrentItem = this.module.ModuleID;
     }
 
+    onTableModeClick() {
+        this.displayMode = 'table';
+    }
+
+    onBoxModeClick() {
+        this.displayMode = 'box';
+    }
+
     populateActions(actions) {
         var result = [];
 
@@ -92,14 +100,6 @@ export class ActionsController {
         });
 
         return result;
-    }
-
-    onTableModeClick() {
-        this.displayMode = 'table';
-    }
-
-    onBoxModeClick() {
-        this.displayMode = 'box';
     }
 
     onAddActionClick() {
@@ -142,7 +142,7 @@ export class ActionsController {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                this.running = "get-actions";
+                this.running = "remove-action";
                 this.awaitAction = {
                     title: "Remove Action",
                     subtitle: "Just a moment for removing action...",

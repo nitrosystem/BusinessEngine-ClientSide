@@ -1,8 +1,8 @@
 import swal from "sweetalert";
 import { GlobalSettings } from "../configs/global.settings";
 
-export class ExtensionsController {
-    constructor($scope, $timeout, Upload, globalService, apiService, notificationService) {
+export class LibrariesController {
+    constructor($scope, $timeout, Upload, studioService, globalService, apiService, notificationService) {
         "ngInject";
 
         this.$scope = $scope;
@@ -12,41 +12,54 @@ export class ExtensionsController {
         this.apiService = apiService;
         this.notifyService = notificationService;
 
+        studioService.setFocusModuleDelegate(this, this.onFocusModule);
+
+        this.$scope.$emit("onChangeActivityBar", {
+            name: "libraries",
+            title: "Libraries",
+            disableActivityBarCallback: true
+        });
+
         this.onPageLoad();
     }
 
     onPageLoad() {
-        this.running = "get-extensions";
+        this.running = "get-libraries";
         this.awaitAction = {
-            title: "Loading Extensions",
-            subtitle: "Just a moment for loading extensions...",
+            title: "Loading Libraries",
+            subtitle: "Just a moment for loading libraries...",
         };
 
-        this.apiService.get("Studio", "GetExtensions").then((data) => {
-            this.extensions = data;
+        this.apiService.get("Studio", "GetLibraries").then((data) => {
+            this.libraries = data;
+            this.topLibraries = data;
 
             delete this.running;
             delete this.awaitAction;
         });
     }
 
-    onAddExtensionClick() {
+    onFocusModule() {
+        this.$scope.$emit('onChangeActivityBar', { name: 'libraries' })
+    }
+
+    onAddLibraryClick() {
         var subParams = {};
-        if (this.isFieldExtensions) subParams.type = "field";
+        if (this.isFieldLibraries) subParams.type = "field";
 
         this.$scope.$emit("onGotoPage", {
-            page: "create-extension",
+            page: "create-library",
             parentID: this.parentID,
             subParams: subParams,
         });
     }
 
-    onEditExtensionClick(id, title) {
+    onEditLibraryClick(id, title) {
         var subParams = {};
-        if (this.isFieldExtensions) subParams.type = "field";
+        if (this.isFieldLibraries) subParams.type = "field";
 
         this.$scope.$emit("onGotoPage", {
-            page: "create-extension",
+            page: "create-library",
             parentID: this.parentID,
             id: id,
             title: title,
@@ -54,26 +67,26 @@ export class ExtensionsController {
         });
     }
 
-    onDeleteExtensionClick(id, index) {
+    onDeleteLibraryClick(id, index) {
         swal({
             title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this imaginary extension!",
+            text: "Once deleted, you will not be able to recover this imaginary library!",
             icon: "warning",
             buttons: true,
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                this.running = "get-extensions";
+                this.running = "get-libraries";
                 this.awaitAction = {
-                    title: "Remove Extension",
-                    subtitle: "Just a moment for removing extension...",
+                    title: "Remove Library",
+                    subtitle: "Just a moment for removing library...",
                 };
 
-                this.apiService.post("Studio", "DeleteExtension", { ID: id }).then(
+                this.apiService.post("Studio", "DeleteLibrary", { ID: id }).then(
                     (data) => {
-                        this.extensions.splice(index, 1);
+                        this.libraries.splice(index, 1);
 
-                        this.notifyService.success("Extension deleted has been successfully");
+                        this.notifyService.success("Library deleted has been successfully");
 
                         this.$rootScope.refreshSidebarExplorerItems();
 
@@ -108,29 +121,29 @@ export class ExtensionsController {
         this.$scope.$emit('onCloseModule');
     }
 
-    onInstallExtensionClick() {
-        this.workingMode = "install-extension";
+    onInstallLibraryClick() {
+        this.workingMode = "install-library";
         this.$scope.$emit("onShowRightWidget");
 
         this.step = 1;
     }
 
-    onUploadExtensionPackage($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event) {
+    onUploadLibraryPackage($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event) {
         if ($file) {
-            this.running = "upload-extension";
+            this.running = "upload-library";
             this.awaitAction = {
-                title: "Uploading Extensions",
-                subtitle: "Just a moment for uploading extension...",
+                title: "Uploading Libraries",
+                subtitle: "Just a moment for uploading library...",
             };
 
             this.uploadService.upload({
-                url: window.bEngineGlobalSettings.apiBaseUrl + 'BusinessEngine/API/Studio/UploadExtensionPackage',
+                url: window.bEngineGlobalSettings.apiBaseUrl + 'BusinessEngine/API/Studio/UploadLibraryPackage',
                 headers: GlobalSettings.apiHeaders,
                 data: { files: $file },
             }).then((data) => {
-                this.extension = JSON.parse(data.data.ExtensionJson);
-                this.extensionInstallDto = {
-                    ExtensionUnzipedPath: data.data.ExtensionUnzipedPath,
+                this.library = JSON.parse(data.data.LibraryJson);
+                this.libraryInstallDto = {
+                    LibraryUnzipedPath: data.data.LibraryUnzipedPath,
                     ManifestFilePath: data.data.ManifestFilePath
                 };
 
@@ -150,18 +163,18 @@ export class ExtensionsController {
         }
     }
 
-    onNextInstallExtensionStepClick() {
+    onNextInstallLibraryStepClick() {
         this.step = 3;
 
-        this.running = "install-extensions";
+        this.running = "install-libraries";
         this.awaitAction = {
-            title: "Install Extension",
-            subtitle: "Just a moment for installing extension...",
+            title: "Install Library",
+            subtitle: "Just a moment for installing library...",
         };
 
-        this.apiService.post("Studio", "InstallExtension", null, {
-            extensionUnzipedPath: this.extensionInstallDto.ExtensionUnzipedPath,
-            manifestFilePath: this.extensionInstallDto.ManifestFilePath,
+        this.apiService.post("Studio", "InstallLibrary", null, {
+            libraryUnzipedPath: this.libraryInstallDto.LibraryUnzipedPath,
+            manifestFilePath: this.libraryInstallDto.ManifestFilePath,
         }).then((data) => {
                 this.step = 4;
                 delete this.awaitAction;
@@ -180,11 +193,11 @@ export class ExtensionsController {
         );
     }
 
-    onDoneInstallExtensionClick() {
+    onDoneInstallLibraryClick() {
         location.reload();
     }
 
-    onCancelInstallExtensionClick() {
+    onCancelInstallLibraryClick() {
         this.disposeWorkingMode();
     }
 }

@@ -16,6 +16,23 @@ export class EntitiesController {
         this.globalService = globalService;
         this.apiService = apiService;
         this.notifyService = notificationService;
+        this.filter = {};
+
+        $scope.$watch('$.filter', (oldVal, newVal) => {
+            if (oldVal != newVal && newVal) {
+                if (!this.entitiesBackup)
+                    this.entitiesBackup = angular.copy(this.entities);
+                else
+                    this.entities = angular.copy(this.entitiesBackup);
+
+                debugger
+                this.entities = _.filter(this.entities, (e) => {
+                    return (!this.filter.EntityName || e.EntityName.indexOf(this.filter.EntityName) >= 0) &&
+                        (!this.filter.EntityType || e.EntityType == this.filter.EntityType) &&
+                        (!this.filter.IsReadonly || e.IsReadonly)
+                })
+            }
+        }, true);
 
         studioService.setFocusModuleDelegate(this, this.onFocusModule);
 

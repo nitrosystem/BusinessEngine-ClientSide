@@ -68,6 +68,7 @@ import {
     DeferredEmit,
     DeferredEvent,
 } from "./providers/deferred-events.provider";
+import { LibrariesController } from "./libraries/libraries.controller";
 
 const app = angular
     .module("BusinessEngineStudioApp", [
@@ -109,6 +110,7 @@ const app = angular
     .controller("studioController", StudioController)
     .controller("createScenarioController", CreateScenarioController)
     .controller("pageResourcesController", PageResourcesController)
+    .controller("librariesController", LibrariesController)
     .controller("extensionsController", ExtensionsController)
     .controller("entitiesController", EntitiesController)
     .controller("createEntityController", CreateEntityController)

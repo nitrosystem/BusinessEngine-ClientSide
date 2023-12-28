@@ -51,7 +51,6 @@ export class CreateServiceController {
 
         this.apiService.get("Studio", "GetService", { serviceID: id || null }).then(
             (data) => {
-
                 this.scenarios = data.Scenarios;
                 this.databases = data.Databases;
                 this.roles = data.Roles;
@@ -390,31 +389,3 @@ export class CreateServiceController {
         this.$scope.$emit('onCloseModule');
     }
 }
-
-// this.$ocLazyLoad
-//   .load([
-//     "/DesktopModules/ClientTest/dist/basic.bundle.js" +
-//       "?ver" +
-//       GlobalSettings.version,
-//   ])
-//   .then(function () {
-//     var polo = new window["Person1"]("negar", "arya");
-//     polo.person1("zahra");
-//   });
-
-// async raiseServiceBuilder() {
-//   await import(
-//     `../../../../basic-components/b-services/${this.serviceType.ESModule}`
-//   ).then((module) => {
-//     $$controllerProvider.register(
-//       this.serviceType.Controller,
-//       module[this.serviceType.ControllerClass]
-//     );
-//     this.$scope.$apply();
-//   });
-// }
-
-// var uu = eval(Temp1);
-// this.apiService.post("Studio", "Temp12", {
-//   Data: uu.toString(),
-// });

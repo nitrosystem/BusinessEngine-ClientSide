@@ -175,17 +175,20 @@
             <!--Standard Form Builder Buttons-->
             <!------------------------------------>
             <div class="b-btn-group" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
-                <button type="button" class="b-btn btn-submit" ng-click="$.onRenderModuleClick()">
+                <button type="button" class="b-btn btn-submit" ng-click="$.onBuildModuleClick()">
                     <i class="codicon codicon-screen-normal"></i>
                     Build Module
                 </button>
                 <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
-                    <a class="dropdown-item" href="" ng-click="$.onRenderModuleClick(true)">
+                    <a class="dropdown-item" href="" ng-click="$.onBuildModuleClick(true)">
                         <i class="codicon codicon-code me-2"></i> Build Scripts & Styles
                     </a>
-                    <a class="dropdown-item" href="" ng-click="$.onRebuildModuleClick()">
-                        <i class="codicon codicon-notebook-template me-2"></i> Redesign Board
+                    <a class="dropdown-item" href="" ng-click="$.onRenderFieldsClick()" b-custom-tooltip data-bs-placement="top" title="Render and show layout panes & fields on the design panel">
+                        <i class="codicon codicon-notebook-template me-2"></i> Render Panes & Fields
+                    </a>
+                    <a class="dropdown-item" href="" ng-click="$.onGotoModuleResourcesClick()">
+                        <i class="codicon codicon-library me-2"></i> Goto Module Resources
                     </a>
                     <a class="dropdown-item" target="_blank" ng-href="{{$.moduleViewLinkUrl}}">
                         <i class="codicon codicon-output me-2"></i> Show Module Output

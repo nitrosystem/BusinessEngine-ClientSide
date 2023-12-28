@@ -2,7 +2,7 @@ import swal from "sweetalert";
 import { GlobalSettings } from "../configs/global.settings";
 
 export class ExtensionsController {
-    constructor($scope, $timeout, Upload, globalService, apiService, notificationService) {
+    constructor($scope, $timeout, Upload, studioService, globalService, apiService, notificationService) {
         "ngInject";
 
         this.$scope = $scope;
@@ -11,6 +11,18 @@ export class ExtensionsController {
         this.globalService = globalService;
         this.apiService = apiService;
         this.notifyService = notificationService;
+
+        this.stepsCallback = { 3: this.monitoringInstall };
+        this.serviceBuilder = {};
+
+
+        studioService.setFocusModuleDelegate(this, this.onFocusModule);
+
+        $scope.$emit('onChangeActivityBar', {
+            name: 'extensions',
+            title: "Extensions",
+            disableActivityBarCallback: true
+        });
 
         this.onPageLoad();
     }
@@ -23,89 +35,53 @@ export class ExtensionsController {
         };
 
         this.apiService.get("Studio", "GetExtensions").then((data) => {
-            this.extensions = data;
+            this.extensions = data.Extensions;
+            this.availableExtensions = data.AvailableExtensions;
 
             delete this.running;
             delete this.awaitAction;
         });
     }
 
-    onAddExtensionClick() {
-        var subParams = {};
-        if (this.isFieldExtensions) subParams.type = "field";
-
-        this.$scope.$emit("onGotoPage", {
-            page: "create-extension",
-            parentID: this.parentID,
-            subParams: subParams,
-        });
+    onFocusModule() {
+        this.$scope.$emit('onChangeActivityBar', { name: 'extensions' })
     }
 
-    onEditExtensionClick(id, title) {
-        var subParams = {};
-        if (this.isFieldExtensions) subParams.type = "field";
+    onInstallAvailableExtension(item, $index) {
+        this.running = "install-available-extensions";
+        this.awaitAction = {
+            title: `Uzip & Ready ${item.extensionFile}`,
+            subtitle: `Just a moment for unzip ${item.extensionName} file and ready to install...`,
+            extIndex: $index
+        };
 
-        this.$scope.$emit("onGotoPage", {
-            page: "create-extension",
-            parentID: this.parentID,
-            id: id,
-            title: title,
-            subParams: subParams,
-        });
-    }
-
-    onDeleteExtensionClick(id, index) {
-        swal({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this imaginary extension!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                this.running = "get-extensions";
-                this.awaitAction = {
-                    title: "Remove Extension",
-                    subtitle: "Just a moment for removing extension...",
+        this.apiService.post("Studio", "InstallAvailableExtensions", item).then((data) => {
+                this.extension = JSON.parse(data.ExtensionJson);
+                this.extensionInstallDto = {
+                    ExtensionUnzipedPath: data.ExtensionUnzipedPath,
+                    ManifestFilePath: data.ManifestFilePath
                 };
 
-                this.apiService.post("Studio", "DeleteExtension", { ID: id }).then(
-                    (data) => {
-                        this.extensions.splice(index, 1);
+                this.workingMode = "install-extension";
+                this.$scope.$emit("onShowRightWidget");
+                this.step = 2;
 
-                        this.notifyService.success("Extension deleted has been successfully");
+                this.availableExtensions.splice($index, 1)
 
-                        this.$rootScope.refreshSidebarExplorerItems();
+                delete this.awaitAction;
+                delete this.running;
+            },
+            (error) => {
+                this.awaitAction.isError = true;
+                this.awaitAction.subtitle = error.statusText;
+                this.awaitAction.desc =
+                    this.globalService.getErrorHtmlFormat(error);
 
-                        delete this.awaitAction;
-                        delete this.running;
-                    },
-                    (error) => {
-                        this.awaitAction.isError = true;
-                        this.awaitAction.subtitle = error.statusText;
-                        this.awaitAction.desc =
-                            this.globalService.getErrorHtmlFormat(error);
+                this.notifyService.error(error.data.Message);
 
-                        this.notifyService.error(error.data.Message);
-
-                        delete this.running;
-                    }
-                );
+                delete this.running;
             }
-        });
-    }
-
-    disposeWorkingMode() {
-        this.$scope.$emit("onHideRightWidget");
-
-        this.$timeout(() => {
-            delete this.workingMode;
-        }, 200);
-    }
-
-
-    onCloseWindow() {
-        this.$scope.$emit('onCloseModule');
+        );
     }
 
     onInstallExtensionClick() {
@@ -134,6 +110,7 @@ export class ExtensionsController {
                     ManifestFilePath: data.data.ManifestFilePath
                 };
 
+                this.monitoringFilePath = data.data.MonitoringFilePath;
                 this.step = 2;
 
                 delete this.running;
@@ -150,8 +127,9 @@ export class ExtensionsController {
         }
     }
 
-    onNextInstallExtensionStepClick() {
+    onInstallExtensionStepClick() {
         this.step = 3;
+        this.stepsCallback[this.step].apply(this);
 
         this.running = "install-extensions";
         this.awaitAction = {
@@ -164,6 +142,7 @@ export class ExtensionsController {
             manifestFilePath: this.extensionInstallDto.ManifestFilePath,
         }).then((data) => {
                 this.step = 4;
+
                 delete this.awaitAction;
                 delete this.running;
             },
@@ -180,11 +159,77 @@ export class ExtensionsController {
         );
     }
 
+
     onDoneInstallExtensionClick() {
         location.reload();
     }
 
     onCancelInstallExtensionClick() {
-        this.disposeWorkingMode();
+        location.reload();
+    }
+
+    onDeleteExtensionClick(id, $index) {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this imaginary extension!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                this.running = "remove-extension";
+                this.awaitAction = {
+                    title: "Remove Extension",
+                    subtitle: "Just a moment for removing the extension...",
+                };
+
+                this.apiService.post("Studio", "DeleteExtension", { ID: id }).then(
+                    (data) => {
+                        this.extensions.splice($index, 1);
+
+                        this.notifyService.success("Extension deleted has been successfully");
+
+                        this.$rootScope.refreshSidebarExplorerItems();
+
+                        delete this.awaitAction;
+                        delete this.running;
+                    },
+                    (error) => {
+                        this.awaitAction.isError = true;
+                        this.awaitAction.subtitle = error.statusText;
+                        this.awaitAction.desc =
+                            this.globalService.getErrorHtmlFormat(error);
+
+                        this.notifyService.error(error.data.Message);
+
+                        delete this.running;
+                    }
+                );
+            }
+        });
+    }
+
+    disposeWorkingMode() {
+        location.reload();
+    }
+
+    onCloseWindow() {
+        location.reload();
+    }
+
+    monitoringInstall() {
+        var index = 1;
+        this.monitoringTimer = setInterval(() => {
+            fetch(this.monitoringFilePath + '?ver=' + index++).then((stream) => { return stream.text(); })
+                .then((content) => {
+                    $('.monitor-install-extension').text(content);
+                })
+                .catch((err) => {
+                    console.log(err)
+                });
+
+            $(".monitor-install-extension").animate({ scrollTop: $('.monitor-install-extension').prop("scrollHeight") }, 400);
+
+        }, 500);
     }
 }

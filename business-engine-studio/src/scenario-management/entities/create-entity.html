@@ -54,22 +54,11 @@
                     </label>
                 </div>
                 <div class="b-field">
-                    <label class="form-label d-block">Entity Type</label>
-                    <div class="b-radio radio-inline">
-                        <label class="radio-item">
-                            <input type="radio" id="rdEntityType" name="entityType{{$.entity.EntityID}}" value="table"
-                                ng-model="$.entity.EntityType" required />
-                            <i class="input-helper"></i>
-                            Table
-                        </label>
-                        <label class="radio-item">
-                            <input type="radio" name="entityType{{$.entity.EntityID}}" value="view"
-                                ng-model="$.entity.EntityType" required />
-                            <i class="input-helper"></i>
-                            View
-                        </label>
+                    <label class="form-label">Result Type</label>
+                    <div class="b-radio-list-inline">
+                        <div class="radio-item"><input type="radio" id="rdEntityTypeTable" name="entityType{{$.entity.EntityID}}" value="table" ng-model="$.entity.EntityType" required><label for="rdEntityTypeTable">Table</label></div>
+                        <div class="radio-item"><input type="radio" id="rdEntityTypeView" name="entityType{{$.entity.EntityID}}" value="view" ng-model="$.entity.EntityType" required><label for="rdEntityTypeView">View</label></div>
                     </div>
-                    <p class="b-invalid">{{$.form.error.EntityType}}</p>
                 </div>
                 <div class="b-field" ng-if="!$.entity.IsReadonly">
                     <label class="form-label">
@@ -284,6 +273,11 @@
                             <input type="checkbox" ng-model="$.entity.IsMultipleColumnsForPK">
                             <span class="slider"></span>
                         </label>
+                    </div>
+                    <div class="b-field">
+                        <button type="button" class="b-btn btn-action" ng-click="$.onAddViewModelClick()">
+                            <i class="codicon codicon-table"></i> Create View Model From Entity
+                        </button>
                     </div>
                 </div>
             </div>

@@ -345,28 +345,15 @@
 }
 
 .b-content-widget .widget-body .advanced-search-box {
-  background-color: #4a4a4abf;
-  width: 100%;
-  height: 0;
-  transform: translateY(-10rem);
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.5s;
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
-    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
   padding: 0;
-}
-
-.b-content-widget .widget-body .advanced-search-box.show {
-  opacity: 1;
-  transform: translateY(0);
-  visibility: visible;
-  height: 5rem;
   margin-bottom: 2rem;
+  transition: all 0.5s;
+  width: 100%;
 }
 
-.b-content-widget .widget-body .advanced-search-box.show .content-pane {
-  padding: 1.5rem;
+.b-content-widget .widget-body .advanced-search-box .content-pane {
+  padding: 0 0 1.5rem;
 }
 
 /* --------------------------------------------------------
@@ -398,7 +385,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 99999;
+  z-index: 999;
 }
 
 .b-right-widget.visible {
@@ -1131,8 +1118,8 @@
   content: "\eab4";
   position: absolute;
   cursor: pointer;
-  right: 0.5rem;
-  top: 0.45rem;
+  right: 0.4rem;
+  top: 0.6rem;
 }
 
 .chosen-container.chosen-container-active {
@@ -1503,7 +1490,8 @@
   display: flex;
 }
 
-.b-multi-btns > button {
+.b-multi-btns > button,
+.b-multi-btns > a {
   color: #ccc;
   background: none;
   box-shadow: none;
@@ -1516,23 +1504,24 @@
   flex: 1;
 }
 
-.b-multi-btns > button.btn-sm {
+.b-multi-btns > .btn-sm {
   padding: 0.2rem;
 }
 
-.b-multi-btns > button:first-child {
+.b-multi-btns > *:first-child {
   border-left-width: 0;
 }
 
-.b-multi-btns > button:last-child {
+.b-multi-btns > *:last-child {
   border-right-width: 0 !important;
 }
 
-.b-multi-btns > button:disabled {
+.b-multi-btns > *:disabled {
   opacity: 0.6;
 }
 
-.b-multi-btns > button > i {
+.b-multi-btns > button > i,
+.b-multi-btns > a > i {
   margin: 0;
 }
 
@@ -1712,6 +1701,16 @@
   -webkit-transform: translateX(1rem);
   -moz-transform: translateX(1rem);
   transform: translateX(1rem);
+}
+
+.b-switch-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.b-switch-inline .b-switch {
+  margin-left: 0.6rem;
 }
 
 /* --------------------------------------------------------

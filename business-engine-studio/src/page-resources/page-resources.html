@@ -72,7 +72,7 @@
                                         <i class="codicon codicon-ellipsis"></i>
                                     </div>
                                 </div>
-                                <div class="d-flex table-row" ng-repeat="item in module  | filter:{IsBaseResource:true} | orderBy:'LoadOrder'" role="button">
+                                <div class="d-flex table-row" ng-repeat="item in module | filter:{IsBaseResource:true} | orderBy:'LoadOrder'" role="button">
                                     <div class="col-1 my-auto text-light">
                                         <label class="b-switch switch-sm" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Important Note" data-bs-html="true" data-bs-content="If this library is loaded with the specified version by another module on this page, it is better to disable the loading of the library.">
                                             <input type="checkbox" ng-model="item.IsActive" ng-change="$.setResourceStatus(item.ResourceID,item.IsActive)">
@@ -96,10 +96,10 @@
                                     </div>
                                     <div class=" col-1">
                                         <div class="b-multi-btns">
-                                            <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                            <a ng-href="{{item.FilePath}}" target="_blank" b-custom-tooltip data-bs-placement="bottom" title="Open resource in new tab">
                                                 <i class="codicon codicon-output"></i>
-                                            </button>
-                                            <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                            </a>
+                                            <button type="button" ng-click="$.onDeletePageResourceClick(module,item)" ng-disabled="$.running" b-custom-tooltip data-bs-placement="bottom" title="Delete resource">
                                                 <i class="codicon codicon-trash"></i>
                                             </button>
                                         </div>
@@ -141,7 +141,7 @@
                                         <i class="codicon codicon-ellipsis"></i>
                                     </div>
                                 </div>
-                                <div class="d-flex table-row" ng-repeat="item in module | filter:{IsSystemResource:true} | orderBy:'LoadOrder'" role="button">
+                                <div class="d-flex table-row" ng-repeat="item in module | filter:{IsSystemResource:true} | orderBy: 'LoadOrder'" role="button">
                                     <div class="col-1 my-auto text-light">
                                         {{item.ResourceType}}
                                     </div>
@@ -156,7 +156,7 @@
                                             <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
                                                 <i class="codicon codicon-output"></i>
                                             </button>
-                                            <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                            <button type="button" ng-click="$.onDeletePageResourceClick(module,item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
                                                 <i class="codicon codicon-trash"></i>
                                             </button>
                                         </div>
@@ -194,9 +194,10 @@
                                         <i class="codicon codicon-ellipsis"></i>
                                     </div>
                                 </div>
-                                <div class="d-flex table-row" ng-repeat="item in module  | orderBy:'LoadOrder'" ng-if="item.FieldType" role="button">
+                                <div class="d-flex table-row" ng-repeat="item in module | orderBy: 'LoadOrder'" ng-if="item.FieldType" role="button">
                                     <div class="col-1 my-auto text-light">
-                                        <label class="b-switch switch-sm" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Important Note" data-bs-html="true" data-bs-content="If this library is loaded with the specified version by another module on this page, it is better to disable the loading of the library.">
+                                        <label class="b-switch switch-sm" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Important Note" data-bs-html="true" data-bs-content="If this library
+                                                is loaded with the specified version by another module on this page, it is better to disable the loading of the library.">
                                             <input type="checkbox" ng-model="item.IsActive">
                                             <span class="slider"></span>
                                         </label>
@@ -222,7 +223,7 @@
                                             <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
                                                 <i class="codicon codicon-output"></i>
                                             </button>
-                                            <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                            <button type="button" ng-click="$.onDeletePageResourceClick(module,item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
                                                 <i class="codicon codicon-trash"></i>
                                             </button>
                                         </div>
@@ -260,9 +261,10 @@
                                         <i class="codicon codicon-ellipsis"></i>
                                     </div>
                                 </div>
-                                <div class="d-flex table-row" ng-repeat="item in module | filter:{IsCustomResource:true} | orderBy:'LoadOrder'" role="button">
+                                <div class="d-flex table-row" ng-repeat="item in module | filter:{IsCustomResource:true} | orderBy: 'LoadOrder'" role="button">
                                     <div class="col-1 my-auto text-light">
-                                        <label class="b-switch switch-sm" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Important Note" data-bs-html="true" data-bs-content="If this library is loaded with the specified version by another module on this page, it is better to disable the loading of the library.">
+                                        <label class="b-switch switch-sm" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Important Note" data-bs-html="true" data-bs-content="If this library
+                                                is loaded with the specified version by another module on this page, it is better to disable the loading of the library.">
                                             <input type="checkbox" ng-model="item.IsActive">
                                             <span class="slider"></span>
                                         </label>
@@ -288,7 +290,7 @@
                                             <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
                                                 <i class="codicon codicon-output"></i>
                                             </button>
-                                            <button type="button" ng-click="$.onDeleteExtensionClick(item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                            <button type="button" ng-click="$.onDeletePageResourceClick(module,item)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
                                                 <i class="codicon codicon-trash"></i>
                                             </button>
                                         </div>
@@ -296,12 +298,12 @@
                                 </div>
                             </div>
                             <div class="table-footer">
-                                <div class="b-notify notify-warning mb-4">
+                                <div class="b-notify notify-warning mb-4" ng-if="module.length">
                                     <i class="codicon codicon-info b-icon-2"></i>
                                     <div class="text">
                                         <span class="subtext">
                                             Click 
-                                            <button type="button" class="b-btn btn-sm ms-2 me-2" ng-click="$.onAddCustomResourceClick()">
+                                            <button type="button" class="b-btn btn-sm ms-2 me-2" ng-click="$.onGotoModuleBuilderClick(module)">
                                                 Module Builder
                                             </button>
                                             for goto module builder and add a new custom resource to module.

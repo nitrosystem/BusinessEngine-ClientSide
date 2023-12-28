@@ -16,6 +16,7 @@ export class ViewModelsController {
         this.globalService = globalService;
         this.apiService = apiService;
         this.notifyService = notificationService;
+        this.filter = {};
 
         studioService.setFocusModuleDelegate(this, this.onFocusModule);
 
@@ -42,6 +43,15 @@ export class ViewModelsController {
     onFocusModule() {
         this.$rootScope.explorerExpandedItems.push(...["view-models"]);
         this.$rootScope.explorerCurrentItem = "view-models";
+    }
+
+    onSearchClick() {
+        if (!this.viewModelsBackup)
+            this.viewModelsBackup = _.cloneDeep(this.viewModels);
+        else
+            this.viewModels = _.cloneDeep(this.viewModelsBackup);
+
+        this.viewModels = _.filter(this.viewModels, (v) => { return v.ViewModelName.indexOf(this.filter.ViewModelName) >= 0 });
     }
 
     onAddViewModelClick() {

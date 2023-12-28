@@ -271,7 +271,7 @@ export class moduleBuilderService {
                   </button>
                 </li>
                <li class="toolbar-item">
-                  <button type="button" class="field-settings-item" ng-click="$.onRenderModuleClick(false)" role="button">
+                  <button type="button" class="field-settings-item" ng-click="$.onBuildModuleClick(false)" role="button">
                     <i class="codicon codicon-play"></i>
                   </button>
                 </li>
@@ -426,7 +426,7 @@ export class moduleBuilderService {
                 </button>
               </li>
              <li class="toolbar-item">
-                <button type="button" class="field-settings-item" ng-click="$.onRenderModuleClick(false)" role="button">
+                <button type="button" class="field-settings-item" ng-click="$.onBuildModuleClick(false)" role="button">
                   <i class="codicon codicon-play"></i>
                 </button>
               </li>

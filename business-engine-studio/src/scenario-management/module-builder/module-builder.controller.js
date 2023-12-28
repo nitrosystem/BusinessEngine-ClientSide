@@ -383,7 +383,7 @@ export class ModuleBuilderController {
     /*------------------------------------*/
     /* Build Module Methods  */
     /*------------------------------------*/
-    onRenderModuleClick(isRenderScriptsAndStyles) {
+    onBuildModuleClick(isRenderScriptsAndStyles) {
         if (!this.module.Skin || !this.module.Template) {
             this.notifyService.notify(`
                 the First step for creating your module,
@@ -434,7 +434,7 @@ export class ModuleBuilderController {
             });
     }
 
-    onRebuildModuleClick() {
+    onRenderFieldsClick() {
         if (!this.module.Skin || !this.module.Template) {
             this.notifyService.notify(`
                 the First step for creating your module,
@@ -526,6 +526,18 @@ export class ModuleBuilderController {
             });
     }
 
+    onGotoModuleResourcesClick() {
+        this.$scope.$emit("onGotoPage", {
+            page: "page-resources",
+            id: this.module.ModuleID,
+            activityBar: 'page-resources',
+            subParams: {
+                mode: 'module-resources',
+                disableActivityBarCallback: true,
+            }
+        });
+    }
+
     saveModule() {
         const defer = this.$q.defer();
 
@@ -543,7 +555,7 @@ export class ModuleBuilderController {
 
                 if (this.module.ModuleBuilderType != "HtmlEditor") {
                     this.reBuildModule(this.module, this.fields, this.$scope).then(() => {
-                        this.onRenderModuleClick(true);
+                        this.onBuildModuleClick(true);
                     });
                 }
 
@@ -1337,7 +1349,7 @@ export class ModuleBuilderController {
                                     return f.FieldType == field.FieldType;
                                 }).length == 1;
 
-                            this.onRenderModuleClick(firstFieldOfFieldType);
+                            this.onBuildModuleClick(firstFieldOfFieldType);
 
                             this.$timeout(() => {
                                 this.disposeWorkingMode();
@@ -1420,7 +1432,7 @@ export class ModuleBuilderController {
                             .find('*[b-field="' + field.FieldID + '"]')
                             .remove();
 
-                        this.onRenderModuleClick();
+                        this.onBuildModuleClick();
 
                         delete this.field[field.FieldName];
                         delete this.awaitAction;

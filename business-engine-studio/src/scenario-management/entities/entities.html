@@ -7,59 +7,42 @@
                     <div class="col-3 me-3">
                         <div class="b-input-group">
                             <input type="text" ng-model="$.filter.EntityName" class="b-input form-control" placeholder="Search by entity name" />
-                            <span><i class="codicon codicon-bell"></i></span>
+                            <span><i class="codicon codicon-table"></i></span>
                         </div>
                     </div>
                     <div class="col-3 me-3">
                         <div class="b-input-group">
-                            <input type="text" ng-model="$.filter.EntityName" class="b-input form-control" placeholder="Search by entity name" />
+                            <select ng-model="$.filter.EntityType" class="b-input form-select" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select entity type'" required>
+                                <option ng-value="">All</option>
+                                <option ng-value="'table'">Table</option>
+                                <option ng-value="'view'">View</option>
+                            </select>
                             <span><i class="codicon codicon-circuit-board"></i></span>
                         </div>
                     </div>
-                    <div class="col-1">
-                        <div class="b-input-group">
-                            <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()" ng-disabled="$.column">
-                            <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
-                        </button>
+                    <div class="col-2">
+                        <div class="b-field b-switch-inline mt-2 mb-2">
+                            <label class="form-label d-block mb-0">Is Readonly</label>
+                            <label class="b-switch">
+                                <input type="checkbox" ng-model="$.filter.IsReadonly" >
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col text-end">
+                        <div class="b-btn-group">
+                            <button type="button" class="b-btn btn-submit" ng-click="$.onAddEntityClick()" ng-disabled="$.column">
+                                <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                                Add Entity
+                            </button>
+                            <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                            <div class="dropdown-menu b-dropdown-menu"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="b-table" ng-if="$.displayMode=='table'">
-            <div class="table-header">
-                <div class="col-3 me-3">
-                    <div class="b-input-group">
-                        <input type="text" ng-model="$.filter.EntityName" class="b-input form-control" placeholder="Search by entity name" />
-                        <span><i class="codicon codicon-bell"></i></span>
-                    </div>
-                </div>
-                <div class="col-3 me-3">
-                    <div class="b-input-group">
-                        <input type="text" ng-model="$.filter.EntityName" class="b-input form-control" placeholder="Search by entity name" />
-                        <span><i class="codicon codicon-circuit-board"></i></span>
-                    </div>
-                </div>
-                <div class="col-1">
-                    <div class="b-input-group">
-                        <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()" ng-disabled="$.column">
-                            <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="header-tools">
-                    <div class="b-btn-group">
-                        <button type="button" class="b-btn btn-action" ng-click="$.onAddEntityClick()" ng-disabled="$.column">
-                            <i class="codicon codicon-plus" ng-disabled="$.running"></i>
-                            Add Entity
-                        </button>
-                        <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <div class="dropdown-menu b-dropdown-menu">
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="table-body">
                 <div class="grid columns-name">
                     <div class="g-col-1">
@@ -139,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <div class="entities-box" ng-if="!$.displayMode || $.displayMode=='box'" style="height: {{$.entitiesColumnsCount * 1.8}}rem;">
+        <div class="entities-box" ng-if="!$.displayMode || $.displayMode=='box'" ng-style="{'height' : $.entitiesColumnsCount * 1.8 + 'rem'}">
             <div class="entity-item" ng-repeat="entity in $.entities">
                 <div class="entity-title-wrapper">
                     <i class="codicon codicon-ungroup-by-ref-type"></i>

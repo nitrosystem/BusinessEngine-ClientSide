@@ -1,46 +1,58 @@
 <div ng-controller="servicesController as $" class="services">
-    <b-content-widget data-title="Services" data-icon="versions" data-module-type="services"
-        data-subtitle="Scenario services - database services & public services & web services & ..."
-        data-await-action="$.awaitAction">
-        <div class="b-table">
-            <div class="table-header">
-                <div class="col-3 me-3">
-                    <div class="b-input-group">
-                        <input type="text" ng-model="$.filter.ServiceName" class="b-input form-control"
-                            placeholder="Search by service name" />
-                        <span><i class="codicon codicon-bell"></i></span>
+    <b-content-widget data-title="Services" data-icon="versions" data-module-type="services" data-subtitle="Scenario services - functionality tasks on the scenario" data-await-service="$.awaitService" extra-icon1="codicon codicon-table" extra-icon1-title="Table Mode"
+        data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow" extra-icon1-method="onTableModeClick" extra-icon2="codicon codicon-chrome-restore" extra-icon2-title="Box Mode" extra-icon2-method="onBoxModeClick">
+        <!------------------------------------>
+        <!--Search Box-->
+        <!------------------------------------>
+        <div class="advanced-search-box">
+            <div class="content-pane">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="b-input-group">
+                            <input type="text" ng-model="$.filter.ServiceName" class="b-input form-control" ng-keyup="$.onServiceNameChange($event)" placeholder="Service name(Press enter)" />
+                            <span><i class="codicon codicon-ruby"></i></span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3 me-3">
-                    <div class="b-input-group">
-                        <input type="text" ng-model="$.filter.ServiceName" class="b-input form-control"
-                            placeholder="Search by service name" />
-                        <span><i class="codicon codicon-circuit-board"></i></span>
+                    <div class="col-2">
+                        <div class="b-input-group">
+                            <select ng-model="$.filter.ServiceType" class="b-input form-select" ng-options="st.ServiceType as st.ServiceType for st in $.serviceTypesForFilters" ng-change="$.filterItems()" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Service type'"
+                                required>
+                                <option value=""></option>
+                            </select>
+                            <span><i class="codicon codicon-circuit-board"></i></span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-1">
-                    <div class="b-input-group">
-                        <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()"
-                            ng-disabled="$.column">
-                            <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
+                    <div class="col-3">
+                        <div class="b-input-group">
+                            <select ng-model="$.filter.ServiceSubtype" class="b-input form-select" ng-options="st.ServiceSubtype as st.ServiceSubtype for st in $.serviceTypes" ng-change="$.filterItems()" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Service subtype'"
+                                required>
+                                <option value=""></option>
+                            </select>
+                            <span><i class="codicon codicon-briefcase"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="b-btn btn-service ps-3 pe-3" ng-click="$.onClearFilterClick()">
+                            <i class="codicon codicon-close me-0"></i>
                         </button>
                     </div>
-                </div>
-                <div class="header-tools">
-                    <div class="b-btn-group">
-                        <button type="button" class="b-btn btn-action" ng-click="$.onAddServiceClick()"
-                            ng-disabled="$.column">
-                            <i class="codicon codicon-plus" ng-disabled="$.running"></i>
-                            Add Service
-                        </button>
-                        <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
-                            ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <div class="dropdown-menu b-dropdown-menu">
+                    <div class="col text-end">
+                        <div class="b-btn-group">
+                            <button type="button" class="b-btn btn-service" ng-click="$.onAddServiceClick()" ng-disabled="$.column">
+                                <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                                Add Service
+                            </button>
+                            <button type="button" class="b-btn btn-service dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                            <div class="dropdown-menu b-dropdown-menu"></div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <!------------------------------------>
+        <!--Display Mode : Table-->
+        <!------------------------------------>
+        <div class="b-table" ng-if="$.displayMode=='table'">
             <div class="table-body">
                 <div class="grid columns-name">
                     <div class="g-col-1">
@@ -83,16 +95,14 @@
                             <i class="codicon codicon-arrow-up d-inline-block me-1"
                                 ng-click="$.onServiceSwapClick($index,$index-1)"></i>
                         </button>
-                        <button type="button" class="b-clean text-light p-0"
-                            ng-disabled="$.running || $index==$.services.length-1">
+                        <button type="button" class="b-clean text-light p-0" ng-disabled="$.running || $index==$.services.length-1">
                             <i class="codicon codicon-arrow-down d-inline-block"
                                 ng-click="$.onServiceSwapClick($index,$index+1)"></i>
                         </button>
                     </div>
                     <div class="g-col-2">
                         <div class="b-multi-btns">
-                            <button type="button"
-                                ng-click="$.onEditServiceClick(service.ServiceID,service.ServiceName)">
+                            <button type="button" ng-click="$.onEditServiceClick(service.ServiceID,service.ServiceName)">
                                 <i class="codicon codicon-edit"></i>
                             </button>
                             <button type="button" ng-click="$.onDeleteServiceClick(service.ServiceID,$index)">
@@ -116,6 +126,103 @@
                                 Service</button> for creating a new
                             service.
                         </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Display Mode : Box-->
+        <!------------------------------------>
+        <div class="services" ng-if="!$.displayMode || $.displayMode=='box'">
+            <div class="service-item" ng-repeat="service in $.services | orderBy: 'ViewOrder'" ng-class="{'service-has-childs':service.Childs.length}">
+                <div class="item-wrapper">
+                    <div class="row">
+                        <div class="col-1 position-relative">
+                            <button type="button" class="b-clean service-move-top" ng-click="$.onServiceSwapClick($index,$index-1)" ng-disabled="$.running || service.IsFirst">
+                                <i class="codicon codicon-arrow-up d-inline-block me-1"></i>
+                            </button>
+                            <button type="button" class="b-clean service-move-bottom" ng-click="$.onServiceSwapClick($index,$index+1)" ng-disabled="$.running || service.IsLast">
+                                <i class="codicon codicon-arrow-down d-inline-block"></i>
+                            </button>
+                        </div>
+                        <div class="col-2">
+                            <div class="d-flex flex-column align-items-center">
+                                <img ng-if="service.ServiceTypeIcon" ng-src="{{service.ServiceTypeIcon}}" class="service-type-icon" />
+                                <i ng-if="!service.ServiceTypeIcon" class="bi bi-card-list service-type-icon"></i>
+                                <p class="service-type">{{service.ServiceSubtype}}</p>
+                                <a class="text-white" href="#serviceSubItems{{service.ServiceID}}" data-bs-toggle="collapse" role="button" ng-if="service.Childs.length" ng-click="service.IsExpanded=!service.IsExpanded">
+                                    <i ng-if="!service.IsExpanded" class="codicon codicon-collapse-all"></i>
+                                    <i ng-if="service.IsExpanded" class="codicon codicon-expand-all"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-5 b-splitter border-end">
+                            <h5 class="h5 text-white">{{service.ServiceName}}</h5>
+                            <p class="text-mute mb-3">
+                                {{service.ServiceType}}
+                                <span class="small" ng-if="service.Event=='OnServiceCompleted'"> 
+                                        -
+                                        <span ng-if="service.ParentResultStatus==0">All Mode</span>
+                                <span ng-if="service.ParentResultStatus==1">On Completed Success</span>
+                                <span ng-if="service.ParentResultStatus==2">On Completed Error</span>
+                                </span>
+                            </p>
+                            <p class="text-white-50 mb-0">Created by {{service.CreatedUserDisplayName}} in <span b-custom-date="{{service.CreatedOnDate}}" data-relative="true"></span></p>
+                            <p class="text-white-50 mb-0">Last Modified by {{service.LastModifiedByUserDisplayName}} in <span b-custom-date="{{service.LastModifiedOnDate}}" data-relative="true"></span></p>
+                        </div>
+                        <div class="col-2 b-splitter border-end small">
+                            <div ng-if="service.HasResult" class="d-flex align-items-center mb-3">
+                                <i class="codicon codicon-references me-2 b-icon-1_5"></i>
+                                <span ng-if="service.ResultType===0">Scaler</span>
+                                <span ng-if="service.ResultType===1">Data Row</span>
+                                <span ng-if="service.ResultType===2">Data List</span>
+                            </div>
+                            <div ng-if="service.HasResult" class="d-flex align-items-center mb-3">
+                                <i class="codicon codicon-check me-2 b-icon-1_5"></i> Has Result
+                            </div>
+                            <div ng-if="!service.HasResult" class="d-flex align-items-center mb-3">
+                                <i class="codicon codicon-chrome-maximize me-2 b-icon-1_5"></i> Has Result
+                            </div>
+                            <div ng-if="service.IsEnabled" class="d-flex align-items-center mb-3">
+                                <i class="codicon codicon-check me-2 b-icon-1_5"></i> Is Enabled
+                            </div>
+                            <div ng-if="!service.IsEnabled" class="d-flex align-items-center mb-3">
+                                <i class="codicon codicon-chrome-maximize me-2 b-icon-1_5"></i> Is Enabled
+                            </div>
+                        </div>
+                        <div class="col-1 small pe-0">
+                            <p class="text-white-50" ng-if="service.Params.length">{{service.Params.length}} Params</p>
+                            <p class="text-white-50" ng-if="service.Results.length">{{service.Results.length}} Results</p>
+                            <p class="text-white-50" ng-if="service.Conditions.length">{{service.Conditions.length}} Conditions</p>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="b-btn btn-service mb-2" ng-click="$.onEditServiceClick(service.ServiceID,service.ServiceName,service.FieldID)">
+                                <i class="codicon codicon-edit me-0"></i>
+                            </button>
+                            <button type="button" class="b-btn btn-service mb-2" ng-click="$.onDeleteServiceClick(service.ServiceID,$index)">
+                                <i class="codicon codicon-trash me-0"></i>
+                            </button>
+                            <a class="b-btn btn-service" href="#serviceMoreData{{service.ServiceID}}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                                <i class="codicon codicon-chevron-down me-0"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="collapse multi-collapse" id="serviceMoreData{{service.ServiceID}}">
+                        <div class="service-options">
+                            <h5 class="option-name">More Data </h5>
+                            <div class="option-item">
+                                <label class="item-label">Service ID:</label>
+                                <label class="item-label">{{service.ServiceID}}</label>
+                            </div>
+                        </div>
+                        <div class="service-options" ng-if="service.Params.length">
+                            <h5 class="option-name">Params: </h5>
+                            <div class="option-item" ng-repeat="param in service.Params | orderBy:'ViewOrder'">
+                                <label class="item-label">{{param.ParamName}}</label>
+                                <span class="item-label">-----</span>
+                                <label class="item-label">{{param.ParamType}}</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

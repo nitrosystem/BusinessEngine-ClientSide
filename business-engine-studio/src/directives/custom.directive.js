@@ -19,8 +19,13 @@ export function CustomDateDirective() {
         link: function(scope, element, attrs) {
             var value = attrs.bCustomDate;
             if (attrs.relative == "true") {
-                value = moment(value).fromNow();
-                element.text(value);
+                var content = moment(value).fromNow();
+                element.text(content);
+            } else {
+                const format = attrs.format || "MM/DD/YYYY";
+                var dt = moment(value);
+                var content = dt.isValid() ? dt.format(format) : "";
+                element.text(content);
             }
         },
         replace: true,

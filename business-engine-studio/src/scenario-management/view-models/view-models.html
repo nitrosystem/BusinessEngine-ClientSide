@@ -1,45 +1,33 @@
 <div ng-controller="viewModelsController as $" class="viewModels">
-    <b-content-widget data-title="View Models" data-icon="combine" data-module-type="viewModels"
-        data-subtitle="Scenario view models" data-await-action="$.awaitAction">
-        <div class="b-table">
-            <div class="table-header">
-                <div class="col-3 me-3">
-                    <div class="b-input-group">
-                        <input type="text" ng-model="$.filter.ViewModelName" class="b-input form-control"
-                            placeholder="Search by viewModel name" />
-                        <span><i class="codicon codicon-bell"></i></span>
+    <b-content-widget data-title="View Models" data-icon="combine" data-module-type="viewModels" data-subtitle="Scenario view models" data-await-action="$.awaitAction">
+        <div class="advanced-search-box">
+            <div class="content-pane">
+                <div class="row">
+                    <div class="col-4 me-2">
+                        <div class="b-input-group">
+                            <input type="text" ng-model="$.filter.ViewModelName" class="b-input form-control" placeholder="Search by view model name" />
+                            <span><i class="codicon codicon-output"></i></span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-3 me-3">
-                    <div class="b-input-group">
-                        <input type="text" ng-model="$.filter.ViewModelName" class="b-input form-control"
-                            placeholder="Search by viewModel name" />
-                        <span><i class="codicon codicon-circuit-board"></i></span>
-                    </div>
-                </div>
-                <div class="col-1">
-                    <div class="b-input-group">
-                        <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()"
-                            ng-disabled="$.column">
-                            <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
+                    <div class="col-1">
+                        <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()">
+                            <i class="codicon codicon-search me-0"></i>
                         </button>
                     </div>
-                </div>
-                <div class="header-tools">
-                    <div class="b-btn-group">
-                        <button type="button" class="b-btn btn-action" ng-click="$.onAddViewModelClick()"
-                            ng-disabled="$.column">
-                            <i class="codicon codicon-plus" ng-disabled="$.running"></i>
-                            Add ViewModel
-                        </button>
-                        <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
-                            ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <div class="dropdown-menu b-dropdown-menu">
+                    <div class="col text-end">
+                        <div class="b-btn-group">
+                            <button type="button" class="b-btn btn-submit" ng-click="$.onAddViewModelClick()" ng-disabled="$.column">
+                                <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                                Add View Model
+                            </button>
+                            <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                            <div class="dropdown-menu b-dropdown-menu"></div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="b-table">
             <div class="table-body">
                 <div class="grid columns-name">
                     <div class="g-col-1">
@@ -72,16 +60,14 @@
                             <i class="codicon codicon-arrow-up d-inline-block me-1"
                                 ng-click="$.onViewModelSwapClick($index,$index-1)"></i>
                         </button>
-                        <button type="button" class="b-clean text-light p-0"
-                            ng-disabled="$.running || $index==$.viewModels.length-1">
+                        <button type="button" class="b-clean text-light p-0" ng-disabled="$.running || $index==$.viewModels.length-1">
                             <i class="codicon codicon-arrow-down d-inline-block"
                                 ng-click="$.onViewModelSwapClick($index,$index+1)"></i>
                         </button>
                     </div>
                     <div class="g-col-2">
                         <div class="b-multi-btns">
-                            <button type="button"
-                                ng-click="$.onEditViewModelClick(viewModel.ViewModelID,viewModel.ViewModelName)">
+                            <button type="button" ng-click="$.onEditViewModelClick(viewModel.ViewModelID,viewModel.ViewModelName)">
                                 <i class="codicon codicon-edit"></i>
                             </button>
                             <button type="button" ng-click="$.onDeleteViewModelClick(viewModel.ViewModelID,$index)">

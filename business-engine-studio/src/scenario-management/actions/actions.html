@@ -1,7 +1,43 @@
 <div ng-controller="actionsController as $" class="actions">
-    <b-content-widget data-title="Actions" data-icon="combine" data-module-type="actions" data-subtitle="Scenario actions - tables & views on database" data-await-action="$.awaitAction" extra-icon1="codicon codicon-table" extra-icon1-title="Table Mode" data-module="$"
+    <b-content-widget data-title="Actions" data-icon="combine" data-module-type="actions" data-subtitle="Module actions - all events on the module" data-await-action="$.awaitAction" extra-icon1="codicon codicon-table" extra-icon1-title="Table Mode" data-module="$"
         data-reload-method="onPageLoad" data-close-method="onCloseWindow" extra-icon1-method="onTableModeClick" extra-icon2="codicon codicon-chrome-restore" extra-icon2-title="Box Mode" extra-icon2-method="onBoxModeClick">
         <b-widget-quick-input ng-if="1==2" items="$.scenarios" item-Title="ScenarioTitle" item-Subtitle="ScenarioName" item-icon="archive" search-placeholder="Select a scenario"></b-widget-quick-input>
+        <!------------------------------------>
+        <!--Search Box-->
+        <!------------------------------------>
+        <div class="d-flex mb-4">
+            <div class="col-3 me-3">
+                <div class="b-input-group">
+                    <input type="text" ng-model="$.filter.ActionName" class="b-input form-control" placeholder="Search by action name" />
+                    <span><i class="codicon codicon-bell"></i></span>
+                </div>
+            </div>
+            <div class="col-3 me-3">
+                <div class="b-input-group">
+                    <input type="text" ng-model="$.filter.ActionName" class="b-input form-control" placeholder="Search by action name" />
+                    <span><i class="codicon codicon-circuit-board"></i></span>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="b-input-group">
+                    <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()" ng-disabled="$.column">
+                        <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="ms-auto">
+                <div class="b-btn-group">
+                    <button type="button" class="b-btn btn-action" ng-click="$.onAddActionClick()" ng-disabled="$.column">
+                        <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                        Add Action
+                    </button>
+                    <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu b-dropdown-menu">
+                    </div>
+                </div>
+            </div>
+        </div>
         <!------------------------------------>
         <!--Display Mode : Table-->
         <!------------------------------------>
@@ -120,39 +156,6 @@
         <!--Display Mode : Box-->
         <!------------------------------------>
         <div class="actions" ng-if="!$.displayMode || $.displayMode=='box'">
-            <div class="d-flex mb-4">
-                <div class="col-3 me-3">
-                    <div class="b-input-group">
-                        <input type="text" ng-model="$.filter.ActionName" class="b-input form-control" placeholder="Search by action name" />
-                        <span><i class="codicon codicon-bell"></i></span>
-                    </div>
-                </div>
-                <div class="col-3 me-3">
-                    <div class="b-input-group">
-                        <input type="text" ng-model="$.filter.ActionName" class="b-input form-control" placeholder="Search by action name" />
-                        <span><i class="codicon codicon-circuit-board"></i></span>
-                    </div>
-                </div>
-                <div class="col-1">
-                    <div class="b-input-group">
-                        <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()" ng-disabled="$.column">
-                            <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="ms-auto">
-                    <div class="b-btn-group">
-                        <button type="button" class="b-btn btn-action" ng-click="$.onAddActionClick()" ng-disabled="$.column">
-                            <i class="codicon codicon-plus" ng-disabled="$.running"></i>
-                            Add Action
-                        </button>
-                        <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <div class="dropdown-menu b-dropdown-menu">
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!------------------------------------>
             <!--Module Actions-->
             <!------------------------------------>

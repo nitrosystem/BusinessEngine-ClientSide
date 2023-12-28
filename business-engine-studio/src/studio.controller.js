@@ -41,7 +41,7 @@ export class StudioController {
                 args.id,
                 args.title,
                 subParamsUrl,
-                args.activityBar
+                args.activityBar,
             );
         });
 
@@ -59,7 +59,7 @@ export class StudioController {
         });
 
         $scope.$on("onChangeActivityBar", (e, args) => {
-            if (args) this.onActivityBarItemClick(args.name, args.title);
+            if (args) this.onActivityBarItemClick(args.name, args.title, args.disableActivityBarCallback);
         });
 
         $scope.$on("onShowRightWidget", (e, args) => {
@@ -87,7 +87,6 @@ export class StudioController {
         this.activityBarItems = activityBarItems;
         this.onActivityBarItemClick("explorer");
         this.$rootScope.explorerExpandedItems = [];
-
 
         this.onPageLoad();
     }
@@ -152,7 +151,7 @@ export class StudioController {
         return defer.promise;
     }
 
-    createOrGotoTab(moduleType, parentID, id, title, subParamsUrl, activityBar) {
+    createOrGotoTab(moduleType, parentID, id, title, subParamsUrl, activityBar, disableActivityBarCallback) {
         var tab = _.find(this.$rootScope.tabs, (tab) => {
             return (
                 tab.moduleType == moduleType && tab.parentID == parentID && tab.id == id
@@ -195,7 +194,7 @@ export class StudioController {
         this.globalService.pushState(url);
 
         this.$rootScope.currentTab.isLoaded = true;
-        this.onActivityBarItemClick(activityBar ? activityBar : "explorer");
+        this.onActivityBarItemClick(activityBar ? activityBar : "explorer", '', this.globalService.getParameterByName('disableActivityBarCallback', subParamsUrl));
         this.$rootScope.$broadcast(`onTab--${tab.key}Selected`);
 
         this.setTabsContentHeight();
@@ -282,7 +281,7 @@ export class StudioController {
         delete this.$rootScope.currentTab;
     }
 
-    onActivityBarItemClick(name, title) {
+    onActivityBarItemClick(name, title, disableActivityBarCallback) {
         if (this.$rootScope.currentActivityBar == name) return;
 
         _.filter(this.activityBarItems, (i) => { return i.name == name; }).map((i) => {
@@ -290,7 +289,7 @@ export class StudioController {
 
             if (title) i.title = title;
 
-            if (i.callback) this[i.callback].apply(this, i);
+            if (i.callback && !disableActivityBarCallback) this[i.callback].apply(this, i);
         });
     }
 
@@ -363,6 +362,8 @@ export class StudioController {
                 param == "type" ||
                 param == "st" ||
                 param == "dashboard" ||
+                param == "mode" ||
+                param == "disableactivitybarcallback" ||
                 param == "return-url"
             ) {
                 const paramValue = this.globalService.getParameterByName(param);

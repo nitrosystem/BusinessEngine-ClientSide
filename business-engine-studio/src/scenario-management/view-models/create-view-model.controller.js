@@ -151,17 +151,39 @@ export class CreateViewModelController {
 
     onPageLoad() {
         const id = this.globalService.getParameterByName("id");
+        const mode = this.globalService.getParameterByName("mode");
+        if (mode == 'entity-view-model' && id) {
+            this.running = "create-viewModel-from-entity";
+            this.awaitAction = {
+                title: "Creating view model from the entity",
+                subtitle: "Just a moment for creating view model...",
+            };
 
-        this.running = "get-viewModel";
-        this.awaitAction = {
-            title: "Loading ViewModel",
-            subtitle: "Just a moment for loading view model...",
-        };
+            this.apiService.get("Studio", "GetViewModelsFromEntity", { entityID: id }).then((data) => {
+                    this.viewModel = data;
 
-        this.apiService
-            .get("Studio", "GetViewModel", { viewModelID: id || null })
-            .then(
-                (data) => {
+                    delete this.awaitAction;
+                    delete this.running;
+                },
+                (error) => {
+                    this.awaitAction.isError = true;
+                    this.awaitAction.subtitle = error.statusText;
+                    this.awaitAction.desc =
+                        this.globalService.getErrorHtmlFormat(error);
+
+                    this.notifyService.error(error.data.Message);
+
+                    delete this.running;
+                }
+            );
+        } else {
+            this.running = "get-viewModel";
+            this.awaitAction = {
+                title: "Loading ViewModel",
+                subtitle: "Just a moment for loading view model...",
+            };
+
+            this.apiService.get("Studio", "GetViewModel", { viewModelID: id || null }).then((data) => {
                     this.viewModel = data.ViewModel;
                     this.scenarios = data.Scenarios;
                     this.viewModels = data.ViewModels;
@@ -194,6 +216,7 @@ export class CreateViewModelController {
                     delete this.running;
                 }
             );
+        }
 
         this.setForm();
     }
