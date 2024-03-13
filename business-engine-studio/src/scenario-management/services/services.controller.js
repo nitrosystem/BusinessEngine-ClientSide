@@ -31,8 +31,12 @@ export class ServicesController {
         };
 
         this.apiService.get("Studio", "GetServices").then((data) => {
-            data.Services.forEach(s => {
-                s.ServiceTypeIcon = (s.ServiceTypeIcon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+            let index = 0;
+            _.forEach(_.sortBy(data.Services, ["ViewOrder"]), (service) => {
+                service.ServiceTypeIcon = (service.ServiceTypeIcon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+
+                if (index == 0) service.IsFirst = true;
+                if (index == data.Services.length - 1) service.IsLast = true;
             });
             this.services = data.Services;
 

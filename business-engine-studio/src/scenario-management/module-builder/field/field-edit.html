@@ -50,7 +50,7 @@
         <div id="grpFieldTemplates" class="group-content collapse show">
             <ul class="field-templates">
                 <li class="template-item" ng-repeat="template in $.currentField.FieldTypeObject.Templates" ng-class="{'active':template.TemplateName==$.currentField.Template}">
-                    <button type="button" class="item-button" ng-click="$.onSelectFieldTemplate(template.TemplateName)">
+                    <button type="button" class="item-button" ng-click="$.onSelectFieldTemplate(template)">
                         <i ng-if="!template.TemplateImage&&!template.FontIcon" class="codicon codicon-preview"></i>
                         <div ng-if="template.TemplateImage"  class="image-wrapper" >
                             <img ng-src="{{template.TemplateImage}}"/>
@@ -80,8 +80,8 @@
         </div>
         <div id="grpFieldThemes" class="group-content collapse show">
             <ul class="field-templates">
-                <li class="template-item" ng-repeat="theme in $.currentField.FieldTypeObject.Themes" ng-class="{'active':theme.ThemeName==$.currentField.Theme}">
-                    <button type="button" class="item-button" ng-click="$.onSelectFieldTemplate(theme.ThemeName)">
+                <li class="template-item" ng-repeat="theme in $.currentField.FieldTypeObject.TemplateThemes" ng-class="{'active':theme.ThemeName==$.currentField.Theme}">
+                    <button type="button" class="item-button" ng-click="$.onSelectFieldTheme(theme)">
                         <i ng-if="!theme.TemplateImage&&!theme.FontIcon" class="codicon codicon-preview"></i>
                         <div ng-if="theme.TemplateImage"  class="image-wrapper" >
                             <img ng-src="{{theme.ThemeImage}}"/>

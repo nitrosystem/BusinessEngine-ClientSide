@@ -27,8 +27,8 @@ export class ModuleController {
         $scope.moduleController = this;
     }
 
-    onInitModule(moduleID, moduleName, connectionID, isSSR, isDisabledFrontFramework) {
-        this.module = { moduleID: moduleID, moduleName: moduleName, isSSR: JSON.parse((isSSR || 'false').toLowerCase()), isDisabledFrontFramework: JSON.parse((isDisabledFrontFramework || 'false').toLowerCase()) };
+    onInitModule(dnnModuleID, moduleID, moduleName, connectionID, isSSR, isDisabledFrontFramework) {
+        this.module = { dnnModuleID: dnnModuleID, moduleID: moduleID, moduleName: moduleName, isSSR: JSON.parse((isSSR || 'false').toLowerCase()), isDisabledFrontFramework: JSON.parse((isDisabledFrontFramework || 'false').toLowerCase()) };
         this.$scope.connectionID = connectionID;
 
         this.onPageLoad();
@@ -61,7 +61,8 @@ export class ModuleController {
                             this.assignScopeData(data.Data);
 
                             if (!this.module.isSSR) {
-                                if (this.module.ParentID && data.ModuleTemplateCssUrl) {
+                                //load custom.css
+                                if (data.ModuleTemplateCssUrl) {
                                     var head = document.getElementsByTagName('head')[0];
                                     var link = document.createElement('link');
                                     link.rel = 'stylesheet';
@@ -69,6 +70,21 @@ export class ModuleController {
                                     link.href = data.ModuleTemplateCssUrl;
                                     link.media = 'all';
                                     head.appendChild(link);
+                                }
+
+                                if (data.ModuleTemplateJsUrl) {
+                                    var head = document.getElementsByTagName('head')[0];
+                                    var script = document.createElement('script');
+                                    script.src = data.ModuleTemplateJsUrl;
+                                    head.appendChild(script);
+                                    this.$timeout(() => {
+                                        const moduleFunction1 = eval(`${this.globalService.capitalizeFirstLetter(this.module.moduleName.replace(/-/g,''))}Controller`);
+                                        console.log(moduleFunction1);
+                                        if (moduleFunction1) {
+                                            const controller = new moduleFunction1(this, this.$scope);
+                                            controller.onPageLoad();
+                                        }
+                                    }, 1500);
                                 }
 
                                 $(`#pnlBusinessEngine${this.module.moduleID}`).html(

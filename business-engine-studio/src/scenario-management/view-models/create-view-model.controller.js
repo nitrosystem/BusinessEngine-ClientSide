@@ -160,6 +160,9 @@ export class CreateViewModelController {
             };
 
             this.apiService.get("Studio", "GetViewModelsFromEntity", { entityID: id }).then((data) => {
+                    this.scenarios = data.Scenarios;
+                    this.groups = data.Groups;
+                    this.viewModels = data.ViewModels;
                     this.viewModel = data;
 
                     delete this.awaitAction;
@@ -184,9 +187,10 @@ export class CreateViewModelController {
             };
 
             this.apiService.get("Studio", "GetViewModel", { viewModelID: id || null }).then((data) => {
-                    this.viewModel = data.ViewModel;
                     this.scenarios = data.Scenarios;
+                    this.groups = data.Groups;
                     this.viewModels = data.ViewModels;
+                    this.viewModel = data.ViewModel;
 
                     if (!this.viewModel) {
                         this.viewModel = {

@@ -229,103 +229,100 @@ export class ModuleBuilderController {
             subtitle: "Just a moment for loading module fields...",
         };
 
-        this.apiService
-            .get("Studio", "GetModuleBuilder", { moduleID: id || null })
-            .then(
-                (data) => {
-                    this.module = data.Module;
-                    this.skins = data.Skins;
-                    this.fields = data.Fields;
-                    this.actions = data.Actions;
-                    this.services = data.Services;
-                    this.viewModels = data.ViewModels;
-                    this.variables = data.Variables;
-                    this.roles = data.Roles;
-                    this.customResources = data.CustomResources;
-                    this.field = {};
+        this.apiService.get("Studio", "GetModuleBuilder", { moduleID: id || null }).then((data) => {
+                this.module = data.Module;
+                this.skins = data.Skins;
+                this.fields = data.Fields;
+                this.actions = data.Actions;
+                this.services = data.Services;
+                this.viewModels = data.ViewModels;
+                this.variables = data.Variables;
+                this.roles = data.Roles;
+                this.customResources = data.CustomResources;
+                this.field = {};
 
-                    data.FieldTypes.forEach(ft => {
-                        ft.Icon = (ft.Icon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
-                    });
-                    this.fieldTypes = data.FieldTypes;
+                data.FieldTypes.forEach(ft => {
+                    ft.Icon = (ft.Icon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+                });
+                this.fieldTypes = data.FieldTypes;
 
-                    /*-----------------------------------------------------------------------
-                        the First step for creating your module,
-                        you must be select skin and template and theme for the module
-                    --------------------------------------------------------------------*/
-                    if (this.module.ModuleBuilderType == "FormDesigner" && !this.module.Skin) {
-                        this.onShowModuleSkinClick();
+                /*-----------------------------------------------------------------------
+                    the First step for creating your module,
+                    you must be select skin and template and theme for the module
+                --------------------------------------------------------------------*/
+                if (this.module.ModuleBuilderType == "FormDesigner" && !this.module.Skin) {
+                    this.onShowModuleSkinClick();
 
-                        this.notifyService.notify(`
+                    this.notifyService.notify(`
                             the First step for creating your module,
                             you must be select skin and template and theme for the module
                         `);
-                    }
-
-                    if (this.module.Wrapper == "Dashboard") {
-                        _.filter(this.$rootScope.explorerItems, (item) => {
-                            return (
-                                item.ItemID == this.module.ModuleID &&
-                                item.DashboardPageParentID
-                            );
-                        }).map((item) => {
-                            const pageID = item.DashboardPageParentID;
-
-                            this.$rootScope.explorerExpandedItems = [
-                                { name: "dashboards" },
-                                { name: "dashboard", id: this.module.ParentID },
-                                { name: "pages", id: this.module.ParentID },
-                                { name: "page", id: pageID },
-                                { name: "module", id: this.module.ModuleID },
-                            ];
-                        });
-                    }
-
-                    _.forEach(this.fields, (field) => {
-                        field.FieldTypeObject = _.find(this.fieldTypes, (ft) => {
-                            return ft.FieldType == field.FieldType;
-                        });
-
-                        this.globalService.parseJsonItems(field.Settings);
-
-                        this.field[field.FieldName] = field;
-                    });
-
-                    this.reBuildModule();
-
-                    this.$scope.$emit("onUpdateCurrentTab", {
-                        id: this.module.ModuleID,
-                        title: this.module.ModuleName,
-                    });
-
-                    this.apiService
-                        .get("Studio", "GetModuleViewLinkUrl", {
-                            moduleID: this.module.ModuleID,
-                            parentID: this.module.ParentID,
-                            moduleWrapper: this.module.Wrapper,
-                        })
-                        .then((data) => (this.moduleViewLinkUrl = data));
-
-                    if (this.module.Settings && this.module.ModuleBuilderType == "HtmlEditor" && !this.module.CustomJs)
-                        this.module.CustomJs = `function ${this.globalService.capitalizeFirstLetter(this.module.ModuleName.replace(/-/g,''))}Controller(moduleController,$scope) /* Please don't rename function name */ \n{\n\tthis.onPageLoad = function()\n\t{\n\t\tmoduleController.callActionsByEvent('module','OnPageLoad').then((data) => {\t\n\t\t\t//...\n\t\t});\n\t}\n}`;
-
-                    this.onFocusModule();
-
-                    delete this.awaitAction;
-                    delete this.running;
-                },
-                (error) => {
-                    if (this.isNewAction) delete this.action.ActionID;
-
-                    this.awaitAction.isError = true;
-                    this.awaitAction.subtitle = error.statusText;
-                    this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
-
-                    this.notifyService.error(error.data.Message);
-
-                    delete this.running;
                 }
-            );
+
+                if (this.module.Wrapper == "Dashboard") {
+                    _.filter(this.$rootScope.explorerItems, (item) => {
+                        return (
+                            item.ItemID == this.module.ModuleID &&
+                            item.DashboardPageParentID
+                        );
+                    }).map((item) => {
+                        const pageID = item.DashboardPageParentID;
+
+                        this.$rootScope.explorerExpandedItems = [
+                            { name: "dashboards" },
+                            { name: "dashboard", id: this.module.ParentID },
+                            { name: "pages", id: this.module.ParentID },
+                            { name: "page", id: pageID },
+                            { name: "module", id: this.module.ModuleID },
+                        ];
+                    });
+                }
+
+                _.forEach(this.fields, (field) => {
+                    field.FieldTypeObject = _.find(this.fieldTypes, (ft) => {
+                        return ft.FieldType == field.FieldType;
+                    });
+
+                    this.globalService.parseJsonItems(field.Settings);
+
+                    this.field[field.FieldName] = field;
+                });
+
+                this.reBuildModule();
+
+                this.$scope.$emit("onUpdateCurrentTab", {
+                    id: this.module.ModuleID,
+                    title: this.module.ModuleName,
+                });
+
+                this.apiService
+                    .get("Studio", "GetModuleViewLinkUrl", {
+                        moduleID: this.module.ModuleID,
+                        parentID: this.module.ParentID,
+                        moduleWrapper: this.module.Wrapper,
+                    })
+                    .then((data) => (this.moduleViewLinkUrl = data));
+
+                if (this.module.Settings && this.module.ModuleBuilderType == "HtmlEditor" && !this.module.CustomJs)
+                    this.module.CustomJs = `function ${this.globalService.capitalizeFirstLetter(this.module.ModuleName.replace(/-/g,''))}Controller(moduleController,$scope) /* Please don't rename function name */ \n{\n\tthis.onPageLoad = function()\n\t{\n\t\tmoduleController.callActionsByEvent('module','OnPageLoad').then((data) => {\t\n\t\t\t//...\n\t\t});\n\t}\n}`;
+
+                this.onFocusModule();
+
+                delete this.awaitAction;
+                delete this.running;
+            },
+            (error) => {
+                if (this.isNewAction) delete this.action.ActionID;
+
+                this.awaitAction.isError = true;
+                this.awaitAction.subtitle = error.statusText;
+                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+
+                this.notifyService.error(error.data.Message);
+
+                delete this.running;
+            }
+        );
 
         this.$scope.$emit("onChangeActivityBar", {
             name: "builder",
@@ -384,7 +381,7 @@ export class ModuleBuilderController {
     /* Build Module Methods  */
     /*------------------------------------*/
     onBuildModuleClick(isRenderScriptsAndStyles) {
-        if (!this.module.Skin || !this.module.Template) {
+        if (this.module.ModuleBuilderType == "FormDesigner" && (!this.module.Skin || !this.module.Template)) {
             this.notifyService.notify(`
                 the First step for creating your module,
                 you must be select skin and template and theme for the module
@@ -435,7 +432,7 @@ export class ModuleBuilderController {
     }
 
     onRenderFieldsClick() {
-        if (!this.module.Skin || !this.module.Template) {
+        if (this.module.ModuleBuilderType == "FormDesigner" && (!this.module.Skin || !this.module.Template)) {
             this.notifyService.notify(`
                 the First step for creating your module,
                 you must be select skin and template and theme for the module
@@ -451,7 +448,7 @@ export class ModuleBuilderController {
     }
 
     reBuildModule() {
-        if (!this.module.Skin || !this.module.Template) {
+        if (this.module.ModuleBuilderType == "FormDesigner" && (!this.module.Skin || !this.module.Template)) {
             this.notifyService.notify(`
                 the First step for creating your module,
                 you must be select skin and template and theme for the module
@@ -478,6 +475,34 @@ export class ModuleBuilderController {
             });
 
         return defer.promise;
+    }
+
+    onClearCache() {
+        this.running = "clear-cache";
+        this.awaitAction = {
+            title: "Clear Cache",
+            subtitle: "Just a moment for clear cache and add host version...",
+        };
+
+        this.apiService.post("Studio", "ClearCacheAndAddCmsVersion").then((data) => {
+            this.notifyService.success("Dnn cache and adding host version has been successfully");
+
+            delete this.awaitAction;
+            delete this.running;
+
+            if (confirm("Do you want to refresh the page?"))
+                location.reload();
+        }, (error) => {
+            defer.reject(error);
+
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+
+            this.notifyService.error(error.data.Message);
+
+            delete this.running;
+        });
     }
 
     setFieldsSortingUi() {
@@ -757,11 +782,36 @@ export class ModuleBuilderController {
             this.module.Template = null;
             this.module.Theme = null;
 
+            this.running = "loading-skin-items";
+            this.awaitAction = {
+                title: "Loading Skin Items",
+                subtitle: "Just a moment for loading the module skin items...",
+            };
+
             this.apiService
-                .get("Studio", "GetModuleSkin", { skinName: skin.SkinName })
+                .get("Studio", "GetModuleSkin", {
+                    moduleID: this.module.ModuleID,
+                    skinName: skin.SkinName,
+                })
                 .then((data) => {
-                    this.module.ModuleSkin = data;
-                });
+                        this.ModuleSkinBackup = _.clone(this.module.ModuleSkin);
+                        this.module.ModuleSkin = data;
+
+                        delete this.awaitAction;
+                        delete this.running;
+                    },
+                    (error) => {
+                        this.module.ModuleSkin[this.module.ModuleType + 'Templates'] = [];
+                        this.module.ModuleSkin[this.module.ModuleType + 'Themes'] = [];
+
+                        this.awaitAction.isError = true;
+                        this.awaitAction.subtitle = error.statusText;
+                        this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+
+                        this.notifyService.error(error.data.Message);
+
+                        delete this.running;
+                    });
         }
     }
 
@@ -827,11 +877,13 @@ export class ModuleBuilderController {
     }
 
     onCancelSkinClick() {
+        this.module.ModuleSkin = _.clone(this.ModuleSkinBackup);
+
         this.disposeWorkingMode();
     }
 
     onShowLayoutTemplateClick() {
-        if (!this.module.Skin || !this.module.Template) {
+        if (this.module.ModuleBuilderType == "FormDesigner" && (!this.module.Skin || !this.module.Template)) {
             this.notifyService.notify(`
                 the First step for creating your module,
                 you must be select skin and template and theme for the module
@@ -857,11 +909,11 @@ export class ModuleBuilderController {
     }
 
     onSelectFieldTemplate(template) {
-        this.currentField.Template = template;
+        this.currentField.Template = template.TemplateName;
     }
 
     onSelectFieldTheme(theme) {
-        this.currentField.Theme = theme;
+        this.currentField.Theme = theme.ThemeName;
     }
 
     onModuleSettingsClick() {
@@ -1280,9 +1332,8 @@ export class ModuleBuilderController {
         const suggestFieldName =
             fieldType.FieldType +
             (_.filter(this.fields, (f) => {
-                    return f.FieldType == fieldType.FieldType;
-                }).length +
-                1);
+                return f.FieldType == fieldType.FieldType;
+            }).length + 1);
 
         const defaultSettings = JSON.parse(fieldType.DefaultSettings || "{}");
 
@@ -1292,7 +1343,7 @@ export class ModuleBuilderController {
             PaneName: paneName,
             FieldType: fieldType.FieldType,
             FieldName: suggestFieldName,
-            FieldText: fieldType.FieldText ? fieldType.FieldText : "Enter your text",
+            FieldText: fieldType.FieldText ? fieldType.FieldText : "",
             IsRequired: false,
             IsShow: true,
             IsEnabled: true,

@@ -187,6 +187,12 @@
                 </select>
             </div>
             <div class="b-field">
+                <label class="form-label">Field Theme</label>
+                <select id="drpTemplate" ng-model="$.currentField.Theme" class="b-input form-select" ng-options="theme.ThemeName as theme.ThemeName for theme in $.currentField.FieldTypeObject.Themes" chosen inherit-select-classes="true" placeholder-text-single="'Select theme'"
+                    required>
+                </select>
+            </div>
+            <div class="b-field">
                 <label class="form-label">Disable Layout</label>
                 <label class="b-switch d-block">
                     <input type="checkbox" ng-model="$.currentField.Settings.IsDisableLayout"

@@ -52,7 +52,7 @@ export class CreateServiceController {
         this.apiService.get("Studio", "GetService", { serviceID: id || null }).then(
             (data) => {
                 this.scenarios = data.Scenarios;
-                this.databases = data.Databases;
+                this.groups = data.Groups;
                 this.roles = data.Roles;
                 this.service = data.Service;
 

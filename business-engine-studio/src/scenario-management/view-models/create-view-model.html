@@ -17,6 +17,15 @@
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
                     </div>
                 </div>
+                <div class="b-field">
+                    <label class="form-label">Group</label>
+                    <div class="b-input-group">
+                        <select ng-model="$.viewModel.GroupID" class="b-input form-select" ng-options="group.GroupID as group.GroupName for group in $.groups" chosen inherit-select-classes="true" placeholder-text-single="'Select a group(optional)'">
+                            <option value=""></option>
+                        </select>
+                        <span><i class="codicon codicon-layers"></i></span>
+                    </div>
+                </div>
                 <div class="b-field" ng-if="!$.viewModel.ViewModelID && $.databases.length">
                     <label class="form-label">Database</label>
                     <div class="b-input-group">

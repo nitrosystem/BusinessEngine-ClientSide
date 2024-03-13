@@ -25,7 +25,6 @@ export class EntitiesController {
                 else
                     this.entities = angular.copy(this.entitiesBackup);
 
-                debugger
                 this.entities = _.filter(this.entities, (e) => {
                     return (!this.filter.EntityName || e.EntityName.indexOf(this.filter.EntityName) >= 0) &&
                         (!this.filter.EntityType || e.EntityType == this.filter.EntityType) &&

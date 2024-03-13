@@ -343,7 +343,8 @@ export class ActionService {
             const value = this.processActionResultsToken(
                 item.RightExpression,
                 data,
-                $scope
+                $scope,
+                item.ExpressionParsingType
             );
 
             this.expressionService.setVariableValue(
@@ -354,16 +355,14 @@ export class ActionService {
         });
     }
 
-    processActionResultsToken(expression, data, $scope) {
+    processActionResultsToken(expression, data, $scope, expressionParsingType) {
         var result;
-
-        if (!data) return data;
 
         const match = /(?:_ServiceResult)\.?(.[^{}:\$,]+)?$/.exec(expression);
         if (match) {
             if (expression == match[0] && !match[1]) result = data;
             else result = _.get(data, match[1]);
-        } else result = this.expressionService.parseExpression(expression, $scope);
+        } else result = this.expressionService.parseExpression(expression, $scope, expressionParsingType);
 
         return result;
     }

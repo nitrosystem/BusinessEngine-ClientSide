@@ -52,9 +52,11 @@ export class DashboardController {
         );
     }
 
-    onInitModule(moduleID, moduleName, connectionID) {
+    onInitModule(moduleID, moduleName, connectionID, now) {
         this.module = { moduleID: moduleID, moduleName: moduleName };
         this.$scope.connectionID = connectionID;
+        this.dataNow = now;
+        this.$scope.dateNow = now;
 
         this.onPageLoad();
     }
@@ -151,7 +153,7 @@ export class DashboardController {
     getAngularModuleTemplate(moduleID, moduleName) {
         const result = `
         <div id="pnlBusinessEngine${moduleID}" data-module="${moduleID}" ng-controller="moduleController as $"
-          ng-init="$.onInitModule('${moduleID}', '${moduleName}','${this.$scope.connectionID}')">
+          ng-init="$.onInitModule(-1,'${moduleID}', '${moduleName}','${this.$scope.connectionID}')">
         </div>
     `;
 

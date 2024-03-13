@@ -213,6 +213,12 @@ export class moduleRenderService {
     getBoardFieldItem(field) {
         const defer = this.$q.defer();
 
+        if (!field.FieldTypeObject) {
+            console.log(field);
+            defer.resolve("<div></div>");
+            return;
+        }
+
         const fieldTemplate = _.find(field.FieldTypeObject.Templates || [], (t) => {
             return t.TemplateName == field.Template;
         });
@@ -334,7 +340,7 @@ export class moduleRenderService {
                         layout
                     }
                 ).then((data) => {
-                    defer.resolve({ html: data.html, type: 1 });
+                    defer.resolve({ html: data.html, type: data.type != undefined ? data.type : 1 });
                 });
             });
         } else defer.resolve({ type: 2 });

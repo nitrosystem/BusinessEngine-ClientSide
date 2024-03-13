@@ -49,6 +49,7 @@ export class CreateEntityController {
                 this.databases = data.Databases;
                 this.entity = data.Entity;
                 this.entities = data.Entities;
+                this.groups = data.Groups;
 
                 if (data.Relationships && data.Relationships.length) {
                     this.entity.Relationships = [];
@@ -293,6 +294,7 @@ export class CreateEntityController {
     }
 
     onAddRelationshipClick() {
+        this.entity.Relationships = this.entity.Relationships || [];
         this.entity.Relationships.push({ EnforceForReplication: true, EnforceForeignKeyConstraint: true, Columns: [{}] });
     }
 
@@ -302,11 +304,14 @@ export class CreateEntityController {
                 EntityID: entity.EntityID,
                 TableName: entity.TableName,
             };
+
             relationship.ParentEntityColumns = entity.Columns;
             relationship.ForeignEntity = {
                 EntityID: this.entity.EntityID,
                 TableName: this.entity.TableName,
             };
+
+            relationship.RelationshipName = 'FK_' + entity.TableName + '_' + this.entity.TableName;
         });
     }
 

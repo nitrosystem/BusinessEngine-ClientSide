@@ -1,8 +1,9 @@
 import { GlobalSettings } from "../configs/global.settings";
 
 export class ApiService {
-    constructor($http, $q, $templateCache, $rootScope) {
+    constructor($http, $q, $templateCache, $rootScope, Upload) {
         this.$http = $http;
+        this.uploadService = Upload;
         this.$q = $q;
         this.$templateCache = $templateCache;
         this.$rootScope = $rootScope;
@@ -111,6 +112,30 @@ export class ApiService {
             }
         }).then((data) => {
             defer.resolve(data);
+        });
+
+        return defer.promise;
+    }
+
+    uploadImage(params) {
+        const defer = this.$q.defer();
+
+        var file = params.file;
+
+        this.uploadService.upload({
+            url: "/DesktopModules/BusinessEngine/API/Common/UploadImage",
+            headers: {
+                ScenarioID: GlobalSettings.scenarioID,
+                Requestverificationtoken: $('[name="__RequestVerificationToken"]').val()
+            },
+            data: params,
+        }).then(function(data) {
+            defer.resolve(data.data);
+        }, function(error) {
+            defer.reject(error);
+        }, function(evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            file.Progress = progressPercentage;
         });
 
         return defer.promise;

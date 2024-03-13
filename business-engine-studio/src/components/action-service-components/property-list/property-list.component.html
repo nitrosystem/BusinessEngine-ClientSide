@@ -51,7 +51,7 @@
                             <div class="d-flex">
                                 <div class="col-10">
                                     <div monaco-editor ng-model="$.property.LeftExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" b-custom-focus="onEditProperty"
-                                        required></div>
+                                        required style="min-height: 1.4rem;"></div>
                                 </div>
                                 <div class="col-1">
                                     <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -76,7 +76,8 @@
                         <div class="col-5">
                             <div class="d-flex">
                                 <div class="col-10">
-                                    <div monaco-editor ng-model="$.property.RightExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true" required></div>
+                                    <div monaco-editor ng-model="$.property.RightExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true" required
+                                        style="min-height: 1.4rem;"></div>
                                 </div>
                                 <div class="col-1">
                                     <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -88,6 +89,9 @@
                                         </a>
                                         <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='parse-string'">
                                             <i ng-if="$.property.ExpressionParsingType=='parse-string'" class="codicon codicon-check-all me-2"></i> Parse String
+                                        </a>
+                                        <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='get-value'">
+                                            <i ng-if="$.property.ExpressionParsingType=='get-value'" class="codicon codicon-check-all me-2"></i> Get Value
                                         </a>
                                         <a class="dropdown-item" href="" ng-click="$.property.ExpressionParsingType='static-expression'">
                                             <i ng-if="$.property.ExpressionParsingType=='static-expression'" class="codicon codicon-check-all me-2"></i>Static Expression

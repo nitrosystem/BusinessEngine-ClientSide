@@ -1,4 +1,5 @@
 import swal from "sweetalert";
+import { GlobalSettings } from "../../configs/global.settings";
 
 export class ActionsController {
     constructor($scope, $rootScope, globalService, apiService, studioService, notificationService) {
@@ -31,6 +32,9 @@ export class ActionsController {
         this.apiService
             .get("Studio", serviceName, { parentID: this.parentID })
             .then((data) => {
+                data.Actions.forEach(a => {
+                    a.ActionTypeIcon = (a.ActionTypeIcon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+                });
                 this.allActions = data.Actions;
                 this.module = data.Module;
 

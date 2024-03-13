@@ -148,7 +148,7 @@
                         <div class="col-2">
                             <div class="d-flex flex-column align-items-center">
                                 <img ng-if="service.ServiceTypeIcon" ng-src="{{service.ServiceTypeIcon}}" class="service-type-icon" />
-                                <i ng-if="!service.ServiceTypeIcon" class="bi bi-card-list service-type-icon"></i>
+                                <i ng-if="!service.ServiceTypeIcon" class="codicon codicon-server-process service-type-icon"></i>
                                 <p class="service-type">{{service.ServiceSubtype}}</p>
                                 <a class="text-white" href="#serviceSubItems{{service.ServiceID}}" data-bs-toggle="collapse" role="button" ng-if="service.Childs.length" ng-click="service.IsExpanded=!service.IsExpanded">
                                     <i ng-if="!service.IsExpanded" class="codicon codicon-collapse-all"></i>
@@ -196,13 +196,13 @@
                             <p class="text-white-50" ng-if="service.Conditions.length">{{service.Conditions.length}} Conditions</p>
                         </div>
                         <div class="col-1">
-                            <button type="button" class="b-btn btn-service mb-2" ng-click="$.onEditServiceClick(service.ServiceID,service.ServiceName,service.FieldID)">
+                            <button type="button" class="b-btn mb-2" ng-click="$.onEditServiceClick(service.ServiceID,service.ServiceName,service.FieldID)">
                                 <i class="codicon codicon-edit me-0"></i>
                             </button>
-                            <button type="button" class="b-btn btn-service mb-2" ng-click="$.onDeleteServiceClick(service.ServiceID,$index)">
+                            <button type="button" class="b-btn mb-2" ng-click="$.onDeleteServiceClick(service.ServiceID,$index)">
                                 <i class="codicon codicon-trash me-0"></i>
                             </button>
-                            <a class="b-btn btn-service" href="#serviceMoreData{{service.ServiceID}}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                            <a class="b-btn" href="#serviceMoreData{{service.ServiceID}}" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
                                 <i class="codicon codicon-chevron-down me-0"></i>
                             </a>
                         </div>
