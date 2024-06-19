@@ -176,10 +176,10 @@
   dependencies:
     "@types/node" "*"
 
-"@vscode/codicons@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@vscode/codicons/-/codicons-0.0.29.tgz#587e6ce4be8de55d9d11e5297ea55a3dbab08ccf"
-  integrity sha512-AXhTv1nl3r4W5DqAfXXKiawQNW+tLBNlXn/GcsnFCL0j17sQ2AY+az9oB9K6wjkibq1fndNJvmT8RYN712Fdww==
+"@vscode/codicons@^0.0.36":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@vscode/codicons/-/codicons-0.0.36.tgz#ccdabfaef5db596b266644ab85fc25aa701058f0"
+  integrity sha512-wsNOvNMMJ2BY8rC2N2MNBG7yOowV3ov8KlvUE/AiVUlHKTfWsw3OgAOQduX7h0Un6GssKD3aoTVH+TF3DSQwKQ==
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"

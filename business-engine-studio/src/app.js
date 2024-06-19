@@ -2,8 +2,7 @@ import angular from "angular";
 import "angular-filter/dist/angular-filter";
 import "angular-dragdrop/src/angular-dragdrop";
 import "ng-file-upload/dist/ng-file-upload";
-import "./directives/chosen.directive"
-
+import "./directives/chosen.directive";
 //Configs
 import { config as appConfig } from "./configs/app.config";
 
@@ -13,8 +12,8 @@ import { ApiService } from "./services/api.service";
 import { ValidationService } from "./services/validation.service";
 import { NotificationService } from "./services/notification.service";
 import { StudioService } from "./services/studio.service";
-import { moduleBuilderService } from "./scenario-management/module-builder/module-builder.service";
-import { moduleRenderService } from "./scenario-management/module-builder/module-render.service";
+import { moduleDesignerService } from "./scenario-management/module-builder/services/module-designer.service";
+import { moduleBuilderService } from "./scenario-management/module-builder/services/module-builder.service";
 
 // Directives
 import {
@@ -84,8 +83,8 @@ const app = angular
     .service("globalService", GlobalService)
     .service("apiService", ApiService)
     .service("validationService", ValidationService)
+    .service("moduleDesignerService", moduleDesignerService)
     .service("moduleBuilderService", moduleBuilderService)
-    .service("moduleRenderService", moduleRenderService)
     .factory("notificationService", NotificationService)
     .factory("studioService", StudioService)
     .directive("studio", StudioDirective)

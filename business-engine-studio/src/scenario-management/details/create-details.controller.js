@@ -59,6 +59,8 @@ export class CreateDetailsController {
                     };
                 }
 
+                this.oldModuleName = this.detailsModule.ModuleName;
+
                 this.onFocusModule();
 
                 delete this.running;
@@ -92,6 +94,10 @@ export class CreateDetailsController {
                     id: "txtModuleTitle",
                     required: true,
                 },
+                ModuleBuilderType: {
+                    id: "drpModuleBuilderType",
+                    required: true,
+                }
             },
             true,
             this.$scope,
@@ -99,50 +105,111 @@ export class CreateDetailsController {
         );
     }
 
-    onSaveDetailsClick() {
-        this.form.validated = true;
-        this.form.validator(this.detailsModule);
-        if (this.form.valid) {
-            this.detailsModule.DnnModuleID =
-                this.globalService.getParameterByName("d") ||
-                this.detailsModule.DnnModuleID;
+    validateModuleName() {
+        var $defer = this.$q.defer();
 
-            this.running = "save-details";
+        if (this.oldModuleName == this.detailsModule.ModuleName) {
+            $defer.resolve();
+            return $defer.promise;
+        }
+
+        if (_.isEmpty(this.detailsModule.ModuleName)) {
+            this.moduleNameIsValid = false;
+            this.moduleNameIsEmpty = true;
+            this.moduleNameIsValidPattern = true;
+
+            $defer.reject();
+        } else if (/^[a-zA-Z][a-zA-Z_.0-9-]+$/gim.test(this.detailsModule.ModuleName) == false) {
+            this.moduleNameIsValid = false;
+            this.moduleNameIsValidPattern = false;
+
+            $defer.reject();
+        } else {
+            this.running = "check-module-name";
             this.awaitAction = {
-                title: "Saving Details",
-                subtitle: "Just a moment for saving the details...",
+                title: "Checking Module Name",
+                subtitle: "Just a moment for checking name of the module...",
             };
 
-            this.currentTabKey = this.$rootScope.currentTab.key;
+            this.apiService.post("Studio", "CheckModuleName", {
+                ScenarioID: this.detailsModule.ScenarioID,
+                ModuleID: this.detailsModule.ModuleID,
+                OldModuleName: this.oldModuleName,
+                NewModuleName: this.detailsModule.ModuleName
+            }).then((data) => {
+                this.moduleNameIsValidPattern = true;
+                this.moduleNameIsValid = data.IsValid;
+                this.moduleNameIsExists = data.IsExists;
 
-            this.apiService.post("Studio", "SaveDetailsModule", this.detailsModule).then((data) => {
-                    this.detailsModule.ModuleID = data;
+                if (data.IsValid)
+                    $defer.resolve();
+                else
+                    $defer.reject();
 
-                    this.notifyService.success("Details updated has been successfully");
+                delete this.awaitAction;
+                delete this.running;
+            }, (error) => {
+                this.awaitAction.isError = true;
+                this.awaitAction.subtitle = error.statusText;
+                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                    this.$scope.$emit("onUpdateCurrentTab", {
-                        id: this.detailsModule.ModuleID,
-                        title: this.detailsModule.ModuleName,
-                        key: this.currentTabKey,
-                    });
+                $defer.reject();
 
-                    this.$rootScope.refreshSidebarExplorerItems();
-
-                    delete this.awaitAction;
-                    delete this.running;
-                },
-                (error) => {
-                    this.awaitAction.isError = true;
-                    this.awaitAction.subtitle = error.statusText;
-                    this.awaitAction.desc =
-                        this.globalService.getErrorHtmlDetailsat(error);
-
-                    this.notifyService.error(error.data.Message);
-
-                    delete this.running;
-                }
-            );
+                delete this.running;
+            });
         }
+
+        return $defer.promise;
+    }
+
+    onSaveDetailsClick() {
+        this.validateModuleName().then(() => {
+            this.form.validated = true;
+            this.form.validator(this.detailsModule);
+            if (this.form.valid) {
+                this.detailsModule.DnnModuleID = this.globalService.getParameterByName("d") || this.detailsModule.DnnModuleID;
+
+                this.running = "save-details";
+                this.awaitAction = {
+                    title: "Saving Details",
+                    subtitle: "Just a moment for saving the details...",
+                };
+
+                this.currentTabKey = this.$rootScope.currentTab.key;
+
+                this.apiService.post("Studio", "SaveDetailsModule", this.detailsModule).then((data) => {
+                        this.detailsModule.ModuleID = data;
+
+                        if (this.oldModuleName != this.detailsModule.ModuleName) this.importantNoteForChangeModuleName = true;
+
+                        this.oldModuleName = this.detailsModule.ModuleName;
+
+                        this.notifyService.success("Details updated has been successfully");
+
+                        this.$scope.$emit("onUpdateCurrentTab", {
+                            id: this.detailsModule.ModuleID,
+                            title: this.detailsModule.ModuleName,
+                            key: this.currentTabKey,
+                        });
+
+                        this.$rootScope.refreshSidebarExplorerItems();
+
+                        delete this.awaitAction;
+                        delete this.running;
+                    },
+                    (error) => {
+                        this.awaitAction.isError = true;
+                        this.awaitAction.subtitle = error.statusText;
+                        this.awaitAction.desc =
+                            this.globalService.getErrorHtmlDetailsat(error);
+
+                        this.notifyService.error(error.data.Message);
+
+                        delete this.running;
+                    }
+                );
+            }
+        });
     }
 
     onGotoModuleBuilderClick() {

@@ -232,7 +232,7 @@ export class CreateServiceController {
                         this.entities = data.Entities;
                         this.viewModels = data.ViewModels;
 
-                        const serviceComponent = `<${this.serviceType.ServiceComponent} service="$.service" scenarios="$.scenarios" entities="$.entities" view-models="$.viewModels"></${this.serviceType.ServiceComponent}>`;
+                        const serviceComponent = `<${this.serviceType.ServiceComponent} parent-controller="$" service="$.service" scenarios="$.scenarios" entities="$.entities" view-models="$.viewModels"></${this.serviceType.ServiceComponent}>`;
 
                         $("#pnlServiceBuilder" + (this.service.ServiceID ? this.service.ServiceID : "")).html(this.$compile(serviceComponent)(this.$scope));
 

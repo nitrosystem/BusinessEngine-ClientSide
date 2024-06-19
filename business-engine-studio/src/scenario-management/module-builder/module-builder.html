@@ -26,7 +26,7 @@
             </li>
         </ul>
         <div class="search-box">
-            <input type="text" class="search-input" ng-model="$.searchComponent" placeholder="Search by title" />
+            <input type="text" class="search-input" ng-model="$.searchComponent" placeholder="Search field type by title" ng-disabled="$.currentSidebarTab!=='toolbox'" ng-class="{'opacity-25':$.currentSidebarTab!=='toolbox'}" autocomplete="off" />
             <i class="codicon codicon-collapse-all" ng-click="$.collapsedComponentGroups=!$.collapsedComponentGroups"></i>
         </div>
         <div class="tab-contents b-scrollbar h-100">
@@ -50,8 +50,7 @@
                             <div class="row">
                                 <div class="col-6" ng-repeat="fieldType in value | toArray:false | orderBy:'ViewOrder'">
                                     <div class="field-type" jqyoui-draggable="{animate:true,onStop:'$.onStopDrag($index)'}" jqyoui-options="{appendTo: 'body',revert: 'invalid',helper: 'clone'}" data-drag="true" data-new-field="true" data-field-type="{{fieldType.FieldType}}">
-                                        <i ng-if="!fieldType.IconType" class="{{fieldType.Icon}}"></i>
-                                        <img ng-if="fieldType.IconType" class="field-image" ng-src="{{fieldType.Icon}}" />
+                                        <img class="field-image" ng-src="{{fieldType.Icon}}" />
                                         <label class="title">{{fieldType.Title}}</label>
                                     </div>
                                 </div>
@@ -78,7 +77,7 @@
                         <i class="codicon codicon-close"></i>
                     </span>
                 </div>
-                <div ng-if="$.fieldActionsFilter && (!$.currentField.Actions ||!$.currentField.Actions.length)" class="b-notify notify-warning mb-4">
+                <div ng-if="$.fieldActionsFilter && (!$.currentField.Actions ||!$.currentField.Actions.length)" class="b-notify notify-info mb-4">
                     <i class="codicon codicon-info b-icon-2"></i>
                     <div class="text">
                         <h4 class="label">the Current field has no any actions.</h4>
@@ -128,14 +127,16 @@
     <!------------------------------------>
     <b-content-widget data-title="{{$.module.ModuleTitle}} - {{$.module.ModuleType}} Module Builder" data-icon="notebook-template" data-module-type="module-builder" data-subtitle="{{$.module.ModuleName}}" data-await-action="$.awaitAction" class="mb-workspace"
         data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+        <button type="button" class="btn-skin" ng-click="$.onShowModuleSkinClick()" b-custom-tooltip data-bs-placement="right" title="Show Skin Widget">
+            <i class="codicon codicon-symbol-color"></i>
+        </button>
         <div class="workspace-actions">
             <div class="b-btn-group me-3">
                 <button type="button" class="b-btn btn-action" ng-click="$.onShowActionsClick()">
                     <i class="codicon codicon-bracket-dot"></i>
                     Actions
                 </button>
-                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                </button>
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onAddActionClick('module',$.module.ModuleID)">
                         <i class="codicon codicon-github-action me-2"></i> New Action
@@ -147,46 +148,66 @@
                     <i class="codicon codicon-preserve-case"></i>
                     Variables
                 </button>
-                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                </button>
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onModuleSettingsClick()">
                         <i class="codicon codicon-gear me-2"></i> Module Settings
                     </a>
                 </div>
             </div>
-            <div class="b-btn-group me-3">
+            <div class="b-btn-group me-3" ng-if="$.module.Skin && $.module.Template">
                 <button type="button" class="b-btn btn-action" ng-click="$.onShowLayoutTemplateClick()" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
-                    <i class="codicon codicon-symbol-color"></i>
+                    <i class="codicon codicon-preview"></i>
                     Layout Template
                 </button>
-                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                </button>
-                <div class="dropdown-menu b-dropdown-menu">
-                    <a class="dropdown-item" href="" ng-click="$.onShowModuleSkinClick()">
-                        <i class="codicon codicon-preview me-2"></i> Module Skin
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.module.ParentID" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <div ng-if="!$.module.ParentID" class="dropdown-menu b-dropdown-menu">
+                    <a class="dropdown-item" href="" ng-click="$.onShowCustomResourcesClick()">
+                        <i class="codicon codicon-combine me-2"></i> Add Custom Resources To the Module
                     </a>
-                    <a class="dropdown-item" href="" ng-click="$.onShowCustomResourceClick()">
-                        <i class="codicon codicon-expand-all me-2"></i> Add Custom Resources To the Module
+                    <a class="dropdown-item" href="" ng-click="$.onShowCustomLibrariesClick()">
+                        <i class="codicon codicon-library me-2"></i> Add Custom Libraries To the Module
                     </a>
                 </div>
             </div>
             <!------------------------------------>
             <!--Standard Form Builder Buttons-->
             <!------------------------------------>
-            <div class="b-btn-group" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
-                <button type="button" class="b-btn btn-submit" ng-click="$.onBuildModuleClick()">
-                    <i class="codicon codicon-screen-normal"></i>
+            <div class="b-btn-group" ng-if="$.module.ModuleBuilderType!='HtmlEditor' && $.module.Skin && $.module.Template">
+                <button type="button" class="b-btn btn-submit" ng-click="$.buildModule()">
+                    <i class="codicon" 
+                        ng-class="{'spin':$.running!=='get-module-builder',
+                        'codicon-terminal-debian': $.running!=='building-module',
+                        'codicon-settings-gear': $.running==='building-module'}">
+                    </i>
                     Build Module
                 </button>
                 <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
-                    <a class="dropdown-item" href="" ng-click="$.onBuildModuleClick(true)">
-                        <i class="codicon codicon-code me-2"></i> Build Scripts & Styles
+                    <a class="dropdown-item" href="" ng-click="$.renderDesignForm()" b-custom-tooltip data-bs-placement="top" title="Render design Form and display Fields in edit mode.">
+                        <i class="codicon codicon-symbol-color me-2"></i> Show Panes & Fields On Designer Board
                     </a>
-                    <a class="dropdown-item" href="" ng-click="$.onRenderFieldsClick()" b-custom-tooltip data-bs-placement="top" title="Render and show layout panes & fields on the design panel">
-                        <i class="codicon codicon-notebook-template me-2"></i> Render Panes & Fields
+                    <a class="dropdown-item" href="" ng-click="$.onGotoModuleResourcesClick()">
+                        <i class="codicon codicon-library me-2"></i> Goto Module Resources
                     </a>
+                    <a class="dropdown-item" target="_blank" ng-href="{{$.moduleViewLinkUrl}}">
+                        <i class="codicon codicon-output me-2"></i> Show Module Output
+                    </a>
+                    <a class="dropdown-item" target="_blank" ng-click="$.onClearCache()" b-custom-tooltip data-bs-placement="bottom" title="Clear dnn cache and add host crm version">
+                        <i class="codicon codicon-issue-reopened me-2"></i> Clear Cache & Add Version
+                    </a>
+                </div>
+            </div>
+            <!------------------------------------>
+            <!--Html Editor Buttons-->
+            <!------------------------------------>
+            <div class="b-btn-group" ng-if="$.module.ModuleBuilderType=='HtmlEditor'">
+                <button type="button" class="b-btn btn-submit" ng-click="$.buildModule()">
+                    <i class="codicon codicon-save"></i>
+                    Save Module
+                </button>
+                <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onGotoModuleResourcesClick()">
                         <i class="codicon codicon-library me-2"></i> Goto Module Resources
                     </a>
@@ -197,15 +218,6 @@
                         <i class="codicon codicon-issue-reopened me-2"></i> Clear Cache & Add Version
                     </a>
                 </div>
-            </div>
-            <!------------------------------------>
-            <!--Html Editor Buttons-->
-            <!------------------------------------>
-            <div ng-if="$.module.ModuleBuilderType=='HtmlEditor'">
-                <button type="button" class="b-btn btn-submit" ng-click="$.saveModule()">
-                    <i class="codicon codicon-save"></i>
-                    Save Module
-                </button>
             </div>
         </div>
         <!------------------------------------>
@@ -229,7 +241,7 @@
                     <button class="nav-link" id="css-tab{{$.module.ModuleID}}" data-bs-toggle="tab" data-bs-target="#css{{$.module.ModuleID}}" type="button" role="tab" aria-controls="css{{$.module.ModuleID}}" aria-selected="false" data-tab="3">Css</button>
                 </li>
                 <li class="position-absolute end-0 m-3">
-                    <button type="button" ng-if="$.IsEditorFullscreen" class="b-btn btn-action fullscreen-save-button" ng-click="$.saveModule()">
+                    <button type="button" ng-if="$.IsEditorFullscreen" class="b-btn btn-action fullscreen-save-button" ng-click="$.buildModule()">
                         <i class="codicon codicon-save"></i>
                         Save Module
                     </button>
@@ -252,7 +264,7 @@
             </div>
             <div class="d-flex">
                 <div class="justify-content-end ms-auto me-3">
-                    <button type="button" class="b-btn btn-submit me-2" ng-click="$.saveModule()" ng-disabled="$.running">
+                    <button type="button" class="b-btn btn-submit me-2" ng-click="$.buildModule()" ng-disabled="$.running">
                         <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-module'}"></i>
                         Save Module
                     </button>
@@ -264,8 +276,11 @@
     <div ng-include="$.moduleVariablesWidget"></div>
     <div ng-include="$.moduleSkinWidget"></div>
     <div ng-include="$.moduleLayoutTemplateWidget"></div>
-    <div ng-include="$.moduleCustomResourceWidget"></div>
+    <div ng-include="$.moduleCustomResourcesWidget"></div>
+    <div ng-include="$.moduleCustomLibrariesWidget"></div>
+    <div ng-include="$.moduleCustomLibraryWidget"></div>
     <div ng-include="$.fieldEditWidget"></div>
+    <div ng-include="$.fieldTemplateWidget"></div>
     <div ng-include="$.fieldShowConditionsWidget"></div>
     <div ng-include="$.fieldConditionalValuesWidget"></div>
     <div ng-include="$.fieldDataSourceWidget"></div>

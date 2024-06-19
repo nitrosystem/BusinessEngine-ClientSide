@@ -1,9 +1,10 @@
-<b-right-widget ng-if="$.workingMode=='module-theme'" data-title="Module Theme" data-icon="symbol-color" data-subtitle="Select skin & template & theme" data-await-action="$.awaitAction" class="mb-select-skin" data-module="$" data-reload-method="onReloadSkinsClick">
+<b-right-widget ng-if="$.workingMode=='module-theme'" data-title="Module Theme" data-icon="symbol-color" data-subtitle="Select skin & template & theme" data-await-action="$.awaitAction" class="mb-select-skin" data-module="$" ng-form="moduleSkinForm" ng-class="{'was-validated':$.moduleSkinForm.validated}"
+    data-reload-method="onReloadSkinsClick">
     <!------------------------------------>
     <!--Module Skin-->
     <!------------------------------------>
-    <div class="b-group mb-4">
-        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModuleSkin">
+    <div class="b-group mb-5">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpSkinObject">
             <h3 class="group-label">
                 <span class="group-icon">
                     <i class="codicon codicon-server-process"></i>
@@ -13,9 +14,13 @@
                 <i class="codicon codicon-chevron-up"></i>
             </span>
         </div>
-        <div id="grpModuleSkin" class="group-content collapse show">
+        <!------------------------------------>
+        <!--Skin List-->
+        <!------------------------------------>
+        <div id="grpSkinObject" class="group-content collapse show">
             <ul class="module-skins">
-                <li class="skin-item" ng-repeat="skin in $.skins" ng-class="{'active':$.module.Skin==skin.SkinName}">
+                <li class="skin-item skin" ng-repeat="skin in $.skins" ng-class="{'active':$.module.Skin==skin.SkinName}">
+                    <input type="image" id="inpModuleSkin" ng-model="$.module.Skin" class="d-none" required/>
                     <button type="button" class="item-button" ng-click="$.onSelectSkinClick(skin)">
                         <div class="image-wrapper">
                             <img ng-src="{{skin.SkinImage}}" />
@@ -29,9 +34,73 @@
         </div>
     </div>
     <!------------------------------------>
-    <!--Module Theme-->
+    <!--Module Templates-->
     <!------------------------------------>
-    <div class="b-group mb-4" ng-if="$.module.ModuleSkin.Themes.length">
+    <div class="b-group mb-4" ng-if="$.module.SkinObject[$.module.ModuleType+'Templates'].length">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModuleTemplate">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Module Template
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <!------------------------------------>
+        <!--Template List-->
+        <!------------------------------------>
+        <div id="grpModuleTemplate" class="group-content collapse show">
+            <ul class="module-skins">
+                <li class="skin-item" ng-repeat="template in $.module.SkinObject[$.module.ModuleType+'Templates']" ng-class="{'active':$.module.Template==template.TemplateName}">
+                    <input type="image" id="inpModuleTemplate" ng-model="$.module.Template" class="d-none" required/>
+                    <button type="button" class="item-button" ng-click="$.onSelectSkinTemplateClick(template)">
+                        <div ng-if="template.TemplateImage" class="image-wrapper">
+                            <img ng-src="{{template.TemplateImage}}" />
+                        </div>
+                        <i ng-if="!template.TemplateImage" class="codicon codicon-preview"></i>
+                        <h6 class="skin-name">{{template.Title}}</h6>
+                        <p ng-if="template.Description" class="skin-description">{{template.Description}}</p>
+                        <p ng-if="!template.Description" class="skin-no-description">No description!</p>
+                    </button>
+                    <div class="b-group mb-4" ng-if="template.Themes && template.Themes.length">
+                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpTemplate{{$index}}Theme">
+                            <h3 class="group-label">
+                                <div class="group-icon">
+                                    <i class="codicon codicon-server-process"></i>
+                                </div> {{template.Title}} Themes
+                            </h3>
+                            <div class="group-collapse">
+                                <i class="codicon codicon-chevron-up"></i>
+                            </div>
+                        </div>
+                        <!------------------------------------>
+                        <!--Theme Of Template List-->
+                        <!------------------------------------>
+                        <div id="grpTemplate{{$index}}Theme" class="group-content collapse show">
+                            <ul class="module-skins">
+                                <li class="skin-item" ng-repeat="theme in template.Themes" ng-class="{'active':$.module.Theme==theme.ThemeName}">
+                                    <input type="hidden" ng-model="$.module.Theme" />
+                                    <a type="button" class="item-button" ng-click="$.onSelectSkinThemeClick(theme)">
+                                        <div class="image-wrapper">
+                                            <img ng-src="{{theme.ThemeImage}}" />
+                                        </div>
+                                        <h6 class="skin-name">{{theme.Title}}</h6>
+                                        <p ng-if="theme.Description" class="skin-description">{{theme.Description}}</p>
+                                        <p ng-if="!theme.Description" class="skin-no-description">No description!</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Module Themes-->
+    <!------------------------------------>
+    <div class="b-group mb-4" ng-if="$.module.SkinObject[$.module.ModuleType+'Themes'].length">
         <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModuleTheme">
             <h3 class="group-label">
                 <span class="group-icon">
@@ -42,9 +111,12 @@
                 <i class="codicon codicon-chevron-up"></i>
             </span>
         </div>
+        <!------------------------------------>
+        <!--Theme List-->
+        <!------------------------------------>
         <div id="grpModuleTheme" class="group-content collapse show">
             <ul class="module-skins">
-                <li class="skin-item" ng-repeat="theme in $.module.ModuleSkin.Themes" ng-class="{'active':$.module.Theme==theme.ThemeName}">
+                <li class="skin-item" ng-repeat="theme in $.module.SkinObject.Themes" ng-class="{'active':$.module.Theme==theme.ThemeName}">
                     <button type="button" class="item-button" ng-click="$.onSelectSkinThemeClick(theme)">
                         <div class="image-wrapper">
                             <img ng-src="{{theme.ThemeImage}}" />
@@ -58,32 +130,65 @@
         </div>
     </div>
     <!------------------------------------>
-    <!--Module Template-->
+    <!--Fields Template-->
     <!------------------------------------>
-    <div class="b-group mb-4" ng-if="$.module.ModuleSkin[$.module.ModuleType+'Templates'].length">
-        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpModuleTemplate">
+    <div class="b-group mb-4">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldsDefaultTemplates">
             <h3 class="group-label">
                 <span class="group-icon">
                     <i class="codicon codicon-server-process"></i>
-                </span> Module Template
+                </span> Fields Default Template
             </h3>
             <span class="group-collapse">
                 <i class="codicon codicon-chevron-up"></i>
             </span>
         </div>
-        <div id="grpModuleTemplate" class="group-content collapse show">
-            <ul class="module-skins">
-                <li class="skin-item" ng-repeat="template in $.module.ModuleSkin[$.module.ModuleType+'Templates']" ng-class="{'active':$.module.Template==template.TemplateName}">
-                    <button type="button" class="item-button" ng-click="$.onSelectSkinTemplateClick(template)">
-                        <div class="image-wrapper">
-                            <img ng-src="{{template.TemplateImage}}" />
-                        </div>
-                        <h6 class="skin-name">{{template.Title}}</h6>
-                        <p ng-if="template.Description" class="skin-description">{{template.Description}}</p>
-                        <p ng-if="!template.Description" class="skin-no-description">No description!</p>
-                    </button>
-                </li>
-            </ul>
+        <div id="grpFieldsDefaultTemplates" class="group-content collapse show">
+            <div class="b-field">
+                <div class="form-label">Set Fields Default Template</div>
+                <label class="b-switch">
+                    <input type="checkbox" ng-model="$.module.EnableFieldsDefaultTemplate">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="b-field" ng-if="$.module.EnableFieldsDefaultTemplate">
+                <label class="form-label">Template Name</label>
+                <div class="b-input-group">
+                    <input type="text" id="txtFieldsTemplate" ng-model="$.module.FieldsDefaultTemplate" class="b-input form-control" placeholder="Enter fields default template name" required/>
+                    <span><i class="codicon codicon-preview"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Fields Theme-->
+    <!------------------------------------>
+    <div class="b-group mb-4">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldsDefaultThemes">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Fields Default Theme
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <div id="grpFieldsDefaultThemes" class="group-content collapse show">
+            <div class="b-field">
+                <div class="form-label">Set Fields Default Theme</div>
+                <label class="b-switch">
+                    <input type="checkbox" ng-model="$.module.EnableFieldsDefaultTheme">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="b-field" ng-if="$.module.EnableFieldsDefaultTheme">
+                <label class="form-label">Theme Name</label>
+                <div class="b-input-group">
+                    <input type="text" id="txtFieldsTheme" ng-model="$.module.FieldsDefaultTheme" class="b-input form-control" placeholder="Enter fields default theme" required/>
+                    <span><i class="codicon codicon-preview"></i></span>
+                </div>
+            </div>
         </div>
     </div>
     <hr class="mb-4" />

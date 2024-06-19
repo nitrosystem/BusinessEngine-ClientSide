@@ -1,6 +1,7 @@
 import "./styles/global.css"
 
 import * as _ from 'lodash';
+import moment from 'moment';
 
 import angular from "angular";
 import "ng-file-upload/dist/ng-file-upload-shim";

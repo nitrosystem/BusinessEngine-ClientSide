@@ -15,7 +15,6 @@ export class ExtensionsController {
         this.stepsCallback = { 3: this.monitoringInstall };
         this.serviceBuilder = {};
 
-
         studioService.setFocusModuleDelegate(this, this.onFocusModule);
 
         $scope.$emit('onChangeActivityBar', {
@@ -158,7 +157,6 @@ export class ExtensionsController {
             }
         );
     }
-
 
     onDoneInstallExtensionClick() {
         location.reload();

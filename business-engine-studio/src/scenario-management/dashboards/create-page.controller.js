@@ -279,9 +279,7 @@ export class CreateDashboardPageController {
                     (data) => {
                         delete this.page.Module;
 
-                        this.notifyService.success(
-                            "Dashboard page module deleted has been successfully"
-                        );
+                        this.notifyService.success("Dashboard page module deleted has been successfully");
 
                         this.$rootScope.refreshSidebarExplorerItems();
 

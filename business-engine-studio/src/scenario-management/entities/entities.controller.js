@@ -1,5 +1,3 @@
-import swal from "sweetalert";
-
 export class EntitiesController {
     constructor(
         $scope,

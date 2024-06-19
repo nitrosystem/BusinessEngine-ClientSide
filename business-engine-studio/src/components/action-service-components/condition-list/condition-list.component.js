@@ -31,7 +31,7 @@ class ConditionListController {
 
         $scope.$watch("$.conditions", (newVal, oldVal) => {
             if (this.condition && oldVal && newVal != oldVal) delete this.condition;
-            _.forEach((newVal || []), (c) => (delete c.IsEdited));
+            if (!this.isEditingForm) _.forEach((newVal || []), (c) => (delete c.IsEdited));
         });
     }
 
@@ -40,6 +40,10 @@ class ConditionListController {
         _.map(this.conditions, (c) => (c.IsEdited = false));
 
         delete this.condition;
+
+        this.$timeout(() => {
+            this.isEditingForm = true;
+        });
     }
 
     onAddConditionClick() {
@@ -91,6 +95,7 @@ class ConditionListController {
         );
 
         delete this.condition;
+        delete this.isEditingForm;
     }
 
     onDeleteItemClick($index, $event) {

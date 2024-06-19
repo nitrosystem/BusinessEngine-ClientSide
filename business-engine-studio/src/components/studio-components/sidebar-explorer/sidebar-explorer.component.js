@@ -48,7 +48,6 @@ class SidebarExplorerController {
                 const explorerElement = document.getElementById(newVal);
                 if (newVal != oldVal && explorerElement) {
                     const rect = explorerElement.getBoundingClientRect();
-                    console.log(rect);
                     $("#bExplorer").animate({ scrollTop: rect.top + $("#bExplorer").scrollTop() - 100 }, 600);
                 }
             });

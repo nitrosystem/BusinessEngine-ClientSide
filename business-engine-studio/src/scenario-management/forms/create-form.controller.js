@@ -59,6 +59,8 @@ export class CreateFormController {
                     };
                 }
 
+                this.oldModuleName = this.formModule.ModuleName;
+
                 this.onFocusModule();
 
                 delete this.running;
@@ -92,6 +94,10 @@ export class CreateFormController {
                     id: "txtModuleTitle",
                     required: true,
                 },
+                ModuleBuilderType: {
+                    id: "drpModuleBuilderType",
+                    required: true,
+                }
             },
             true,
             this.$scope,
@@ -99,49 +105,112 @@ export class CreateFormController {
         );
     }
 
-    onSaveFormClick() {
-        this.form.validated = true;
-        this.form.validator(this.formModule);
-        if (this.form.valid) {
-            this.formModule.DnnModuleID =
-                this.globalService.getParameterByName("d") ||
-                this.formModule.DnnModuleID;
+    validateModuleName() {
+        var $defer = this.$q.defer();
 
-            this.running = "save-form";
+        if (this.oldModuleName == this.formModule.ModuleName) {
+            $defer.resolve();
+            return $defer.promise;
+        }
+
+        if (_.isEmpty(this.formModule.ModuleName)) {
+            this.moduleNameIsValid = false;
+            this.moduleNameIsEmpty = true;
+            this.moduleNameIsValidPattern = true;
+
+            $defer.reject();
+        } else if (/^[a-zA-Z][a-zA-Z_.0-9-]+$/gim.test(this.formModule.ModuleName) == false) {
+            this.moduleNameIsValid = false;
+            this.moduleNameIsValidPattern = false;
+
+            $defer.reject();
+        } else {
+            this.running = "check-module-name";
             this.awaitAction = {
-                title: "Saving Form",
-                subtitle: "Just a moment for saving the form...",
+                title: "Checking Module Name",
+                subtitle: "Just a moment for checking name of the module...",
             };
 
-            this.currentTabKey = this.$rootScope.currentTab.key;
+            this.apiService.post("Studio", "CheckModuleName", {
+                ScenarioID: this.formModule.ScenarioID,
+                ModuleID: this.formModule.ModuleID,
+                OldModuleName: this.oldModuleName,
+                NewModuleName: this.formModule.ModuleName
+            }).then((data) => {
+                this.moduleNameIsValidPattern = true;
+                this.moduleNameIsValid = data.IsValid;
+                this.moduleNameIsExists = data.IsExists;
 
-            this.apiService.post("Studio", "SaveFormModule", this.formModule).then((data) => {
-                    this.formModule.ModuleID = data;
+                if (data.IsValid)
+                    $defer.resolve();
+                else
+                    $defer.reject();
 
-                    this.notifyService.success("Form updated has been successfully");
+                delete this.awaitAction;
+                delete this.running;
+            }, (error) => {
+                this.awaitAction.isError = true;
+                this.awaitAction.subtitle = error.statusText;
+                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                    this.$scope.$emit("onUpdateCurrentTab", {
-                        id: this.formModule.ModuleID,
-                        title: this.formModule.ModuleName,
-                        key: this.currentTabKey,
-                    });
+                $defer.reject();
 
-                    this.$rootScope.refreshSidebarExplorerItems();
-
-                    delete this.awaitAction;
-                    delete this.running;
-                },
-                (error) => {
-                    this.awaitAction.isError = true;
-                    this.awaitAction.subtitle = error.statusText;
-                    this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
-
-                    this.notifyService.error(error.data.Message);
-
-                    delete this.running;
-                }
-            );
+                delete this.running;
+            });
         }
+
+        return $defer.promise;
+    }
+
+    onSaveFormClick() {
+        this.validateModuleName().then(() => {
+            this.form.validated = true;
+            this.form.validator(this.formModule);
+            if (this.form.valid) {
+                this.formModule.DnnModuleID =
+                    this.globalService.getParameterByName("d") ||
+                    this.formModule.DnnModuleID;
+
+                this.running = "save-form";
+                this.awaitAction = {
+                    title: "Saving Form",
+                    subtitle: "Just a moment for saving the form...",
+                };
+
+                this.currentTabKey = this.$rootScope.currentTab.key;
+
+                this.apiService.post("Studio", "SaveFormModule", this.formModule).then((data) => {
+                        this.formModule.ModuleID = data;
+
+                        if (this.oldModuleName != this.formModule.ModuleName) this.importantNoteForChangeModuleName = true;
+
+                        this.oldModuleName = this.formModule.ModuleName;
+
+                        this.notifyService.success("Form updated has been successfully");
+
+                        this.$scope.$emit("onUpdateCurrentTab", {
+                            id: this.formModule.ModuleID,
+                            title: this.formModule.ModuleName,
+                            key: this.currentTabKey,
+                        });
+
+                        this.$rootScope.refreshSidebarExplorerItems();
+
+                        delete this.awaitAction;
+                        delete this.running;
+                    },
+                    (error) => {
+                        this.awaitAction.isError = true;
+                        this.awaitAction.subtitle = error.statusText;
+                        this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+
+                        this.notifyService.error(error.data.Message);
+
+                        delete this.running;
+                    }
+                );
+            }
+        });
     }
 
     onGotoModuleBuilderClick() {

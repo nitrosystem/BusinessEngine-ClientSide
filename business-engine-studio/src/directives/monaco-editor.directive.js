@@ -1,5 +1,6 @@
 import { monacoDefaultOptions } from "../configs/monac-editor.config";
 
+var bMonacoEditorLanguageBuffer = [];
 var bMonacoEditorBuffer = [];
 var completionItemProvider;
 
@@ -29,7 +30,12 @@ export function MonacoEditor($rootScope, $filter, $timeout) {
                 monaco.languages.register({ id: language });
             }
 
-            if (attrs.height) element.css("min-height", attrs.height);
+            if (language == 'bProperties')
+                element.css("min-height", '2.3rem');
+            else if (element.data('height'))
+                element.css("height", element.data('height'));
+            else
+                element.css("min-height", '300px');
 
             var options = monacoDefaultOptions[language] || {};
             options = angular.extend(options, {
@@ -39,6 +45,8 @@ export function MonacoEditor($rootScope, $filter, $timeout) {
             });
 
             var monacoEditor = monaco.editor.create(element[0], options);
+
+            bMonacoEditorBuffer.push(monacoEditor);
 
             ngModel.$render = function() {
                 if (monacoEditor) {
@@ -62,6 +70,15 @@ export function MonacoEditor($rootScope, $filter, $timeout) {
                 }
 
                 if (attrs.oneLine == "true") {
+                    //detect tab key
+                    monacoEditor.addCommand(
+                        monaco.KeyCode.Tab,
+                        function(e, d) {
+                            if (bMonacoEditorBuffer.length > 1) bMonacoEditorBuffer[1].focus();
+                        },
+                        ""
+                    );
+
                     // set editor in one line
                     let lineCount = monacoEditor.getModel().getLineCount();
                     if (newValue && !isChanged && lineCount > 1) {
@@ -77,9 +94,9 @@ export function MonacoEditor($rootScope, $filter, $timeout) {
 
             showAutocompletion(getItems(scope.datasource));
 
-            if (bMonacoEditorBuffer.indexOf(language) >= 0) return;
+            if (bMonacoEditorLanguageBuffer.indexOf(language) >= 0) return;
 
-            bMonacoEditorBuffer.push(language);
+            bMonacoEditorLanguageBuffer.push(language);
 
             function showAutocompletion(obj) {
                 // Helper function to return the monaco completion item type of a thing
@@ -211,6 +228,10 @@ export function MonacoEditor($rootScope, $filter, $timeout) {
                             };
                         },
                     });
+            }
+
+            function focusNextElement(nextElem) {
+                $('#' + nextElem).focus();
             }
 
             function getItems(dataSource) {

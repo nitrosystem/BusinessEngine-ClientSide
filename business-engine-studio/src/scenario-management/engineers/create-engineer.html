@@ -219,7 +219,7 @@
                                         <div class="b-field mb-1">
                                             <label class="form-label d-block">DELETE Specification</label>
                                             <div class="b-input-group">
-                                                <select ng-model="relationship.DELETESpecification" class="b-input" chosen>
+                                                <select ng-model="relationship.DELETESpecification" class="b-input" chosen inherit-select-classes="true">
                                                     <option value="NO_ACTION">No Action</option>
                                                     <option value="CASCADE">Cascade</option>
                                                     <option value="SET_NULL">Set Null</option>
@@ -233,7 +233,7 @@
                                         <div class="b-field mb-1">
                                             <label class="form-label d-block">UPDATE Specification</label>
                                             <div class="b-input-group">
-                                                <select ng-model="relationship.UPDATESpecification" class="b-input" chosen>
+                                                <select ng-model="relationship.UPDATESpecification" class="b-input" chosen inherit-select-classes="true">
                                                     <option value="NO_ACTION">No Action</option>
                                                     <option value="CASCADE">Cascade</option>
                                                     <option value="SET_NULL">Set Null</option>

@@ -1,3 +1,5 @@
+import { GlobalSettings } from "../configs/global.settings";
+
 export class ModuleController {
     constructor(
         $scope,
@@ -24,8 +26,11 @@ export class ModuleController {
         this.expressionService = expressionService;
         this.actionService = actionService;
 
+        this.globalSettings = GlobalSettings;
+
         $scope.moduleController = this;
     }
+
 
     onInitModule(dnnModuleID, moduleID, moduleName, connectionID, isSSR, isDisabledFrontFramework) {
         this.module = { dnnModuleID: dnnModuleID, moduleID: moduleID, moduleName: moduleName, isSSR: JSON.parse((isSSR || 'false').toLowerCase()), isDisabledFrontFramework: JSON.parse((isDisabledFrontFramework || 'false').toLowerCase()) };
@@ -61,39 +66,12 @@ export class ModuleController {
                             this.assignScopeData(data.Data);
 
                             if (!this.module.isSSR) {
-                                //load custom.css
-                                if (data.ModuleTemplateCssUrl) {
-                                    var head = document.getElementsByTagName('head')[0];
-                                    var link = document.createElement('link');
-                                    link.rel = 'stylesheet';
-                                    link.type = 'text/css';
-                                    link.href = data.ModuleTemplateCssUrl;
-                                    link.media = 'all';
-                                    head.appendChild(link);
-                                }
-
-                                if (data.ModuleTemplateJsUrl) {
-                                    var head = document.getElementsByTagName('head')[0];
-                                    var script = document.createElement('script');
-                                    script.src = data.ModuleTemplateJsUrl;
-                                    head.appendChild(script);
-                                    this.$timeout(() => {
-                                        const moduleFunction1 = eval(`${this.globalService.capitalizeFirstLetter(this.module.moduleName.replace(/-/g,''))}Controller`);
-                                        console.log(moduleFunction1);
-                                        if (moduleFunction1) {
-                                            const controller = new moduleFunction1(this, this.$scope);
-                                            controller.onPageLoad();
-                                        }
-                                    }, 1500);
-                                }
-
                                 $(`#pnlBusinessEngine${this.module.moduleID}`).html(
                                     this.$compile(moduleTemplate)(this.$scope)
                                 );
                             }
 
                             this.$scope.loadedModule = true;
-
                             this.$timeout(() => {
                                 $('.b-engine-module').addClass('is-loaded');
                                 $('.ignore-ssr').removeClass('ignore-ssr')
@@ -128,7 +106,11 @@ export class ModuleController {
                                     });
                                 }
 
-                                if (field.Settings.DataSource && field.Settings.DataSource.RunServiceClientSide) dataSourceFields.push(field.FieldID);
+                                if (field.DataSource) {
+                                    if (field.DataSource.RunServiceClientSide) dataSourceFields.push(field.FieldID);
+
+                                    this.appendWatches(`Field.${field.FieldName}.DataSource`, "onFieldDataSourceChange", field.FieldID);
+                                }
 
                                 this.showHideField(field.FieldID);
 
@@ -155,7 +137,17 @@ export class ModuleController {
                                     }, 1000);
                                 });
                             });
+
+                            this.$scope.loadedModule = true;
+                            this.$timeout(() => {
+                                $('.b-engine-module').addClass('is-loaded');
+                                $('.ignore-ssr').removeClass('ignore-ssr')
+                            });
                         }
+
+                        this.$timeout(() => {
+                            this.completedForm = true;
+                        })
                     }, (error) => {});
                 },
                 (error) => {}
@@ -199,7 +191,7 @@ export class ModuleController {
 
     onFieldValueChange(fieldID) {
         var field = this.getFieldByID(fieldID);
-        if (field) {
+        if (field /*&& this.completedForm*/ ) {
             if (field.Settings.SaveValueIn) {
                 var match = /(\w+)([\.\[].[^*+%\-\/\s()]*)?/gm.exec(
                     field.Settings.SaveValueIn
@@ -208,12 +200,22 @@ export class ModuleController {
                     var model = this.$parse(match[0]);
                     model.assign(this.$scope, field.Value);
                 }
-            } else this.$scope.Form[field.FieldName] = field.Value;
+            } else {
+                this.$scope.Field[field.FieldName].Value = field.Value;
+                this.$scope.Form[field.FieldName] = field.Value;
+
+                console.log(this.$scope.Form)
+            }
 
             if (field.BeValidate) {
                 const fields = !field.IsGroup ? [field] : this.getFieldChilds(field);
                 this.validateFields(fields);
             }
+
+            this.$timeout(() => {
+                if (field.Value !== field.OldValue) this.$scope.$broadcast(`onFieldValueChange_${field.FieldID}`, { field: field });
+                field.OldValue = field.Value;
+            }, 200);
 
             if (field.Actions && field.Actions.length)
                 this.callActionByEvent(this.actions, fieldID, "OnFieldValueChange");
@@ -298,8 +300,8 @@ export class ModuleController {
 
     getFieldDataSource(fieldID, pageIndex) {
         var field = this.getFieldByID(fieldID);
-        if (field && field.Settings.DataSource) {
-            var datasource = _.clone(field.Settings.DataSource);
+        if (field && field.DataSource) {
+            var datasource = _.clone(field.DataSource);
 
             if (datasource.Type == "2") {
                 this.apiService.post("Module", "GetFieldDataSource", {
@@ -315,17 +317,25 @@ export class ModuleController {
                         this.$scope.Field[data.FieldName].DataSource = data.DataSource;
                     });
             } else if (datasource.Type == "actions") {
-                const listName = field.Settings.DataSource.ListName;
+                const listName = field.DataSource.ListName;
                 const value = this.expressionService.parseExpression(listName, this.$scope);
 
                 field.DataSource = field.DataSource || {};
                 field.DataSource.Items = field.DataSource.Items || [];
                 field.DataSource.Items = value;
             }
-        } else
-            console.warn(
-                "Field not found. Method: getFieldDataSource, FieldID: " + fieldID
-            );
+        } else {
+            console.warn("Field not found. Method: getFieldDataSource, FieldID: " + fieldID);
+        }
+    }
+
+    onFieldDataSourceChange(fieldID) {
+        var field = this.getFieldByID(fieldID);
+
+        this.$timeout(() => {
+            if (field.DataSource !== field.OldDataSource) this.$scope.$broadcast(`onFieldDataSourceChange_${field.FieldID}`, { field: field });
+            field.OldDataSource = field.DataSource;
+        }, 200);
     }
 
     validateForm() {
@@ -577,6 +587,9 @@ export class ModuleController {
         return defer.promise;
     }
 
+    /*------------------------------------*/
+    /* Watch Fields or Variables Changed   */
+    /*------------------------------------*/
     appendWatches(expression, callback, ...params) {
         if (!expression || typeof expression != "string" || !callback) return;
 
@@ -605,9 +618,7 @@ export class ModuleController {
 
     raiseWatches() {
         _.forEach(this.watches, (w) => {
-            this.$scope.$watch(
-                w.property,
-                () => {
+            this.$scope.$watch(w.property, () => {
                     _.forEach(w.callbacks, (item) => {
                         if (typeof this[item.callback] == "function")
                             this[item.callback].apply(this, item.params);

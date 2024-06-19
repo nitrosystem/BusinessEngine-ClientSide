@@ -63,6 +63,8 @@ export class StudioController {
         });
 
         $scope.$on("onShowRightWidget", (e, args) => {
+            if (args && args.controller) args.controller.currentFieldFocused = false;
+
             $("body").addClass("overflow-hidden");
 
             this.$timeout(() => {

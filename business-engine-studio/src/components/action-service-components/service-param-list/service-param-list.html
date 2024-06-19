@@ -14,7 +14,7 @@
     </div>
     <div class="table-body">
         <div class="d-flex columns-name">
-            <div class="col-4">Pdfsdfaram Name</div>
+            <div class="col-4">Param Name</div>
             <div class="col-4">Param Value</div>
             <div class="col-3">Default Value</div>
             <div class="col-1">
@@ -48,7 +48,7 @@
                 <div class="d-flex">
                     <div class="col-10">
                         <div monaco-editor ng-model="$.param.ParamValue" data-height="30px" data-language="bProperties" data-one-line="true" b-custom-focus="onEditParam" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields"
-                            data-service-result="true" required style="min-height: 1.4rem;">
+                            data-service-result="true" required>
                         </div>
                     </div>
                     <div class="col-1">
@@ -78,7 +78,7 @@
         </div>
     </div>
     <div class="table-footer">
-        <div ng-if="!$.params.length" class="b-notify notify-warning mb-4">
+        <div ng-if="!$.params.length" class="b-notify notify-info mb-4">
             <i class="codicon codicon-info b-icon-2"></i>
             <div class="text">
                 <h4 class="label">Service has not any params.</h4>

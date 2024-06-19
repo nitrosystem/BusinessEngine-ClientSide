@@ -5,14 +5,19 @@
             <div class="widget-title" ng-if="!$.awaitAction">
                 <i class="codicon codicon-{{$.icon}} b-{{$.moduleType}}-icon"></i>
                 <h2>{{$.title}}</h2>
-                <p ng-if="$.subtitle">({{$.subtitle}})</p>
+                <p class="mt-1" ng-if="$.subtitle">({{$.subtitle}})</p>
             </div>
             <div class="widget-title shimmer" ng-if="$.awaitAction">
                 <div ng-if="!$.awaitAction.isError" class="loading-circle me-2"></div>
                 <i ng-if="$.awaitAction.isError" class="codicon codicon-warning"></i>
-                <h2>{{$.awaitAction.title}}</h2>
-                <p ng-if="$.awaitAction.subtitle">({{$.awaitAction.subtitle}})</p>
+                <h2 class="await-action-title">{{$.awaitAction.title}}</h2>
+                <p class="await-action-subtitle">({{$.awaitAction.subtitle}})</p>
                 <i ng-if="$.awaitAction.isError" class="ms-2 codicon codicon-unverified" b-custom-popover data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="bottom" title="Error Details" data-bs-html="true" data-bs-content="{{$.awaitAction.desc}}"></i>
+            </div>
+            <div ng-if="$.awaitAction.showProgress" data-bs-theme="dark">
+                <div class="progress mt-2 mb-1" role="progressbar" aria-label="{{$.awaitAction.subtitle}}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                </div>
             </div>
         </div>
         <div class="col">

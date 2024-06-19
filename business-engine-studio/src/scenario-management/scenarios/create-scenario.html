@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="col ps-5">
-                <div class="b-notify notify-warning mb-4">
+                <div class="b-notify notify-info mb-4">
                     <i class="codicon codicon-info b-icon-2"></i>
                     <div class="text">
                         <h4 class="label">Low Risk!</h4>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="b-field">
-                    <button type="button" class="b-btn btn-action btn-lg btn-full" ng-click="$.onRenderScenarioModulesClick()" ng-disabled="$.running">
+                    <button type="button" class="b-btn btn-action btn-lg btn-full" ng-click="$.onRenderScenarioModulesClick()" ng-disabled="$.running||1==1">
                         <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='render-all-modules'}"></i>
                         Render All Scenario Modules
                     </button>

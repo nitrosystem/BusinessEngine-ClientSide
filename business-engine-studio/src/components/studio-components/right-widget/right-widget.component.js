@@ -5,10 +5,6 @@ class RightWidgetController {
         "ngInject";
     }
 
-    onRightWidgetKeydownChange($event) {
-        this.module.disposeWorkingMode();
-    }
-
     onMaximizeClick() {
         this.widgetFull = !this.widgetFull;
     }

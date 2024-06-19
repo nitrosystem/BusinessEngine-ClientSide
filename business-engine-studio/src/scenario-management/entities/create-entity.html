@@ -284,11 +284,6 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div class="b-field">
-                        <button type="button" class="b-btn btn-action" ng-click="$.onAddViewModelClick()">
-                            <i class="codicon codicon-table"></i> Create View Model From Entity
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -432,6 +427,23 @@
                                 <i class="codicon codicon-circle-slash"></i>
                                 Cancel
                             </button>
+
+                        </div>
+                    </div>
+                    <div ng-if="$.isNewEntity" class="mt-4 mb-2 b-notify notify-warning mb-4">
+                        <i class="codicon codicon-info b-icon-2"></i>
+                        <div class="text">
+                            <h6 class="label text-uppercase">Create View Model Base On Entity</h6>
+                            <div class="subtext">
+                                Do you want to create a ViewModel based on the created Entity?
+                                <br> Every column at Entity is one property at ViewModel
+                                <br> After click on below button, goto ViewModel page and will create or update ViewModel
+                                <br>
+                                <button type="button" class="mt-2 b-btn btn-green" ng-click="$.onSaveViewModelClick()">
+                                    <i class="codicon codicon-references"></i>
+                                    Add View Model
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

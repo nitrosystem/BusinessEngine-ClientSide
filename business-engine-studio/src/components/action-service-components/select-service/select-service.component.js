@@ -63,6 +63,10 @@ class SelectServiceController {
         _.forEach(this.action.Params, (p) => (p.IsEdited = false));
     }
 
+    onAddServiceClick() {
+        this.$scope.$emit("onGotoPage", { page: "create-service" });
+    }
+
     onRowItemClick(param, $index) {
         if (this.param) {
             this.param.IsEdited = false;

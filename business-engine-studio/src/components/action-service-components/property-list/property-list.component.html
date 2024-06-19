@@ -51,7 +51,7 @@
                             <div class="d-flex">
                                 <div class="col-10">
                                     <div monaco-editor ng-model="$.property.LeftExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" b-custom-focus="onEditProperty"
-                                        required style="min-height: 1.4rem;"></div>
+                                        required></div>
                                 </div>
                                 <div class="col-1">
                                     <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -76,8 +76,7 @@
                         <div class="col-5">
                             <div class="d-flex">
                                 <div class="col-10">
-                                    <div monaco-editor ng-model="$.property.RightExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true" required
-                                        style="min-height: 1.4rem;"></div>
+                                    <div monaco-editor ng-model="$.property.RightExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true" required></div>
                                 </div>
                                 <div class="col-1">
                                     <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -127,7 +126,7 @@
         </div>
     </div>
     <div class="table-footer">
-        <div ng-if="!$.properties.length" class="b-notify notify-warning mb-4">
+        <div ng-if="!$.properties.length" class="b-notify notify-info mb-4">
             <i class="codicon codicon-info b-icon-2"></i>
             <div class="text">
                 <h4 class="label">no Properties.</h4>

@@ -8,7 +8,7 @@
             <div class="col-10 me-2">
                 <div class="b-input-group">
                     <select ng-model="$.action.ServiceID" class="b-input form-select b-btn btn-action text-start" ng-options="service.ServiceID as service.ServiceName for service in $.services | filter:{ServiceSubtype:$.serviceType}" ng-change="$.onServiceChange()" chosen
-                        placeholder-text-single="'Select service'" required>
+                        inherit-select-classes="true" placeholder-text-single="'Select service'" required>
                         <option disabled></option>
                     </select>
                     <span><i class="codicon codicon-ruby"></i></span>
@@ -71,7 +71,7 @@
                 <div class="d-flex">
                     <div class="col-10">
                         <div monaco-editor ng-model="$.param.ParamValue" data-language="bProperties" data-one-line="true" b-custom-focus="onEditParam" data-datasource="['fields','form','variables','actionParams']" data-variables="$.variables" data-view-models="$.viewModels"
-                            data-fields="$.fields" required style="min-height: 1.4rem;"></div>
+                            data-fields="$.fields" required></div>
                     </div>
                     <div class="col-1">
                         <button type="button" class="bg-dark text-light border-1 pt-1 pb-1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -117,7 +117,7 @@
         </div>
     </div>
     <div class="table-footer">
-        <div ng-if="!$.action.Params.length" class="b-notify notify-warning mb-4">
+        <div ng-if="!$.action.Params.length" class="b-notify notify-info mb-4">
             <i class="codicon codicon-info b-icon-2"></i>
             <div class="text">
                 <h4 class="label">Service has not any params.</h4>

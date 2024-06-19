@@ -382,6 +382,9 @@
 <!------------------------------------>
 <script type="text/ng-template" id="sidebarExplorerDashboardPages.html">
     <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expDashboardPages{{page.ItemID}}" ng-class="{'collapsed':!$.isExpanded(page.ItemID)}">
+        <span class="exp-remove-item" role="button" ng-click="$.onRemoveItem($event,item)" title="Remove Item" b-custom-tooltip data-bs-placement="right">
+            <i class="codicon codicon-trash"></i>
+        </span>
         <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
         <i class="codicon codicon-copy"></i> {{page.Title}}
     </a>

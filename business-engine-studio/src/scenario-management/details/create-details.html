@@ -11,11 +11,45 @@
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
                     </div>
                 </div>
+                <div class="b-notify mb-2">
+                    <i class="codicon codicon-info b-icon-1"></i>
+                    <p class="subtext m-0">
+                        <b>Details Name Example:</b> product-details, Store, details_1 ...
+                    </p>
+                </div>
                 <div class="b-field">
                     <label class="form-label">Details Name</label>
-                    <div class="b-input-group">
-                        <input type="text" id="txtModuleName" ng-model="$.detailsModule.ModuleName" class="b-input form-control" placeholder="Enter details name(must be unique)" autocomplete="off" required />
-                        <span><i class="codicon codicon-gear"></i></span>
+                    <div class="d-flex mb-2">
+                        <div class="col-8">
+                            <div class=" b-input-group">
+                                <input type="text" id="txtModuleName" ng-model="$.detailsModule.ModuleName" class="b-input form-control" placeholder="Enter details name(like top examples)" autocomplete="off " required />
+                                <span><i class="codicon codicon-gear"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-3 ms-1">
+                            <button type="button" class="b-btn btn-action h-100 ps-4 pe-4" ng-click="$.validateModuleName()" ng-disabled="!$.detailsModule.ModuleName">
+                                <i class=" codicon codicon-go-to-search"></i>
+                                Validate Name
+                            </button>
+                        </div>
+                    </div>
+                    <div ng-if="$.moduleNameIsValid==false">
+                        <div class="b-notify notify-warning mb-2" ng-if="!$.moduleNameIsValidPattern">
+                            <i class="codicon codicon-regex b-icon-2"></i>
+                            <p class="text mb-0"> This name does not match with the pattern.</p>
+                        </div>
+                        <div class="b-notify notify-warning mb-2" ng-if="$.moduleNameIsExists">
+                            <i class="codicon codicon-references b-icon-2"></i>
+                            <p class="text mb-0"> this name is already exists on the database table.</p>
+                        </div>
+                        <div class="b-notify notify-warning mb-2" ng-if="$.moduleNameIsEmpty">
+                            <i class="codicon codicon-warning b-icon-2"></i>
+                            <p class="text mb-0"> This name is not valid because field "details name" not have value.</p>
+                        </div>
+                    </div>
+                    <div class="b-notify notify-success mb-2" ng-if="$.moduleNameIsValid">
+                        <i class="codicon codicon-check-all b-icon-2"></i>
+                        <p class="text mb-0"> This name is valid.</p>
                     </div>
                 </div>
                 <div class="b-field">
@@ -30,7 +64,7 @@
                 <div class="b-field">
                     <label class="form-label">Module Builder Type</label>
                     <div class="b-input-group">
-                        <select id="drpScenarioID" ng-model="$.detailsModule.ModuleBuilderType" class="b-input form-select" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select module builder type'" required>
+                        <select id="drpModuleBuilderType" ng-model="$.detailsModule.ModuleBuilderType" class="b-input form-select" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select module builder type'" required>
                         <option value="FormDesigner">Form Designer</option>
                         <option value="HtmlEditor">Html Editor</option>
                         </select>
@@ -81,6 +115,16 @@
                     <i class="codicon codicon-circle-slash"></i>
                     Cancel
                 </button>
+            </div>
+        </div>
+        <div class="b-notify notify-note mt-4 mb-4" ng-if="$.importantNoteForChangeModuleName">
+            <i class="codicon codicon-info b-icon-2"></i>
+            <div class="text">
+                <h4 class="label">Important Note!!</h4>
+                <div class="subtext ">
+                    <p class="mb-2">After the module rename, you must goto <b>Module Builder</b> and <b>Rebuild</b> module again.</p>
+                    <button type="button" class="b-btn btn-white btn-sm" ng-click="$.onGotoModuleBuilderClick()">Goto Module Builder</button>
+                </div>
             </div>
         </div>
     </b-content-widget>

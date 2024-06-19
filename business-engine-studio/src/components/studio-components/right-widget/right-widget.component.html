@@ -24,7 +24,7 @@
                     </li>
                     <li>
                         <a b-custom-tooltip data-bs-placement="left" title="{{!$.widgetFull?'Maximize':'Restore Down'}}" ng-click="$.onMaximizeClick()">
-                            <i ng-class="{'codicon-chrome-restore':$.widgetFull,'codicon-vm':!$.widgetFull}" class="codicon"></i>
+                            <i ng-class="{'codicon-screen-normal':$.widgetFull,'codicon-screen-full':!$.widgetFull}" class="codicon"></i>
                         </a>
                     </li>
                     <li>
@@ -34,12 +34,12 @@
                     </li>
                     <li>
                         <a b-custom-tooltip data-bs-placement="left" title="Close" ng-click="$.onCloseClick()">
-                            <i class="codicon codicon-close"></i></a>
+                            <i class="codicon codicon-close"></i>
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
-        <div b-esc-key="$.onRightWidgetKeydownChange()" class="widget-body b-scrollbar" ng-transclude>
-        </div>
+        <div class="widget-body b-scrollbar" ng-transclude></div>
     </div>
 </div>

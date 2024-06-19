@@ -1,5 +1,8 @@
-<div ng-controller="createDashboardController as $" class="create-dashboard" ng-class="{'was-validated':$.form.validated}">
-    <b-content-widget data-title="Create Dashboard" data-icon="table" data-module-type="create-dashboard" data-subtitle="Add or edit scenario dashboard" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+<div ng-controller="createDashboardController as $" class="create-dashboard"
+    ng-class="{'was-validated':$.form.validated}">
+    <b-content-widget data-title="Create Dashboard" data-icon="table" data-module-type="create-dashboard"
+        data-subtitle="Add or edit scenario dashboard" data-await-action="$.awaitAction" data-module="$"
+        data-reload-method="onPageLoad" data-close-method="onCloseWindow">
         <!------------------------------------>
         <!--Create Dashboard -->
         <!------------------------------------>
@@ -8,30 +11,74 @@
                 <div class="b-field">
                     <label class="form-label">Scenario</label>
                     <div class="b-input-group">
-                        <select id="drpScenarioID" ng-model="$.dashboard.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select dashboard scenario'"
-                            required>
+                        <select id="drpScenarioID" ng-model="$.dashboard.ScenarioID" class="b-input form-select"
+                            ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios"
+                            ng-disabled="$.running" chosen inherit-select-classes="true"
+                            placeholder-text-single="'Select dashboard scenario'" required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
                     </div>
                 </div>
+                <div class="b-notify mb-2">
+                    <i class="codicon codicon-info b-icon-1"></i>
+                    <p class="subtext m-0">
+                        <b>Dashboard Name Example:</b> admin-dashboard, Dashboard, dashboard_1 ...
+                    </p>
+                </div>
                 <div class="b-field">
                     <label class="form-label">Dashboard Name</label>
-                    <div class="b-input-group">
-                        <input type="text" id="txtModuleName" ng-model="$.dashboard.ModuleName" class="b-input form-control" placeholder="Enter dashboard name(must be unique)" autocomplete="off" required />
-                        <span><i class="codicon codicon-gear"></i></span>
+                    <div class="d-flex mb-2">
+                        <div class="col-8">
+                            <div class=" b-input-group">
+                                <input type="text" id="txtModuleName" ng-model="$.dashboard.ModuleName"
+                                    class="b-input form-control" placeholder="Enter dashboard name(like top examples)"
+                                    autocomplete="off " required />
+                                <span><i class="codicon codicon-gear"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-3 ms-1">
+                            <button type="button" class="b-btn btn-action h-100 ps-4 pe-4"
+                                ng-click="$.validateModuleName()" ng-disabled="!$.dashboard.ModuleName">
+                                <i class=" codicon codicon-go-to-search"></i>
+                                Validate Name
+                            </button>
+                        </div>
+                    </div>
+                    <div ng-if="$.moduleNameIsValid==false">
+                        <div class="b-notify notify-warning mb-2" ng-if="!$.moduleNameIsValidPattern">
+                            <i class="codicon codicon-regex b-icon-2"></i>
+                            <p class="text mb-0"> This name does not match with the pattern.</p>
+                        </div>
+                        <div class="b-notify notify-warning mb-2" ng-if="$.moduleNameIsExists">
+                            <i class="codicon codicon-references b-icon-2"></i>
+                            <p class="text mb-0"> this name is already exists on the database table.</p>
+                        </div>
+                        <div class="b-notify notify-warning mb-2" ng-if="$.moduleNameIsEmpty">
+                            <i class="codicon codicon-warning b-icon-2"></i>
+                            <p class="text mb-0"> This name is not valid because field "details name" not have value.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="b-notify notify-success mb-2" ng-if="$.moduleNameIsValid">
+                        <i class="codicon codicon-check-all b-icon-2"></i>
+                        <p class="text mb-0"> This name is valid.</p>
                     </div>
                 </div>
                 <div class="b-field">
                     <label class="form-label">Dashboard Title</label>
                     <div class="b-input-group">
-                        <input type="text" id="txtModuleTitle" ng-model="$.dashboard.ModuleTitle" class="b-input form-control" placeholder="Enter dashboard title" autocomplete="off" required />
+                        <input type="text" id="txtModuleTitle" ng-model="$.dashboard.ModuleTitle"
+                            class="b-input form-control" placeholder="Enter dashboard title" autocomplete="off"
+                            required />
                         <span><i class="codicon codicon-gear"></i></span>
                     </div>
                 </div>
                 <div class="b-field">
                     <label class="form-label">Authorization View Dashboard</label>
                     <div class="b-input-group">
-                        <select ng-model="$.dashboard.AuthorizationViewDashboard" class="b-input form-select" ng-options="role for role in $.roles" chosen inherit-select-classes="true" multiple placeholder-text-multiple="'Authorization run dashboard'"></select>
+                        <select ng-model="$.dashboard.AuthorizationViewDashboard" class="b-input form-select"
+                            ng-options="role for role in $.roles" chosen inherit-select-classes="true" multiple
+                            placeholder-text-multiple="'Authorization run dashboard'"></select>
                         <span><i class="codicon codicon-bookmark"></i></span>
                     </div>
                 </div>
@@ -39,7 +86,8 @@
             <div class="col ps-5">
                 <div class="b-field">
                     <label class="form-label">Dashboard Type</label>
-                    <select id="drpDashboardType" ng-model="$.dashboard.DashboardType" class="b-input form-select" required>
+                    <select id="drpDashboardType" ng-model="$.dashboard.DashboardType" class="b-input form-select"
+                        required>
                         <option value="" disabled>Select dashboard type</option>
                         <option ng-value="1">Standalone Panel</option>
                         <option ng-value="2">Dnn Module</option>
@@ -48,21 +96,80 @@
                 <div class="b-field" ng-if="$.dashboard.DashboardType==1">
                     <label class="form-label">Unique Name</label>
                     <div class="b-input-group">
-                        <input type="text" id="txtUniqueName" ng-model="$.dashboard.UniqueName" class="b-input form-control" placeholder="Enter unique name" autocomplete="off" required />
+                        <input type="text" id="txtUniqueName" ng-model="$.dashboard.UniqueName"
+                            class="b-input form-control" placeholder="Enter unique name" autocomplete="off" required />
                         <span><i class="codicon codicon-gear"></i></span>
                     </div>
                 </div>
+                <div class="b-field">
+                    <label class="form-label">Module Builder Type</label>
+                    <div class="b-input-group">
+                        <select id="drpModuleBuilderType" ng-model="$.dashboard.ModuleBuilderType"
+                            class="b-input form-select " ng-disabled="$.running " chosen inherit-select-classes="true "
+                            placeholder-text-single=" 'Select dashboard module builder type' " required>
+                            <option value="FormDesigner">Form Designer</option>
+                            <option value="HtmlEditor">Html Editor</option>
+                        </select>
+                        <span><i class="codicon codicon-code"></i></span>
+                    </div>
+                </div>
+                <div class="b-field " ng-if="$.dashboard.ModuleBuilderType=='HtmlEditor' ">
+                    <label class="form-label ">Files(html,js,css)</label>
+                    <div class="b-small-nowrap b-input form-control ">
+                        /Portals/[Portal-System]/BusinessEngine/[ScenarioName]/[ModuleName]-custom.html
+                    </div>
+                    <div class="b-small-nowrap b-input form-control ">
+                        /Portals/[Portal-System]/BusinessEngine/[ScenarioName]/[ModuleName]-custom.js
+                    </div>
+                    <div class="b-small-nowrap b-input form-control ">
+                        /Portals/[Portal-System]/BusinessEngine/[ScenarioName]/[ModuleName]-custom.css
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Server Side Rendering</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.dashboard.IsSSR">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="b-field" ng-if="$.dashboard.IsSSR">
+                    <label class="form-label">Disable Front Framework</label>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.dashboard.IsDisabledFrontFramework">
+                        <span class="slider"></span>
+                    </label>
+                </div>
                 <hr class="mb-4" />
                 <div class="mb-1 d-flex justify-content-end mt-auto">
-                    <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveDashboardClick()" ng-disabled="$.running">
+                    <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveDashboardClick()"
+                        ng-disabled="$.running">
                         <i class="codicon codicon-save"
                             ng-class="{'loading-circle mini':$.running=='save-dashboard'}"></i>
                         Save Dashboard
                     </button>
-                    <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelDashboardClick()" ng-disabled="$.running">
+                    <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelDashboardClick()"
+                        ng-disabled="$.running">
                         <i class="codicon codicon-circle-slash"></i>
                         Cancel
                     </button>
+                </div>
+            </div>
+            <div class="d-flex align-self-end mt-auto" ng-if="$.dashboard.ModuleID">
+                <button type="button" class="b-btn btn-sm btn-cancel me-2" b-custom-tooltip title="Goto Module Builder"
+                    ng-click="$.onGotoModuleBuilderClick()" ng-disabled="$.running">
+                    <i class="codicon codicon-preview me-0"></i>
+                </button>
+            </div>
+        </div>
+        <div class="b-notify notify-note mt-4 mb-4" ng-if="$.importantNoteForChangeModuleName">
+            <i class="codicon codicon-info b-icon-2"></i>
+            <div class="text">
+                <h4 class="label">Important Note!!</h4>
+                <div class="subtext ">
+                    <p class="mb-2">After rename the module, you must goto <b>Module Builder</b> and <b>Rebuild</b>
+                        module again.</p>
+                    <button type="button" class="b-btn btn-white btn-sm" ng-click="$.onGotoModuleBuilderClick()">Goto
+                        Module Builder</button>
                 </div>
             </div>
         </div>

@@ -1,0 +1,123 @@
+<b-right-widget ng-if="$.workingMode=='field-template'" data-title="{{$.currentField.FieldName}} Field Template" data-icon="preview" data-subtitle="Build custom module with more components" data-await-action="$.awaitAction" class="mb-edit-field" data-module="$">
+    <!------------------------------------>
+    <!--Field Template-->
+    <!------------------------------------>
+    <div class="b-group mb-4">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldTemplates">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Field Template
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <div id="grpFieldTemplates" class="group-content collapse show">
+            <div ng-if="$.module.EnableFieldsDefaultTemplate">
+                <div class="b-field">
+                    <div class="form-label">Inherit Template From Module Settings</div>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.currentField.InheritTemplate" ng-change="$.checkInheritTemplateAndTheme($.currentField)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="b-notify notify-info mb-4" ng-if="$.showProblemForInheritTemplate">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <h4 class="label">Problem!</h4>
+                        <span class="subtext">
+                            Can not set the current field template from the module settings.
+                            <br/> 
+                            No template with the same name as <b>{{$.module.FieldsDefaultTemplate}}</b> were found in the field templates list.
+                        </span>
+                    </div>
+                </div>
+                <div class="b-field" ng-if="$.currentField.InheritTemplate">
+                    <div class="form-label">Template Name</div>
+                    <label class="b-input form-control">{{$.module.FieldsDefaultTemplate}}</label>
+                </div>
+            </div>
+            <ul class="field-templates" ng-if="!$.currentField.InheritTemplate">
+                <li class="template-item" ng-repeat="template in $.currentField.FieldTypeObject.Templates" ng-class="{'active':template.TemplateName==$.currentField.Template}">
+                    <button type="button" class="item-button" ng-click="$.onSelectFieldTemplate(template)">
+                        <i ng-if="!template.TemplateImage" class="codicon codicon-preview"></i>
+                        <div ng-if="template.TemplateImage"  class="image-wrapper" >
+                            <img ng-src="{{template.TemplateImage}}"/>
+                        </div>
+                        <h6 class="template-name w-100">{{template.TemplateName}}</h6>
+                        <p ng-if="template.Description" class="template-description">{{template.Description}}</p>
+                        <p ng-if="!template.Description" class="template-no-description">No description!</p>
+                        <span ng-if="template.IsSkinTemplate" class="text-center" >{{$.module.Skin}} Skin Template </span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!------------------------------------>
+    <!--Field Theme-->
+    <!------------------------------------>
+    <div class="b-group mb-4">
+        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldThemes">
+            <h3 class="group-label">
+                <span class="group-icon">
+                    <i class="codicon codicon-server-process"></i>
+                </span> Field Theme
+            </h3>
+            <span class="group-collapse">
+                <i class="codicon codicon-chevron-up"></i>
+            </span>
+        </div>
+        <div id="grpFieldThemes" class="group-content collapse show">
+            <div ng-if="$.module.EnableFieldsDefaultTheme">
+                <div class="b-field">
+                    <div class="form-label">Inherit Template From Module Settings</div>
+                    <label class="b-switch">
+                        <input type="checkbox" ng-model="$.currentField.InheritTheme" ng-change="$.checkInheritTemplateAndTheme($.currentField)"/>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="b-notify notify-info mb-4" ng-if="$.showProblemForInheritTheme">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <h4 class="label">Problem!</h4>
+                        <span class="subtext">
+                        Can not set the current field theme from the module settings.
+                        <br/> 
+                        No theme with the same name as <b>{{$.module.FieldsDefaultTheme}}</b> were found in the field themes list.
+                    </span>
+                    </div>
+                </div>
+                <div class="b-field" ng-if="$.currentField.InheritTheme">
+                    <div class="form-label">Theme Name</div>
+                    <label class="b-input form-control">{{$.module.FieldsDefaultTemplate}}</label>
+                </div>
+            </div>
+            <ul class="field-templates" ng-if="!$.currentField.InheritTheme">
+                <li class="template-item" ng-repeat="theme in $.currentField.FieldTypeObject.Themes" ng-if="!theme.TemplateName||theme.TemplateName==$.currentField.Template" ng-class="{'active':theme.ThemeName==$.currentField.Theme}">
+                    <button type="button" class="item-button" ng-click="$.onSelectFieldTheme(theme)">
+                        <i ng-if="!theme.ThemeImage" class="codicon codicon-preview"></i>
+                        <div ng-if="theme.ThemeImage"  class="image-wrapper" >
+                            <img ng-src="{{theme.ThemeImage}}"/>
+                        </div>
+                        <h6 class="template-name w-100">{{theme.ThemeName}}</h6>
+                        <p ng-if="theme.Description" class="template-description">{{theme.Description}}</p>
+                        <p ng-if="!theme.Description" class="template-no-description">No description!</p>
+                        <span ng-if="template.IsSkinTheme" class="text-center" >{{$.module.Skin}} Skin Theme </span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveTemplateWidgetClick($event)" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+            Save Field
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelFieldTemplateClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

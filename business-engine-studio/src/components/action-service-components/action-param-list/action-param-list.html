@@ -47,7 +47,7 @@
                 <div class="d-flex">
                     <div class="col-10">
                         <div monaco-editor ng-model="$.param.ParamValue" data-language="bProperties" data-one-line="true" b-custom-focus="onEditParam" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true"
-                            required style="min-height: 2rem;">
+                            required>
                         </div>
                     </div>
                     <div class="col-1">
@@ -84,7 +84,7 @@
         <button type="button" class="b-btn btn-action" ng-click="$.onAddParamClick()">
             <i class="codicon codicon-plus"></i>
         </button>
-        <div ng-if="!$.params.length" class="b-notify notify-warning mb-4">
+        <div ng-if="!$.params.length" class="b-notify notify-info mb-4">
             <i class="codicon codicon-info b-icon-2"></i>
             <div class="text">
                 <h4 class="label">Action has not any params.</h4>

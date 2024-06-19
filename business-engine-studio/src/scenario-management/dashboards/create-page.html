@@ -52,7 +52,7 @@
                 <div class="b-field" ng-if="$.page.PageType==2">
                     <label class="form-label">Existing Page</label>
                     <div class="b-input-group">
-                        <select ng-model="$.page.ExistingPageID" class="b-input form-select" placeholder-text-single="'None'" ng-options="page.PageID as page.LevelTitle for page in $.allPages" chosen></select>
+                        <select ng-model="$.page.ExistingPageID" class="b-input form-select" placeholder-text-single="'None'" ng-options="page.PageID as page.LevelTitle for page in $.allPages" chosen inherit-select-classes="true"></select>
                         <span><i class="codicon codicon-files"></i></span>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                 <!------------------------------------>
                 <!--Page Module-->
                 <!------------------------------------>
-                <div class="b-notify notify-warning mb-4" ng-if="$.page.IncludeModule && !$.page.PageID">
+                <div class="b-notify notify-info mb-4" ng-if="$.page.IncludeModule && !$.page.PageID">
                     <i class="codicon codicon-info b-icon-2"></i>
                     <div class="text">
                         <span class="text">
@@ -146,13 +146,12 @@
                             </button>
                         </div>
                         <div class="justify-content-end ms-auto">
-                            <button type="button" class="b-btn btn-sm btn-action me-2" b-custom-tooltip title="Save Page Module" ng-click="$.onSaveModuleClick($event,true)" ng-disabled="$.running">
-                                <i class="codicon codicon-save me-0"
-                                    ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+                            <button type="button" class="b-btn btn-sm btn-submit me-2" b-custom-tooltip title="Save Page Module" ng-click="$.onSaveModuleClick($event,true)" ng-disabled="$.running">
+                                <i class="codicon codicon-save"ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+                                Save Module
                             </button>
                             <button type="button" class="b-btn btn-sm btn-action" ng-if="$.page.Module.ModuleID" b-custom-tooltip title="Delete Page Module" ng-click="$.onDeleteModuleClick()" ng-disabled="$.running">
-                                <i class="codicon codicon-trash me-0"
-                                    ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+                                <i class="codicon codicon-trash me-0"ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
                             </button>
                         </div>
                     </div>

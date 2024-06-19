@@ -537,6 +537,8 @@ export class CreateEntityController {
             this.currentTabKey = this.$rootScope.currentTab.key;
 
             this.apiService.post("Studio", "SaveEntity", this.entity).then((data) => {
+                    this.isNewEntity = !!!this.entity.EntityID;
+
                     this.entity = data;
                     this.entity.Relationships = relationships;
 
@@ -619,7 +621,15 @@ export class CreateEntityController {
         });
     }
 
-    onAddViewModelClick() {
+    onCloseWindow() {
+        this.$scope.$emit('onCloseModule');
+    }
+
+    /*------------------------------------*/
+    /* Create View Model  */
+    /*------------------------------------*/
+
+    onSaveViewModelClick() {
         this.$scope.$emit("onGotoPage", {
             page: "create-view-model",
             id: this.entity.EntityID,
@@ -629,7 +639,4 @@ export class CreateEntityController {
         });
     }
 
-    onCloseWindow() {
-        this.$scope.$emit('onCloseModule');
-    }
 }

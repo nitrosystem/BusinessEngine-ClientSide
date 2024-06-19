@@ -49,8 +49,8 @@
             <div class="col-9 my-auto">
                 <div class="d-flex">
                     <div class="col-5">
-                        <div monaco-editor ng-model="$.condition.LeftExpression" data-language="bProperties" data-one-line="true" b-custom-focus="onEditCondition" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields"
-                            data-service-result="true" required style="min-height: 1.4rem;">
+                        <div id="monacoConditionLeft" monaco-editor ng-model="$.condition.LeftExpression" data-language="bProperties" data-one-line="true" b-custom-focus="onEditCondition" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels"
+                            data-fields="$.fields" data-service-result="true" next-elm="monacoConditionRight" required>
                         </div>
                     </div>
                     <div class="col-2 p-0">
@@ -59,8 +59,8 @@
                         </select>
                     </div>
                     <div class="col-5">
-                        <div monaco-editor ng-model="$.condition.RightExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true" required
-                            style="min-height: 1.4rem;"></div>
+                        <div id="monacoConditionRight" monaco-editor ng-model="$.condition.RightExpression" data-language="bProperties" data-one-line="true" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" data-service-result="true"
+                            required></div>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
         </div>
     </div>
     <div class="table-footer">
-        <div ng-if="!$.conditions.length" class="b-notify notify-warning mb-4">
+        <div ng-if="!$.conditions.length" class="b-notify notify-info mb-4">
             <i class="codicon codicon-info b-icon-2"></i>
             <div class="text">
                 <h4 class="label">no conditions.</h4>

@@ -1,0 +1,67 @@
+<b-right-widget ng-if="$.workingMode=='module-custom-libraries'" data-title="Module Custom Libraries" data-icon="library" data-subtitle="add custom libraries with resources" data-await-action="$.awaitAction">
+    <div class="b-form">
+        <div class="b-table theme-gray">
+            <div class="table-body pt-4">
+                <div class="d-flex columns-name">
+                    <div class="col-4">Library Name</div>
+                    <div class="col-2 text-center">Version</div>
+                    <div class="col-3">Library Address</div>
+                    <div class="col-2">Prioriry</div>
+                    <div class="col-1">
+                        <i class="codicon codicon-ellipsis"></i>
+                    </div>
+                </div>
+                <div class="d-flex table-row" ng-repeat="library in $.customLibraries" role="button" ng-style="{'order':($index+1)}">
+                    <div class="col-4 my-auto">
+                        <select ng-model="library.LibraryID" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Select library'" ng-options="l.LibraryID as (l.LibraryName+'-'+l.Version) for l in $.libraries" ng-change="$.onCustomLibraryChange(library)"
+                            required>
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="col-2 my-auto text-center">
+                        {{library.Version}}
+                    </div>
+                    <div class="col-3 my-auto">
+                        <small>{{library.LocalPath}}</small>
+                    </div>
+                    <div class="col-2 my-auto">
+                        <input type="number" class="b-input form-control" ng-model="library.LoadOrder" placeholder="Priority" autocomplete="off" required />
+                    </div>
+                    <div class=" col-1">
+                        <button type="button" class="b-btn btn-action btn-sm h-100" ng-click="$.onDeleteCustomLibraryClick($index,1)" ng-disabled="$.awaitAction" title="Delete Library">
+                            <i class="codicon codicon-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-footer">
+                <div ng-if="!$.customLibraries.length" class="b-notify notify-info mb-4">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <h4 class="label">No custom libraries.</h4>
+                    </div>
+                </div>
+                <button type="button" class="b-btn btn-action" ng-click="$.onAddCustomLibraryClick()" ng-disabled="$.resource">
+                    <i class="codicon codicon-plus me-0"></i>
+                </button>
+            </div>
+        </div>
+        <br>
+        <ul ng-if="$.libraryResources">
+            <li ng-repeat="item in $.libraryResources">
+                {{item.ResourcePath}}
+            </li>
+        </ul>
+    </div>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveCustomLibrariesClick()" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-custom-libraries'}"></i>
+            Save Resources
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelCustomLibrariesClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

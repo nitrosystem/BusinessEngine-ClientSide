@@ -61,8 +61,7 @@
         <div ng-if="$.param.IsEdited" class="d-flex table-row edit-row" ng-style="{'order':$.param.OrderID}">
             <div class="col-4 my-auto">{{$.param.ParamName}}</div>
             <div class="col-5 my-auto">
-                <div monaco-editor ng-model="$.param.ParamValue" data-language="bProperties" data-one-line="true" b-custom-focus="onEditParam" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" required
-                    style="min-height: 1.4rem;"></div>
+                <div monaco-editor ng-model="$.param.ParamValue" data-language="bProperties" data-one-line="true" b-custom-focus="onEditParam" data-datasource="$.datasource" data-variables="$.variables" data-view-models="$.viewModels" data-fields="$.fields" required></div>
             </div>
             <div class="col-2 my-auto">
                 <div class="b-multi-btns">
@@ -74,7 +73,7 @@
         </div>
     </div>
     <div class="table-footer">
-        <div ng-if="!$.action.Params.length" class="b-notify notify-warning mb-4">
+        <div ng-if="!$.action.Params.length" class="b-notify notify-info mb-4">
             <i class="codicon codicon-info b-icon-2"></i>
             <div class="text">
                 <h4 class="label">Action has not any params.</h4>

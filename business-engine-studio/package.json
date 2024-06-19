@@ -12,7 +12,7 @@
   "dependencies": {
     "@popperjs/core": "^2.10.2",
     "@types/angular": "^1.8.3",
-    "@vscode/codicons": "^0.0.29",
+    "@vscode/codicons": "^0.0.36",
     "angular": "^1.8.2",
     "angular-dragdrop": "^1.0.13",
     "angular-filter": "^0.5.17",

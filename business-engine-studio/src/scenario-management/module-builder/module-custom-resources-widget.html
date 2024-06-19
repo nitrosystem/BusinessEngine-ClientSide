@@ -1,0 +1,66 @@
+<b-right-widget ng-if="$.workingMode=='module-custom-resources'" data-title="Module Custom Resources" data-icon="preserve-case" data-subtitle="add custom resources(css or js files)" data-await-action="$.awaitAction">
+    <div class="b-form">
+        <div class="b-table theme-gray">
+            <div class="table-body pt-4">
+                <div class="d-flex columns-name">
+                    <div class="col-2">Address Type</div>
+                    <div class="col-2">Resource Type</div>
+                    <div class="col-5">Resource Path</div>
+                    <div class="col-2">Load Order</div>
+                    <div class="col-1">
+                        <i class="codicon codicon-ellipsis"></i>
+                    </div>
+                </div>
+                <div class="d-flex table-row" ng-repeat="resource in $.customResources" role="button" ng-style="{'order':($index+1)}">
+                    <div class="col-2 my-auto">
+                        <select ng-model="resource.AddressType" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Select url address type'" required>
+                            <option disabled></option>
+                            <option value="internal">Internal</option>
+                            <option value="global">Global(External)</option>
+                        </select>
+                    </div>
+                    <div class="col-2 my-auto">
+                        <select ng-model="resource.ResourceType" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Select resource type'" required>
+                            <option disabled></option>
+                            <option value="css">Css</option>
+                            <option value="js">Js</option>
+                        </select>
+                    </div>
+                    <div class="col-5 my-auto">
+                        <input type="text" class="b-input form-control" ng-model="resource.ResourcePath" placeholder="Url Address" autocomplete="off" required />
+                    </div>
+                    <div class="col-2 my-auto">
+                        <input type="number" class="b-input form-control" ng-model="resource.LoadOrder" placeholder="Load Order" autocomplete="off" required />
+                    </div>
+                    <div class=" col-1">
+                        <button type="button" ng-click="$.onDeleteCustomResourceClick($index,1)" ng-disabled="$.awaitAction" title="Delete Resource">
+                            <i class="codicon codicon-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-footer">
+                <div ng-if="!$.customResources.length" class="b-notify notify-info mb-4">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <h4 class="label">No custom resources.</h4>
+                    </div>
+                </div>
+                <button type="button" class="b-btn btn-action" ng-click="$.onAddCustomResourceClick()" ng-disabled="$.resource">
+                    <i class="codicon codicon-plus me-0"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr class="mb-4" />
+    <div class="mb-1 d-flex justify-content-end mt-auto">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveCustomResourcesClick()" ng-disabled="$.running">
+            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-custom-resources'}"></i>
+            Save Resources
+        </button>
+        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelCustomResourcesClick()" ng-disabled="$.running">
+            <i class="codicon codicon-circle-slash"></i>
+            Cancel
+        </button>
+    </div>
+</b-right-widget>

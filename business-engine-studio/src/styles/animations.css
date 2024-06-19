@@ -1,216 +1,248 @@
 /* --------------------------------------------------------
         spin animation
     -----------------------------------------------------------*/
+
 .spin {
-  -webkit-animation-name: spin;
-  -webkit-animation-duration: 4000ms;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-name: spin;
-  -moz-animation-duration: 4000ms;
-  -moz-animation-iteration-count: infinite;
-  -moz-animation-timing-function: linear;
-  -ms-animation-name: spin;
-  -ms-animation-duration: 4000ms;
-  -ms-animation-iteration-count: infinite;
-  -ms-animation-timing-function: linear;
-  animation-name: spin;
-  animation-duration: 4000ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 4000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 4000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 4000ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    animation-name: spin;
+    animation-duration: 4000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 @-moz-keyframes spin {
-  from {
-    -moz-transform: rotate(0deg);
-  }
-
-  to {
-    -moz-transform: rotate(360deg);
-  }
+    from {
+        -moz-transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
 }
 
 @-webkit-keyframes spin {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
+
 
 /* --------------------------------------------------------
         progress animation
     -----------------------------------------------------------*/
+
 .progress-animation {
-  animation: progress-animation 2s linear infinite;
+    animation: progress-animation 2s linear infinite;
 }
 
 @keyframes progress-animation {
-  from {
-    background-position: 100%;
-  }
-
-  to {
-    background-position: 0;
-  }
+    from {
+        background-position: 100%;
+    }
+    to {
+        background-position: 0;
+    }
 }
+
 
 /* --------------------------------------------------------
         shimmer animation
     -----------------------------------------------------------*/
+
 .shimmer {
-  /* the shimmer magic */
-  background: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    from(#222),
-    to(#222),
-    color-stop(0.5, #fff)
-  );
-  background: -moz-gradient(
-    linear,
-    left top,
-    right top,
-    from(#222),
-    to(#222),
-    color-stop(0.5, #fff)
-  );
-  background: gradient(
-    linear,
-    left top,
-    right top,
-    from(#222),
-    to(#222),
-    color-stop(0.5, #fff)
-  );
-  -webkit-background-size: 125px 100%;
-  -moz-background-size: 125px 100%;
-  background-size: 125px 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  background-clip: text;
-  -webkit-animation-name: shimmer;
-  -moz-animation-name: shimmer;
-  -webkit-animation-name: shimmer;
-  animation-name: shimmer;
-  -webkit-animation-duration: 2s;
-  -moz-animation-duration: 2s;
-  -webkit-animation-duration: 2s;
-  animation-duration: 2s;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  background-color: #222;
+    /* the shimmer magic */
+    background: -webkit-gradient( linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
+    background: -moz-gradient( linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
+    background: gradient( linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
+    -webkit-background-size: 125px 100%;
+    -moz-background-size: 125px 100%;
+    background-size: 125px 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-animation-name: shimmer;
+    -moz-animation-name: shimmer;
+    -webkit-animation-name: shimmer;
+    animation-name: shimmer;
+    -webkit-animation-duration: 2s;
+    -moz-animation-duration: 2s;
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-color: #222;
 }
 
 @-moz-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-
-  100% {
-    background-position: top right;
-  }
+    0% {
+        background-position: top left;
+    }
+    100% {
+        background-position: top right;
+    }
 }
 
 @-webkit-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-
-  100% {
-    background-position: top right;
-  }
+    0% {
+        background-position: top left;
+    }
+    100% {
+        background-position: top right;
+    }
 }
 
 @-o-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-
-  100% {
-    background-position: top right;
-  }
+    0% {
+        background-position: top left;
+    }
+    100% {
+        background-position: top right;
+    }
 }
 
 @-ms-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-
-  100% {
-    background-position: top right;
-  }
+    0% {
+        background-position: top left;
+    }
+    100% {
+        background-position: top right;
+    }
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-
-  100% {
-    background-position: top right;
-  }
+    0% {
+        background-position: top left;
+    }
+    100% {
+        background-position: top right;
+    }
 }
+
 
 /* --------------------------------------------------------
         Rotate & Border Color Animation
     -----------------------------------------------------------*/
+
 .rotate-border-color {
-  animation: rotate-border-color 1.2s linear infinite;
-  transition: border-color 0.6s linear;
+    animation: rotate-border-color 1.2s linear infinite;
+    transition: border-color 0.6s linear;
 }
 
 @keyframes rotate-border-color {
-  50% {
-    border-left-color: #9b59b6;
-  }
-  75% {
-    border-left-color: #e67e22;
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    50% {
+        border-left-color: #9b59b6;
+    }
+    75% {
+        border-left-color: #e67e22;
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
 
 /* --------------------------------------------------------
         Tik Animation
     -----------------------------------------------------------*/
+
 .tik {
-  animation: check-icon 0.8s ease;
+    animation: check-icon 0.8s ease;
 }
 
 @keyframes tik {
-  0% {
-    height: 0;
-    width: 0;
-  }
-  20% {
-    height: 0;
-    width: 0.4rem;
-  }
-  40% {
-    height: 0.5rem;
-    width: 0.4rem;
-  }
-  100% {
-    height: 1rem;
-    width: 0.4rem;
-  }
+    0% {
+        height: 0;
+        width: 0;
+    }
+    20% {
+        height: 0;
+        width: 0.4rem;
+    }
+    40% {
+        height: 0.5rem;
+        width: 0.4rem;
+    }
+    100% {
+        height: 1rem;
+        width: 0.4rem;
+    }
+}
+
+
+/* --------------------------------------------------------
+          pulse ring animation
+    -----------------------------------------------------------*/
+
+.pulse___ring {
+    animation: animation___pulse 2s infinite;
+    animation-iteration-count: infinite;
+    color: white;
+}
+
+@keyframes animation___pulse {
+    0% {
+        transform: rotate(90deg);
+        color: white;
+    }
+    20% {
+        transform: rotate(180deg);
+        color: #f0f1b7;
+    }
+    40% {
+        transform: rotate(270deg);
+        color: #eef085;
+    }
+    60% {
+        transform: rotate(360deg);
+        color: #edf066;
+    }
+    80% {
+        transform: rotate(450deg);
+        color: #edf03f;
+    }
+    100% {
+        transform: rotate(540deg);
+        color: #eaee0c;
+    }
+}
+
+
+/* --------------------------------------------------------
+          Border animation
+    -----------------------------------------------------------*/
+
+.valid-animation-border {
+    animation: animation-valid--border 3s infinite;
+}
+
+@keyframes animation-valid--border {
+    50% {
+        box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+    }
 }

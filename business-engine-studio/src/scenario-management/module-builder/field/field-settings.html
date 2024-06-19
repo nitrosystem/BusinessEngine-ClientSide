@@ -1,5 +1,7 @@
 <div class="field-settings">
+    <!------------------------------------>
     <!--Basic Settings-->
+    <!------------------------------------>
     <div class="b-group group-sm">
         <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpBasicSettings">
             <h3 class="group-label">
@@ -34,7 +36,7 @@
                     <span><i class="codicon codicon-gear"></i></span>
                 </div>
             </div>
-            <div class="b-field" ng-if=" !$.currentField.Settings.IsDisableLayout && !$.currentField.Settings.IsHideFieldText">
+            <div class="b-field" ng-if="!$.currentField.Settings.IsDisableLayout && !$.currentField.Settings.IsHideFieldText">
                 <label class="form-label">Field Text</label>
                 <div class="b-input-group">
                     <textarea ng-model="$.currentField.FieldText" class="b-input form-control" placeholder="Enter your field text(title)"></textarea>
@@ -64,16 +66,20 @@
             </div>
             <div class="b-field">
                 <label class="form-label">Show Conditions</label>
-                <div class="b-input form-control position-relative" role="button" ng-click="$.onShowConditionsClick()">
+                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowConditionsClick()">
+                    <i class="codicon codicon-eye-closed"></i>
                     <span ng-if="!$.currentField.ShowConditions.length">No Conditions</span>
-                    <span ng-if="$.currentField.ShowConditions.length">{{$.currentField.ShowConditions.length}}
-                        Conditions</span>
-                    <i class="codicon codicon-ellipsis position-absolute top-0 end-0 mt-2 me-2"></i>
+                    <span ng-if="$.currentField.ShowConditions.length">
+                        {{$.currentField.ShowConditions.length}} Conditions
+                    </span>
+                    <label>...</label>
                 </div>
             </div>
         </div>
     </div>
+    <!------------------------------------>
     <!--Advanced Settings-->
+    <!------------------------------------>
     <div class="b-group group-sm">
         <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpAdvancedSettings">
             <h3 class="group-label">
@@ -92,27 +98,30 @@
             </div>
             <div class="b-field">
                 <label class="form-label">Conditional Value(s)</label>
-                <div class="b-input form-control position-relative" role="button" ng-click="$.onShowConditionalValuesClick()">
+                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowConditionalValuesClick()">
+                    <i class="codicon codicon-checklist"></i>
                     <span ng-if="!$.currentField.Settings.FieldValues.length">No Value</span>
                     <span ng-if="$.currentField.Settings.FieldValues.length">Has Value</span>
-                    <i class="codicon codicon-ellipsis position-absolute top-0 end-0 mt-2 me-2"></i>
+                    <label>...</label>
                 </div>
             </div>
             <div class="b-field" ng-if="$.currentField.IsSelective">
                 <label class="form-label">Data Source</label>
-                <div class="b-input form-control position-relative" role="button" ng-click="$.onShowFieldDataSourceClick($event)">
-                    <span ng-if="!$.currentField.Settings.DataSource.Type">Standard(Static items)</span>
-                    <span ng-if="$.currentField.Settings.DataSource.Type==1">Custom Defined List</span>
-                    <span ng-if="$.currentField.Settings.DataSource.Type==2">Use Service</span>
-                    <i class="codicon codicon-ellipsis position-absolute top-0 end-0 mt-2 me-2"></i>
+                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowFieldDataSourceClick($event)">
+                    <i class="codicon codicon-database"></i>
+                    <span ng-if="!$.currentField.DataSource.Type">Standard(Static items)</span>
+                    <span ng-if="$.currentField.DataSource.Type==1">Custom Defined List</span>
+                    <span ng-if="$.currentField.DataSource.Type==2">Use Service</span>
+                    <label>...</label>
                 </div>
             </div>
             <div class="b-field">
                 <label class="form-label">Actions</label>
-                <div class="b-input form-control position-relative" role="button" ng-click="$.onShowFieldActionsClick()">
+                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowFieldActionsClick()">
+                    <i class="codicon codicon-github-action"></i>
                     <span ng-if="!$.currentField.Actions.length">No Action</span>
                     <span ng-if="$.currentField.Actions.length">Has Actions</span>
-                    <i class="codicon codicon-ellipsis position-absolute top-0 end-0 mt-2 me-2"></i>
+                    <label>...</label>
                 </div>
             </div>
             <div class="b-field">
@@ -167,7 +176,9 @@
             </div>
         </div>
     </div>
+    <!------------------------------------>
     <!--Appearance Settings-->
+    <!------------------------------------>
     <div class="b-group group-sm">
         <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpAppearanceSettings">
             <h3 class="group-label">
@@ -181,16 +192,16 @@
         </div>
         <div id="grpAppearanceSettings" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
             <div class="b-field">
-                <label class="form-label">Field Template</label>
-                <select id="drpTemplate" ng-model="$.currentField.Template" class="b-input form-select" ng-options="template.TemplateName as template.TemplateName for template in $.currentField.FieldTypeObject.Templates" chosen inherit-select-classes="true" placeholder-text-single="'Select Template'"
-                    required>
-                </select>
-            </div>
-            <div class="b-field">
-                <label class="form-label">Field Theme</label>
-                <select id="drpTemplate" ng-model="$.currentField.Theme" class="b-input form-select" ng-options="theme.ThemeName as theme.ThemeName for theme in $.currentField.FieldTypeObject.Themes" chosen inherit-select-classes="true" placeholder-text-single="'Select theme'"
-                    required>
-                </select>
+                <label class="form-label">Field Template & Theme</label>
+                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowFieldTemplateClick()">
+                    <i class="codicon codicon-preview"></i>
+                    <span ng-if="$.currentField.InheritTemplate">Inherit Template</span>
+                    <span ng-if="$.currentField.InheritTheme">Inherit Theme</span>
+                    <span ng-if="!$.currentField.InheritTemplate">{{$.currentField.Template}}</span>
+                    <span ng-if="!$.currentField.InheritTemplate && !$.currentField.InheritTheme">&nbsp|&nbsp</span>
+                    <span ng-if="!$.currentField.InheritTheme">{{$.currentField.Theme}}</span>
+                    <label>...</label>
+                </div>
             </div>
             <div class="b-field">
                 <label class="form-label">Disable Layout</label>
@@ -260,10 +271,9 @@
                     <input type="text" ng-model="$.currentField.Settings.ValidationMessageCssClass" class="b-input form-control" placeholder="Field css class" />
                 </div>
             </div>
-            <div class="b-field">
+            <div class="b-field" ng-if="$.currentField.ParentID">
                 <label class="form-label">Parent</label>
-                <select ng-model="$.currentField.ParentID" class="b-input form-select" ng-options="field.FieldID as field.FieldName for field in $.fields | filter: {IsGroup:true}" chosen>
-                </select>
+                <select ng-model="$.currentField.ParentID" class="b-input form-select" ng-options="field.FieldID as field.FieldName for field in $.fields | filter: {IsGroup:true}" disabled chosen inherit-select-classes="true"></select>
             </div>
             <div class="b-field">
                 <label class="form-label">Pane Name</label>
@@ -275,6 +285,9 @@
             </div>
         </div>
     </div>
+    <!------------------------------------>
+    <!--Field Custom Settings-->
+    <!------------------------------------>
     <div ng-if="$.currentField.CustomSettings" class="b-group group-sm">
         <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldCustomSettings">
             <h3 class="group-label">
@@ -291,6 +304,9 @@
         </div>
     </div>
     <hr>
+    <!------------------------------------>
+    <!--Action Buttons-->
+    <!------------------------------------>
     <div class="mb-5 d-flex justify-content-end mt-auto">
         <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveFieldClick($event)" ng-disabled="$.running">
             <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>

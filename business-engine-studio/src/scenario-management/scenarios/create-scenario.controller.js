@@ -9,7 +9,7 @@ export class CreateScenarioController {
         apiService,
         validationService,
         notificationService,
-        moduleRenderService,
+        moduleBuilderService,
         $deferredBroadcast
     ) {
         "ngInject";
@@ -23,7 +23,7 @@ export class CreateScenarioController {
         this.apiService = apiService;
         this.validationService = validationService;
         this.notifyService = notificationService;
-        this.moduleRenderService = moduleRenderService;
+        this.moduleBuilderService = moduleBuilderService;
         this.$deferredBroadcast = $deferredBroadcast;
 
         this.onPageLoad();
@@ -107,6 +107,6 @@ export class CreateScenarioController {
             title: "Rendering All Modules",
             subtitle: "Just a moment for rendering the scenario all modules...",
         };
-        this.moduleRenderService.rebuildScenarioModules(this.scenario.ScenarioID, this.$scope);
+        this.moduleBuilderService.rebuildScenarioModules(this.scenario.ScenarioID, this.$scope);
     }
 }
