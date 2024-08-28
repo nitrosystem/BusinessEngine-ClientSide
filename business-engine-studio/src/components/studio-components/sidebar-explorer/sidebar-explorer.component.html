@@ -274,21 +274,60 @@
             <!------------------------------------>
             <!--Providers -->
             <!------------------------------------>
-            <li class="exp-item exp-has-childs exp-modules" ng-if="$.providers.length" ng-class="{'collapsed':!$.isExpanded('providers')}">
+            <li class="exp-item exp-has-childs exp-providers" ng-if="$.providers.length" ng-class="{'collapsed':!$.isExpanded('providers')}">
                 <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expProviderItems">
                     <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
-                    <i class="codicon codicon-multiple-windows"></i> Providers
+                    <i class="codicon codicon-azure"></i> Providers
                 </a>
                 <ul class="exp-sub-items collapse" id="expProviderItems" ng-class="{'show':$.searchItem || $.isExpanded('providers')}">
+                    <li class="exp-item">
+                        <a class="exp-label" ng-click="$.onItemClick($event,'create-provider')" ng-class="{'active':$.$rootScope.explorerCurrentItem=='create-provider'}">
+                            <i class="codicon codicon-empty-window"></i> New Provider
+                        </a>
+                    </li>
                     <li class="exp-item" ng-repeat="item in $.providers | fuzzyBy: 'Title': $.searchItem">
                         <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expProviderItem{{$index}}">
                             <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
-                            <i class="codicon codicon-window"></i> {{item.Title}}
+                            <i class="codicon codicon-briefcase"></i> {{item.Title}}
                         </a>
                         <ul class="exp-sub-items collapse" id="expProviderItem{{$index}}" ng-class="{'show':$.isExpanded(item.ItemID)}">
                             <li class="exp-item" id="provider-settings-{{item.ItemID}}">
                                 <a class="exp-label" ng-click="$.onItemClick($event,'provider-settings',null,item.ItemID,item.Title)" ng-class="{'active':$.$rootScope.explorerCurrentItem=='provider-settings-'+item.ItemID}">
-                                    <i class="codicon codicon-layout-menubar"></i> Provider Settings
+                                    <i class="codicon codicon-server-process"></i> Provider Settings
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <!------------------------------------>
+            <!--Defined List -->
+            <!------------------------------------>
+            <li class="exp-item exp-has-childs exp-defined-lists" ng-if="1==1||$.definedLists.length" ng-class="{'collapsed':!$.isExpanded('defined-lists')}">
+                <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expDefinedListItems">
+                    <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
+                    <i class="codicon codicon-list-ordered"></i> Defined Lists
+                </a>
+                <ul class="exp-sub-items collapse" id="expDefinedListItems" ng-class="{'show':$.searchItem || $.isExpanded('defined-lists')}">
+                    <li class="exp-item">
+                        <a class="exp-label" ng-click="$.onItemClick($event,'defined-lists')" ng-class="{'active':$.$rootScope.explorerCurrentItem=='defined-lists'}">
+                            <i class="codicon codicon-list-ordered"></i> Defined Lists
+                        </a>
+                    </li>
+                    <li class="exp-item">
+                        <a class="exp-label" ng-click="$.onItemClick($event,'create-defined-list')" ng-class="{'active':$.$rootScope.explorerCurrentItem=='create-defined-list'}">
+                            <i class="codicon codicon-expand-all"></i> New Defined List
+                        </a>
+                    </li>
+                    <li class="exp-item" ng-repeat="item in $.definedLists | fuzzyBy: 'Title': $.searchItem">
+                        <a class="exp-label collapsed" data-bs-toggle="collapse" data-bs-target="#expDefinedListItem{{$index}}">
+                            <i class="codicon codicon-chevron-down exp-arrow-icon"></i>
+                            <i class="codicon codicon-window"></i> {{item.Title}}
+                        </a>
+                        <ul class="exp-sub-items collapse" id="expDefinedListItem{{$index}}" ng-class="{'show':$.isExpanded(item.ItemID)}">
+                            <li class="exp-item" id="defined-list-settings-{{item.ItemID}}">
+                                <a class="exp-label" ng-click="$.onItemClick($event,'defined-list-settings',null,item.ItemID,item.Title)" ng-class="{'active':$.$rootScope.explorerCurrentItem=='defined-list-settings-'+item.ItemID}">
+                                    <i class="codicon codicon-layout-menubar"></i> Defined List Settings
                                 </a>
                             </li>
                         </ul>

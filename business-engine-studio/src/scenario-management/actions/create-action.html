@@ -62,8 +62,7 @@
                                     <div class="col" ng-repeat="actionType in value | toArray:false | orderBy:'ViewOrder'">
                                         <div class="card action-type" ng-click="$.onSelectActionTypeClick(actionType)" ng-class="{'selected':$.action.ActionType==actionType.ActionType}">
                                             <div class="card-body text-center">
-                                                <i ng-if="!actionType.IconType" class="fs-1 {{actionType.Icon}} text-muted mb-4 d-block"></i>
-                                                <img ng-if="actionType.IconType" class="action-image" ng-src="{{actionType.Icon}}" />
+                                                <img class="action-image" ng-src="{{actionType.Icon}}" />
                                                 <h5 class="action-title">{{actionType.Title}}</h5>
                                                 <p class="action-summary">{{actionType.Description}}</p>
                                             </div>

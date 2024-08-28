@@ -1,22 +1,16 @@
+//Css
 import "./styles/global.css"
 
-import * as _ from 'lodash';
-import moment from 'moment';
-
+//Js
 import angular from "angular";
 import "ng-file-upload/dist/ng-file-upload-shim";
 import "ng-file-upload/dist/ng-file-upload";
-
 
 //Configs
 import { config as appConfig } from "./configs/app.config";
 
 //Providers
-import {
-    DeferredBroadcast,
-    DeferredEmit,
-    DeferredEvent,
-} from "./providers/deferred-events.provider";
+import { DeferredBroadcast, DeferredEmit, DeferredEvent } from "./providers/deferred-events.provider";
 
 //Services
 import { GlobalService } from "./services/global.service";
@@ -26,6 +20,7 @@ import { ActionService } from "./services/action.service";
 
 //Directives
 import { bShow, bFor, bClick } from "./directives/angular-extended.directive";
+import { FieldDirective } from "./directives/field.directive";
 import {
     BindDate,
     BindImage,
@@ -34,18 +29,13 @@ import {
     DashboardLinkDirective,
     FocusDirective,
 } from "./directives/custom-items.directive";
-import { FieldDirective } from "./directives/field.directive";
 
 //Controllers
 import { ModuleController } from "./controllers/module.controllers";
 import { DashboardController } from "./controllers/dashboard.controller";
 
 const app = angular
-    .module("BusinessEngineClientApp", [
-        require("angular-sanitize"),
-        "angular.filter",
-        "ngFileUpload"
-    ])
+    .module("BusinessEngineClientApp", [require("angular-sanitize"), "angular.filter", "ngFileUpload"])
     .config(appConfig)
     .provider("$deferredEvent", DeferredEvent)
     .provider("$deferredEmit", DeferredEmit)

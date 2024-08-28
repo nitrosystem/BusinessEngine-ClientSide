@@ -82,22 +82,20 @@ export class LibrariesController {
                     subtitle: "Just a moment for removing library...",
                 };
 
-                this.apiService.post("Studio", "DeleteLibrary", { ID: id }).then(
-                    (data) => {
-                        this.libraries.splice(index, 1);
+                this.apiService.post("Studio", "DeleteLibrary", { ID: id }).then((data) => {
+                    this.libraries.splice(index, 1);
 
-                        this.notifyService.success("Library deleted has been successfully");
+                    this.notifyService.success("Library deleted has been successfully");
 
-                        this.$rootScope.refreshSidebarExplorerItems();
+                    this.$rootScope.refreshSidebarExplorerItems();
 
-                        delete this.awaitAction;
-                        delete this.running;
-                    },
+                    delete this.awaitAction;
+                    delete this.running;
+                },
                     (error) => {
                         this.awaitAction.isError = true;
                         this.awaitAction.subtitle = error.statusText;
-                        this.awaitAction.desc =
-                            this.globalService.getErrorHtmlFormat(error);
+                        this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
                         this.notifyService.error(error.data.Message);
 
@@ -115,7 +113,6 @@ export class LibrariesController {
             delete this.workingMode;
         }, 200);
     }
-
 
     onCloseWindow() {
         this.$scope.$emit('onCloseModule');
@@ -176,10 +173,10 @@ export class LibrariesController {
             libraryUnzipedPath: this.libraryInstallDto.LibraryUnzipedPath,
             manifestFilePath: this.libraryInstallDto.ManifestFilePath,
         }).then((data) => {
-                this.step = 4;
-                delete this.awaitAction;
-                delete this.running;
-            },
+            this.step = 4;
+            delete this.awaitAction;
+            delete this.running;
+        },
             (error) => {
                 this.awaitAction.isError = true;
                 this.awaitAction.subtitle = error.statusText;

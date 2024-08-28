@@ -25,6 +25,7 @@ export class ModuleBuilderController {
         apiService,
         validationService,
         notificationService,
+        eventService,
         moduleDesignerService,
         moduleBuilderService
     ) {
@@ -41,8 +42,21 @@ export class ModuleBuilderController {
         this.apiService = apiService;
         this.validationService = validationService;
         this.notifyService = notificationService;
+        this.eventService = eventService;
         this.moduleDesignerService = moduleDesignerService;
         this.moduleBuilderService = moduleBuilderService;
+
+        this.moduleVariablesWidget = moduleVariablesWidget;
+        this.moduleSkinWidget = moduleSkinWidget;
+        this.moduleLayoutTemplateWidget = moduleLayoutTemplateWidget;
+        this.moduleCustomResourcesWidget = moduleCustomResourcesWidgets;
+        this.moduleCustomLibrariesWidget = moduleCustomLibrariesWidget;
+        this.fieldEditWidget = fieldEditWidget;
+        this.fieldTemplateWidget = fieldTemplateWidget;
+        this.fieldSettingsWidget = fieldSettingsWidget;
+        this.fieldShowConditionsWidget = fieldShowConditionsWidget;
+        this.fieldConditionalValuesWidget = fieldConditionalValuesWidget;
+        this.fieldDataSourceWidget = fieldDataSourceWidget;
 
         this.variableScopes = [
             { Text: "Global", Value: 0 },
@@ -173,63 +187,123 @@ export class ModuleBuilderController {
         },
         ];
 
+        $scope.$watch('$.currentField', (oldVal, newVal) => {
+            if (!this.ignoreWatchCurrentField && this.currentField && oldVal != newVal) {
+                this.currentField.isEdited = true;
+            }
+        }, true);
+
         $scope.$on("onShowFieldDataSource", (e, args) => {
             this.onShowFieldDataSourceClick(args.field);
         });
 
-        this.moduleVariablesWidget = moduleVariablesWidget;
-        this.moduleSkinWidget = moduleSkinWidget;
-        this.moduleLayoutTemplateWidget = moduleLayoutTemplateWidget;
-        this.moduleCustomResourcesWidget = moduleCustomResourcesWidgets;
-        this.moduleCustomLibrariesWidget = moduleCustomLibrariesWidget;
-        this.fieldEditWidget = fieldEditWidget;
-        this.fieldTemplateWidget = fieldTemplateWidget;
-        this.fieldSettingsWidget = fieldSettingsWidget;
-        this.fieldShowConditionsWidget = fieldShowConditionsWidget;
-        this.fieldConditionalValuesWidget = fieldConditionalValuesWidget;
-        this.fieldDataSourceWidget = fieldDataSourceWidget;
-
         studioService.setFocusModuleDelegate(this, this.onFocusModule);
 
-        if (!window.isDefindeCtrl_sEvent) {
-            document.addEventListener("keydown", (e) => {
-                if (this.module.ModuleBuilderType == "HtmlEditor") {
-                    {
-                        if (e.key == 'F6') {
-                            var tabNumber = $('button[data-bs-toggle="tab"].active').data('tab');
-                            tabNumber = tabNumber >= 1 && tabNumber < 3 ? tabNumber + 1 : 1;
-                            $(`button[data-tab=${tabNumber}]`).tab('show');
-                            e.preventDefault();
-                        }
-                    }
-                } else if (this.module.ModuleBuilderType == 'FormDesigner') {
-                    if ((e.key == 's' && e.ctrlKey) || e.key === "F7") {
-                        if (this.currentField) this.saveCurrentField()
-                        e.preventDefault();
-                    }
-                }
-                if ((e.key == 'ArrowDown' || e.key == 'ArrowUp') && e.ctrlKey && this.currentField && this.currentFieldFocused) {
-                    const $field = this.getFieldElementByFieldID(this.currentField.FieldID);
-                    const $target = e.key == 'ArrowUp' ? $field.previousElementSibling : $field.nextElementSibling;
-                    if ($target && $target.attributes['b-field']) {
-                        const fieldID = $target.attributes['b-field'].value;
-                        this.onFieldItemClick(e, fieldID);
-                        if (!$scope.$$phase) $scope.$apply();
-                    }
-                    e.preventDefault();
-                }
-                if ((e.key == 'ArrowDown' || e.key == 'ArrowUp') && e.shiftKey && this.currentField && this.currentFieldFocused) {
-                    this.onFieldSwap(e, e.key.replace('ArrowDown', 'down').replace('ArrowUp', 'up'));
+        /*-----------------------------------------------------------------------
+             Standard Window Events Custom Methods
+        --------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------
+            keydown detect
+        -------------------------------------------------------------------*/
+        this.eventService.register('keydown', (e) => {
+            //ctrl + s -- Save Current Field
+            if (e.ctrlKey && (e.key == 's' || e.key == 'S') && this.currentField && this.currentFieldFocused) {
+                this.saveCurrentField();
 
+                e.preventDefault();
+            }
+
+            //Esc -- Cancel Current Field
+            if (e.key == 'Escape' && this.currentField && this.currentFieldFocused) {
+                this.onCancelEditFieldClick(e);
+
+                e.preventDefault();
+            }
+
+            //ctrl + 5 -- Refresh Field
+            if (e.ctrlKey && e.key == '5' && this.currentField && this.currentFieldFocused) {
+                this.onRefreshFieldClick(e, this.currentField.FieldID);
+
+                e.preventDefault();
+            }
+
+            //Delete -- Delete Field
+            if (e.ctrlKey && e.key == 'Delete' && this.currentField && this.currentFieldFocused) {
+                this.onDeleteFieldClick(e);
+
+                e.preventDefault();
+            }
+
+            //ctrl + q -- Show Field Actions
+            if (e.ctrlKey && (e.key == 'q' || e.key == 'Q') && this.currentField && this.currentFieldFocused) {
+                this.onShowFieldActionsClick(e);
+
+                e.preventDefault();
+            }
+
+            //ctrl + 🠛🠅 -- Select Prev/Next Field
+            if (e.ctrlKey && this.currentField && this.currentFieldFocused && (e.key == 'ArrowDown' || e.key == 'ArrowUp')) {
+                const $field = this.getFieldElementByFieldID(this.currentField.FieldID);
+                const $target = e.key == 'ArrowUp' ? $field.previousElementSibling : $field.nextElementSibling;
+                if ($target && $target.attributes['b-field']) {
+                    const fieldID = $target.attributes['b-field'].value;
+                    this.onFieldItemClick(e, fieldID);
                     if (!$scope.$$phase) $scope.$apply();
 
-                    e.preventDefault();
+                    this.scrollToFieldSection(this.currentField.FieldID)
                 }
 
-            }, false);
+                e.preventDefault();
+            }
 
-            window.isDefindeCtrl_sEvent = true;
-        }
+            //shift + 🠛🠅 -- Swap Current Field
+            if (e.shiftKey && this.currentField && this.currentFieldFocused && (e.key == 'ArrowDown' || e.key == 'ArrowUp')) {
+                this.onFieldSwap(e, e.key.replace('ArrowDown', 'down').replace('ArrowUp', 'up'));
+
+                if (!$scope.$$phase) $scope.$apply();
+
+                e.preventDefault();
+            }
+
+            //f10 -- Build Module
+            if (e.key == 'F10') {
+                this.buildModule();
+                e.preventDefault();
+            }
+        }, [
+            { l: 'id', r: this.globalService.getParameterByName("id"), isPageParam: true },
+            { l: 'module.ModuleBuilderType', r: 'FormDesigner', _: this },
+        ]);
+
+        /*-----------------------------------------------------------------------
+            keydown detect
+        -------------------------------------------------------------------*/
+        this.eventService.register('keydown', (e) => {
+            if (e.key == 'F6') {
+                var tabNumber = $('button[data-bs-toggle="tab"].active').data('tab');
+                tabNumber = tabNumber >= 1 && tabNumber < 3 ? tabNumber + 1 : 1;
+                $(`button[data-tab=${tabNumber}]`).tab('show');
+
+                e.preventDefault();
+            }
+        }, [
+            { l: 'id', r: this.globalService.getParameterByName("id"), isPageParam: true },
+            { l: 'module.ModuleBuilderType', r: 'HtmlEditor', _: this },
+        ]);
+
+        /*-----------------------------------------------------------------------
+            window scroll detect
+         -------------------------------------------------------------------*/
+        this.eventService.register('scroll', (e) => {
+            const top = $(window).scrollTop();
+            if (top > 150)
+                $(`#buildWrapper${this.module.ModuleID}`).addClass('b-sticky');
+            else
+                $(`#buildWrapper${this.module.ModuleID}`).removeClass('b-sticky');
+        }, [
+            { l: 'id', r: this.globalService.getParameterByName("id"), isPageParam: true },
+            { l: 'module.ModuleBuilderType', r: 'FormDesigner', _: this },
+        ]);
 
         this.onPageLoad();
     }
@@ -248,10 +322,10 @@ export class ModuleBuilderController {
             showProgress: true
         };
 
-        this.monitoringProgress();
+        this.monitorProgress();
 
         this.apiService.get("Studio", "GetModuleBuilder", { moduleID: (id || null), monitoringFileID: monitoringFileID }).then((data) => {
-            this.module = data.Module;
+            this.module = data.Module ?? {};
             this.skins = data.Skins;
             this.fields = data.Fields;
             this.actions = data.Actions;
@@ -264,13 +338,9 @@ export class ModuleBuilderController {
             this.customLibraries = data.CustomLibraries;
             this.field = {};
 
-            data.FieldTypes.forEach(ft => {
-                ft.Icon = (ft.Icon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+            this.fieldTypes = this.parseFieldTypes(data.FieldTypes);
 
-                _.forEach(ft.Templates, (t) => { return t.TemplateImage = (t.TemplateImage || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions"); })
-                _.forEach(ft.Themes, (t) => { return t.ThemeImage = (t.ThemeImage || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions"); })
-            });
-            this.fieldTypes = data.FieldTypes;
+            this.module.skinIsEmpty = !!!this.module.Skin;
 
             /*-----------------------------------------------------------------------
                 the First step for creating your module,
@@ -280,9 +350,9 @@ export class ModuleBuilderController {
                 this.onShowModuleSkinClick();
 
                 this.notifyService.notify(`
-                            the First step for creating your module,
-                            you must be select skin and template and theme for the module
-                        `);
+                    the First step for creating your module,
+                    you must be select skin and template and theme for the module
+                `);
             }
 
             if (this.module.Wrapper == "Dashboard") {
@@ -305,9 +375,12 @@ export class ModuleBuilderController {
             }
 
             _.forEach(this.fields, (field) => {
+                field.FieldTypeBackup = field.FieldType;
                 field.FieldTypeObject = _.find(this.fieldTypes, (ft) => {
                     return ft.FieldType == field.FieldType;
-                });
+                }) ?? {
+                    FieldComponent: 'b-not-field-type'
+                };
 
                 this.globalService.parseJsonItems(field.Settings);
 
@@ -343,22 +416,20 @@ export class ModuleBuilderController {
 
             clearInterval(this.monitoringTimer);
             this.monitoringTimer = 0;
-        },
-            (error) => {
-                if (this.isNewAction) delete this.action.ActionID;
+        }, (error) => {
+            if (this.isNewAction) delete this.action.ActionID;
 
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
+            this.notifyService.error(error.data.Message);
 
-                delete this.running;
+            delete this.running;
 
-                clearInterval(this.monitoringTimer);
-                this.monitoringTimer = 0;
-            }
-        );
+            clearInterval(this.monitoringTimer);
+            this.monitoringTimer = 0;
+        });
 
         this.$scope.$emit("onChangeActivityBar", {
             name: "builder",
@@ -393,8 +464,7 @@ export class ModuleBuilderController {
             },
             FieldText: {
                 rule: (value) => {
-                    if (!this.currentField.Settings.IsHideFieldText && !value)
-                        return false;
+                    if (!this.currentField.Settings.IsHideFieldText && !value) return false;
 
                     return true;
                 },
@@ -410,6 +480,15 @@ export class ModuleBuilderController {
                     if (!value && this.currentField.InheritTemplate)
                         return true;
                     else if (value)
+                        return true;
+                },
+                required: true,
+            },
+            Theme: {
+                rule: (value) => {
+                    if (!value && this.currentField.FieldTypeObject.Themes && this.currentField.FieldTypeObject.Themes.length)
+                        return false;
+                    else
                         return true;
                 },
                 required: true,
@@ -456,10 +535,27 @@ export class ModuleBuilderController {
         );
     }
 
+    parseFieldTypes(fieldTypes) {
+        fieldTypes.forEach(ft => {
+            ft.Icon = (ft.Icon || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions");
+
+            _.forEach(ft.Templates, (t) => { return t.TemplateImage = (t.TemplateImage || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions"); })
+            _.forEach(ft.Themes, (t) => { return t.ThemeImage = (t.ThemeImage || '').replace('[EXTPATH]', GlobalSettings.modulePath + "extensions"); })
+        });
+
+        return fieldTypes;
+    }
+
     /*------------------------------------*/
     /* Build Module & Render Design Module Methods  */
     /*------------------------------------*/
     buildModule() {
+        if (this.running) {
+            this.notifyService.warning('Can not execute this operation!.');
+
+            return;
+        }
+
         if (!this.module.ModuleBuilderType) {
             alert('the ModuleBuilderType field of the module fields has not set.you must be set the field value.');
             this.onModuleSettingsClick();
@@ -500,7 +596,7 @@ export class ModuleBuilderController {
             this.monitoringFile = `/Portals/${GlobalSettings.portalID}-System/BusinessEngine/MonitoringProgress/Monitoring_${this.module.ModuleID}_${monitoringFileID}.txt`;
             this.progressValueFile = `/Portals/${GlobalSettings.portalID}-System/BusinessEngine/MonitoringProgress/ProgressValue_${this.module.ModuleID}_${monitoringFileID}.txt`;
 
-            this.monitoringProgress();
+            this.monitorProgress();
 
             this.apiService.post("Studio", "BuildModule", {
                 ModuleID: this.module.ModuleID,
@@ -512,9 +608,7 @@ export class ModuleBuilderController {
                 CustomCss: this.module.CustomCss,
                 MonitoringFileID: monitoringFileID
             }).then((data) => {
-                this.notifyService.success(
-                    "Build module has been successfully!. ;)"
-                );
+                this.notifyService.success("Build module has been successfully!. ;)");
 
                 delete this.awaitAction;
                 delete this.running;
@@ -636,14 +730,6 @@ export class ModuleBuilderController {
         });
     }
 
-    onShowActionsClick() {
-        this.$scope.$emit("onGotoPage", {
-            page: "actions",
-            parentID: this.module.ModuleID,
-            subParams: { type: "module" },
-        });
-    }
-
     /*------------------------------------*/
     /* Module Variables Methods  */
     /*------------------------------------*/
@@ -662,27 +748,24 @@ export class ModuleBuilderController {
         this.apiService
             .get("Studio", "GetModuleVariables", {
                 moduleID: this.module.ModuleID,
-            })
-            .then(
-                (data) => {
-                    this.variables = data;
+            }).then((data) => {
+                this.variables = data;
 
-                    this.notifyService.success(
-                        "Module variables loaded has been successfully"
-                    );
+                this.notifyService.success(
+                    "Module variables loaded has been successfully"
+                );
 
-                    delete this.awaitAction;
-                    delete this.running;
-                },
-                (error) => {
-                    this.awaitAction.isError = true;
-                    this.awaitAction.subtitle = error.statusText;
-                    this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+                delete this.awaitAction;
+                delete this.running;
+            }, (error) => {
+                this.awaitAction.isError = true;
+                this.awaitAction.subtitle = error.statusText;
+                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                    this.notifyService.error(error.data.Message);
+                this.notifyService.error(error.data.Message);
 
-                    delete this.running;
-                }
+                delete this.running;
+            }
             );
     }
 
@@ -744,28 +827,24 @@ export class ModuleBuilderController {
         this.apiService
             .post("Studio", "SaveModuleVariables", this.variables, {
                 moduleID: this.module.ModuleID,
-            })
-            .then(
-                (data) => {
-                    this.variables = data;
+            }).then((data) => {
+                this.variables = data;
 
-                    this.notifyService.success(
-                        "Module variables updated has been successfully"
-                    );
+                this.notifyService.success("Module variables updated has been successfully");
 
-                    delete this.awaitAction;
-                    delete this.running;
-                },
-                (error) => {
-                    this.awaitAction.isError = true;
-                    this.awaitAction.subtitle = error.statusText;
-                    this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+                this.disposeWorkingMode();
 
-                    this.notifyService.error(error.data.Message);
+                delete this.awaitAction;
+                delete this.running;
+            }, (error) => {
+                this.awaitAction.isError = true;
+                this.awaitAction.subtitle = error.statusText;
+                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                    delete this.running;
-                }
-            );
+                this.notifyService.error(error.data.Message);
+
+                delete this.running;
+            });
     }
 
     onCancelVariablesClick() {
@@ -791,22 +870,19 @@ export class ModuleBuilderController {
             this.skins = data.Skins;
             this.module.SkinObject = data.CurrentSkin;
 
-            this.notifyService.success(
-                "Module Skins loaded has been successfully"
-            );
+            this.notifyService.success("Module Skins loaded has been successfully");
 
             delete this.awaitAction;
             delete this.running;
-        },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
+            this.notifyService.error(error.data.Message);
 
-                delete this.running;
-            }
+            delete this.running;
+        }
         );
     }
 
@@ -814,7 +890,7 @@ export class ModuleBuilderController {
         if (!this.module.SkinObject || this.module.Skin != skin.SkinName) {
             this.moduleSkinBackup = this.module.Skin;
             this.moduleSkinObjectBackup = this.module.SkinObject;
-            this.isSkinChanged = true;
+            this.isSkinOrTemplateChanged = this.module.skinIsEmpty ? false : true;
             this.module.Skin = skin.SkinName;
             this.module.Template = null;
 
@@ -845,7 +921,7 @@ export class ModuleBuilderController {
     }
 
     onSelectSkinTemplateClick(template) {
-        if (this.module.Template != template.TemplateName) this.isSkinChanged = true;
+        if (this.module.skinIsEmpty || this.module.Template != template.TemplateName) this.isSkinOrTemplateChanged = true;
 
         this.moduleTemplateBackup = this.module.Template;
         this.module.Template = template.TemplateName;
@@ -855,27 +931,21 @@ export class ModuleBuilderController {
         this.moduleSkinForm.validated = true;
         this.moduleSkinForm.validator(this.module);
         if (this.moduleSkinForm.valid) {
-            if (this.isSkinChanged)
+            if (this.isSkinOrTemplateChanged)
                 swal({
-                    title: "Important note?",
+                    title: "Important Note!!",
                     text: "after apply change the skin or template, the layout of the module will change, and will losted the Panes then you must sort the fields based on the new layout.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
                 }).then((confirm) => {
                     if (confirm) {
-                        this.saveSkin().then((data) => {
-                            this.module.LayoutTemplate = data.layoutTemplateHtml;
-                            this.module.LayoutCss = data.layoutTemplateCss;
-
-                            this.renderDesignForm();
-                            this.buildModule();
-                            this.disposeWorkingMode();
-                        });
+                        this.saveSkin();
                     }
                 });
-            else
-                this.disposeWorkingMode();
+            else {
+                this.saveSkin();
+            }
         }
     }
 
@@ -899,26 +969,32 @@ export class ModuleBuilderController {
             FieldsDefaultTheme: this.module.FieldsDefaultTheme,
             LayoutTemplate: this.module.LayoutTemplate,
             LayoutCss: this.module.LayoutCss
-        }).then(
-            (data) => {
-                $defer.resolve(data);
+        }).then((data) => {
+            this.notifyService.success("Module skin updated has been successfully");
 
-                this.notifyService.success("Module skin updated has been successfully");
+            this.module.LayoutTemplate = data.layoutTemplateHtml;
+            this.module.LayoutCss = data.layoutTemplateCss;
+            this.fieldTypes = this.parseFieldTypes(data.fieldTypes);
 
-                delete this.awaitAction;
-                delete this.running;
-            },
-            (error) => {
-                $defer.reject(error);
+            this.renderDesignForm();
+            this.buildModule();
+            this.disposeWorkingMode();
 
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+            $defer.resolve(data);
 
-                this.notifyService.error(error.data.Message);
+            delete this.awaitAction;
+            delete this.running;
+        }, (error) => {
+            $defer.reject(error);
 
-                delete this.running;
-            }
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+
+            this.notifyService.error(error.data.Message);
+
+            delete this.running;
+        }
         );
 
         return $defer.promise;
@@ -961,26 +1037,24 @@ export class ModuleBuilderController {
             ModuleID: this.module.ModuleID,
             LayoutTemplate: this.module.LayoutTemplate,
             LayoutCss: this.module.LayoutCss
-        }).then(
-            (data) => {
-                this.disposeWorkingMode();
-                this.buildModule();
-                this.renderDesignForm();
+        }).then((data) => {
+            this.disposeWorkingMode();
+            this.buildModule();
+            this.renderDesignForm();
 
-                this.notifyService.success("Module layout template updated has been successfully");
+            this.notifyService.success("Module layout template updated has been successfully");
 
-                delete this.awaitAction;
-                delete this.running;
-            },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+            delete this.awaitAction;
+            delete this.running;
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
+            this.notifyService.error(error.data.Message);
 
-                delete this.running;
-            }
+            delete this.running;
+        }
         );
     }
 
@@ -991,6 +1065,8 @@ export class ModuleBuilderController {
     onSelectFieldTemplate(template) {
         this.currentField.Template = template.TemplateName;
         this.currentField.IsSkinTemplate = template.IsSkinTemplate;
+
+        delete this.currentField.Theme;
     }
 
     onSelectFieldTheme(theme) {
@@ -1013,6 +1089,11 @@ export class ModuleBuilderController {
     /*------------------------------------*/
     /*  Field Methods */
     /*------------------------------------*/
+    onToggleSearchFieldsClick() {
+        this.isShowSearchBox = !this.isShowSearchBox;
+        if (this.isShowSearchBox) this.$scope.$broadcast("onFocusSearchInput_" + this.module.ModuleID);
+    }
+
     onRefreshFieldClick($event, fieldID) {
         const $defer = this.$q.defer();
 
@@ -1053,37 +1134,40 @@ export class ModuleBuilderController {
     }
 
     onFieldItemClick($event, fieldID) {
-        if (
-            this.currentField &&
-            this.currentField.FieldID != fieldID &&
-            this.isEditedCurrentField
-        ) {
-            this.currentField.shakeField = true;
-            this.currentField.isShowSavePanel = true;
+        const field = this.getFieldByID(fieldID);
+        this.currentField = field;
+        this.field[this.currentField.FieldName] = this.currentField;
+        this.currentFieldBackup = _.cloneDeep(this.currentField);
 
-            this.$scope.$broadcast("onFocusField_" + this.currentFieldBackup.FieldName);
-        } else {
-            const field = this.getFieldByID(fieldID);
+        this.ignoreWatchCurrentField = true;
+        this.$timeout(() => delete this.ignoreWatchCurrentField);
 
-            this.currentFieldBackup = _.clone(field);
-            this.currentField = field;
-            this.field[this.currentField.FieldName] = this.currentField;
+        this.fieldActionsFilter = this.currentField.FieldID;
+        if (this.currentSidebarTab != 'actions') this.onSidebarTabClick("field-settings");
 
-            this.$scope.$broadcast("onBindFieldSettings_" + this.currentField.FieldName);
-
-            if (this.currentSidebarTab != 'actions') {
-                this.onSidebarTabClick("field-settings");
-            }
-
-            this.fieldActionsFilter = this.currentField.FieldID;
-        }
+        this.$scope.$broadcast("onBindFieldSettings_" + this.currentField.FieldName);
 
         this.currentFieldFocused = true;
 
         if ($event) $event.stopPropagation();
     }
 
-    onFieldTypeChange($event, fieldID) {
+    onFieldToolbarClick($event) {
+        this.currentFieldFocused = !!this.currentField;
+
+        $event.stopPropagation();
+    }
+
+    onFieldItemBlur($event) {
+        if ($event.target.contains($event.relatedTarget)) return;
+
+        this.currentFieldFocused = false;
+
+        if ($event) $event.stopPropagation();
+    }
+
+
+    onChangeFieldTypeClick($event, fieldID) {
         swal({
             title: "Are you sure change field type?",
             text: "Some settings may be lost after the field type is changed",
@@ -1093,12 +1177,13 @@ export class ModuleBuilderController {
         }).then((agree) => {
             if (agree) {
                 this.saveCurrentField().then(() => {
-                    this.onRefreshFieldClick($event, fieldID).then(() => {
-                        this.currentField.FieldTypeObject = _.find(this.fieldTypes, (ft) => {
-                            return ft.FieldType == this.currentField.FieldType;
-                        });
-                        console.log(this.currentField)
-                    });
+                    location.reload();
+                    // this.onRefreshFieldClick($event, fieldID).then(() => {
+                    //     this.currentField.FieldTypeObject = _.find(this.fieldTypes, (ft) => {
+                    //         return ft.FieldType == this.currentField.FieldType;
+                    //     });
+                    //     console.log(this.currentField)
+                    // });
                 })
             }
         });
@@ -1106,10 +1191,9 @@ export class ModuleBuilderController {
 
     onCancelEditFieldClick($event) {
         const field = this.getFieldByID(this.currentField.FieldID);
-
-        this.field[this.currentFieldBackup.FieldName] = this.fields[
-            this.fields.indexOf(field)
-        ] = _.clone(this.currentFieldBackup);
+        var oldField = _.cloneDeep(this.currentFieldBackup);
+        this.fields[this.fields.indexOf(field)] = oldField;
+        this.field[this.currentFieldBackup.FieldName] = oldField;
 
         this.removeCurrentField(true);
 
@@ -1125,6 +1209,7 @@ export class ModuleBuilderController {
             ParentID: parentID,
             PaneName: paneName,
             FieldType: fieldType.FieldType,
+            FieldTypeObject: fieldType ?? {},
             FieldName: suggestFieldName,
             IsRequired: false,
             IsShow: true,
@@ -1137,7 +1222,6 @@ export class ModuleBuilderController {
             InheritTheme: this.module.EnableFieldsDefaultTheme,
             DataSource: {},
             Settings: defaultSettings,
-            FieldTypeObject: fieldType,
         };
 
         this.beforeFieldID = beforeFieldID;
@@ -1153,7 +1237,7 @@ export class ModuleBuilderController {
         }, 500);
     }
 
-    onSaveFieldClick($event, isNewField) {
+    onSaveFieldClick($event, isNewField, changeEditStatus) {
         this.form.validated = true;
         this.form.validator(this.currentField);
         if (this.form.valid) {
@@ -1162,11 +1246,13 @@ export class ModuleBuilderController {
                     field.FieldTypeObject = _.find(this.fieldTypes, (ft) => {
                         return ft.FieldType == field.FieldType;
                     });
+                    field.FieldTypeBackup = field.FieldType;
 
                     this.fields.push(field);
                     this.field[field.FieldName] = field;
                     this.currentField = field;
-                    this.currentFieldBackup = _.clone(field);
+
+                    delete this.currentFieldBackup;
 
                     this.moduleDesignerService.getFieldUI(this.currentField, this.$scope).then(($fieldItem) => {
                         const $field = this.$compile($fieldItem)(this.$scope);
@@ -1192,7 +1278,7 @@ export class ModuleBuilderController {
                         });
                     });
                 });
-            } else this.saveCurrentField();
+            } else this.saveCurrentField().then(() => { if (changeEditStatus) delete this.currentField });
 
             if ($event) $event.stopPropagation();
         }
@@ -1216,19 +1302,19 @@ export class ModuleBuilderController {
         this.monitoringFile = `/Portals/${GlobalSettings.portalID}-System/BusinessEngine/MonitoringProgress/Monitoring_${this.module.ModuleID}_${monitoringFileID}.txt`;
         this.progressValueFile = `/Portals/${GlobalSettings.portalID}-System/BusinessEngine/MonitoringProgress/ProgressValue_${this.module.ModuleID}_${monitoringFileID}.txt`;
 
-        this.monitoringProgress();
+        this.monitorProgress();
 
         this.apiService.post("Studio", "SaveModuleField", this.currentField, { monitoringFileID: monitoringFileID }).then((field) => {
             this.notifyService.success(this.currentField.FieldName + " Field updated has been successfully");
 
             delete this.awaitAction;
             delete this.running;
-            delete this.currentField.isShowSavePanel;
-            delete this.isEditedCurrentField;
 
-            this.disposeWorkingMode();
+            this.currentField.isEdited = false;
 
             $defer.resolve(field);
+
+            this.disposeWorkingMode();
 
             clearInterval(this.monitoringTimer);
             this.monitoringTimer = 0;
@@ -1386,12 +1472,10 @@ export class ModuleBuilderController {
     }
 
     removeCurrentField(changeTab) {
-        delete this.currentField.isShowSavePanel;
-        delete this.currentField.shakeField;
+        this.currentField.isEdited = false;
 
         delete this.currentField;
         delete this.currentFieldBackup;
-        delete this.isEditedCurrentField;
 
         this.onSidebarTabClick("toolbox");
 
@@ -1413,20 +1497,11 @@ export class ModuleBuilderController {
         return result;
     }
 
-
     onFieldSettingsClick($event) {
         this.$scope.$broadcast("onBindFieldSettings_" + this.currentField.FieldName);
 
         this.onSidebarTabClick("field-settings");
         this.$rootScope.currentActivityBar = "builder";
-    }
-
-    onFieldItemBlur($event) {
-        if ($event.target.contains($event.relatedTarget)) return;
-
-        this.currentFieldFocused = false;
-
-        if ($event) $event.stopPropagation();
     }
 
     getFieldElementByFieldID(fieldID) {
@@ -1465,11 +1540,26 @@ export class ModuleBuilderController {
         this.$timeout(() => {
             const $field = this.getFieldElementByFieldID(fieldID);
             $([document.documentElement, document.body]).animate({
-                scrollTop: $field.offset().top - 100
+                scrollTop: $($field).offset().top - 100
             }, 500);
 
             $('ul.dropdown-menu.show').removeClass('show');
         }, 1000);
+    }
+
+    onIsCustomFieldLayoutChange() {
+        if (this.currentField.Settings.IsCustomFieldLayout && !this.currentField.Settings.CustomFieldLayoutModified)
+            this.currentField.Settings.CustomFieldLayout = this.moduleBuilderService.getDefaultFieldLayoutTemplate(this.currentField)
+    }
+
+    onCustomFieldLayoutChange() {
+        this.currentField.Settings.CustomFieldLayoutModified = true;
+    }
+
+    onResetCustomFieldLayoutClick() {
+        this.currentField.Settings.CustomFieldLayout = this.moduleBuilderService.getDefaultFieldLayoutTemplate(this.currentField)
+
+        delete this.currentField.Settings.CustomFieldLayoutModified;
     }
 
     /*------------------------------------*/
@@ -1536,29 +1626,22 @@ export class ModuleBuilderController {
                 subtitle: "Just a moment for loading the defined lists...",
             };
 
-            this.apiService
-                .get("Studio", "GetDefinedLists", {
-                    fieldID: this.currentField.FieldID,
-                })
-                .then(
-                    (data) => {
-                        this.definedLists = data;
+            this.apiService.get("Studio", "GetDefinedLists", { fieldID: this.currentField.FieldID, }).then((data) => {
+                this.definedLists = data;
 
-                        this.onDefinedListChange();
+                this.onDefinedListChange();
 
-                        delete this.awaitAction;
-                        delete this.running;
-                    },
-                    (error) => {
-                        this.awaitAction.isError = true;
-                        this.awaitAction.subtitle = error.statusText;
-                        this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+                delete this.awaitAction;
+                delete this.running;
+            }, (error) => {
+                this.awaitAction.isError = true;
+                this.awaitAction.subtitle = error.statusText;
+                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                        this.notifyService.error(error.data.Message);
+                this.notifyService.error(error.data.Message);
 
-                        delete this.running;
-                    }
-                );
+                delete this.running;
+            });
         }
     }
 
@@ -1598,16 +1681,15 @@ export class ModuleBuilderController {
 
             delete this.awaitAction;
             delete this.running;
-        },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
+            this.notifyService.error(error.data.Message);
 
-                delete this.running;
-            }
+            delete this.running;
+        }
         );
     }
 
@@ -1628,33 +1710,30 @@ export class ModuleBuilderController {
             title: "Saving Field Data Source",
             subtitle: "Just a moment for saving the field data source...",
         };
-        this.apiService.post("Studio", "SaveDefinedList", this.definedList).then(
-            (data) => {
-                this.notifyService.success(
-                    "Field data source saved has been successfully"
-                );
+        this.apiService.post("Studio", "SaveDefinedList", this.definedList).then((data) => {
+            this.notifyService.success(
+                "Field data source saved has been successfully"
+            );
 
-                this.currentField.DataSource.Items = _.cloneDeep(this.definedList.Items);
+            this.currentField.DataSource.Items = _.cloneDeep(this.definedList.Items);
 
-                this.onSaveFieldClick($event);
+            this.onSaveFieldClick($event);
 
-                this.disposeWorkingMode();
+            this.disposeWorkingMode();
 
-                delete this.definedList;
-                delete this.awaitAction;
-                delete this.running;
-            },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+            delete this.definedList;
+            delete this.awaitAction;
+            delete this.running;
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
+            this.notifyService.error(error.data.Message);
 
-                delete this.definedList;
-                delete this.running;
-            }
-        );
+            delete this.definedList;
+            delete this.running;
+        });
     }
 
     onDefinedListChange() {
@@ -1676,17 +1755,15 @@ export class ModuleBuilderController {
 
             delete this.awaitAction;
             delete this.running;
-        },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
+            this.notifyService.error(error.data.Message);
 
-                delete this.running;
-            }
-        );
+            delete this.running;
+        });
     }
 
     onCancelFieldDataSourceClick() {
@@ -1706,6 +1783,14 @@ export class ModuleBuilderController {
     /*------------------------------------*/
     /* Actions & Conditions Methods  */
     /*------------------------------------*/
+    onShowActionsClick() {
+        this.$scope.$emit("onGotoPage", {
+            page: "actions",
+            parentID: this.module.ModuleID,
+            subParams: { type: "module" },
+        });
+    }
+
     onShowFieldActionsClick($event) {
         this.fieldActionsFilter = this.currentField.FieldID;
 
@@ -1716,7 +1801,9 @@ export class ModuleBuilderController {
         if ($event) $event.stopPropagation();
     }
 
-    onShowConditionsClick() {
+    onShowConditionsClick($event, fieldID) {
+        if (fieldID) this.onFieldItemClick($event, fieldID);
+
         this.workingMode = "field-show-conditions";
         this.$scope.$emit("onShowRightWidget", { controller: this });
     }
@@ -1782,14 +1869,14 @@ export class ModuleBuilderController {
 
     onShowFieldTemplateClick() {
         this.checkInheritTemplateAndTheme(this.currentField);
-        this.currentFieldBackup = _.clone(this.currentField);
+        this.currentFieldBackup = _.cloneDeep(this.currentField);
 
         this.workingMode = "field-template";
         this.$scope.$emit("onShowRightWidget", { controller: this });
     }
 
     onCancelFieldTemplateClick() {
-        this.currentField = _.clone(this.currentFieldBackup);
+        this.currentField = _.cloneDeep(this.currentFieldBackup);
         this.field[this.currentField.FieldName] = this.currentField;
 
         this.disposeWorkingMode();
@@ -1808,6 +1895,10 @@ export class ModuleBuilderController {
         this.customResources.push({ ModuleID: this.module.ModuleID });
     }
 
+    onDeleteCustomResourceClick($index) {
+        this.customResources.splice($index, 1);
+    }
+
     onSaveCustomResourcesClick() {
         this.running = "save-custom-resources";
         this.awaitAction = {
@@ -1821,23 +1912,17 @@ export class ModuleBuilderController {
         this.apiService.post("Studio", "SaveCustomResources", this.customResources, { moduleID: this.module.ModuleID }).then((data) => {
             this.notifyService.success("Module custom resources updated has been successfully");
 
+            this.disposeWorkingMode();
+
             delete this.awaitAction;
             delete this.running;
-        },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
-
-                delete this.running;
-            }
-        );
-    }
-
-    onDeleteCustomResourceClick($index) {
-        this.customResources.splice($index, 1);
+            delete this.running;
+        });
     }
 
     onCancelCustomResourcesClick() {
@@ -1874,17 +1959,19 @@ export class ModuleBuilderController {
 
             delete this.awaitAction;
             delete this.running;
-        },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
+            this.notifyService.error(error.data.Message);
 
-                delete this.running;
-            }
-        );
+            delete this.running;
+        });
+    }
+
+    onDeleteCustomLibraryClick($index) {
+        this.customLibraries.splice($index, 1);
     }
 
     onSaveCustomLibrariesClick() {
@@ -1897,23 +1984,17 @@ export class ModuleBuilderController {
         this.apiService.post("Studio", "SaveCustomLibraries", this.customLibraries, { moduleID: this.module.ModuleID }).then((data) => {
             this.notifyService.success("Module custom libraries updated has been successfully");
 
+            this.disposeWorkingMode();
+
             delete this.awaitAction;
             delete this.running;
-        },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
-
-                delete this.running;
-            }
-        );
-    }
-
-    onDeleteCustomLibraryClick($index) {
-        this.customLibraries.splice($index, 1);
+            delete this.running;
+        });
     }
 
     onCancelCustomLibrariesClick() {
@@ -1939,10 +2020,20 @@ export class ModuleBuilderController {
         item.ExpressionParsingType = type;
     }
 
-    monitoringProgress() {
+    onSearchTextChange() {
+        this.fieldsBackup = this.fieldsBackup ?? _.cloneDeep(this.fields);
+
+        this.fields = _.filter(this.fieldsBackup, (f) => { return (f.FieldName ?? '').indexOf(this.searchText) >= 0 || (f.FieldText ?? '').indexOf(this.searchText) >= 0 || (f.FieldType ?? '').indexOf(this.searchText) >= 0 });
+
+        this.renderDesignForm();
+    }
+
+    monitorProgress() {
         var index = 1;
         var monitoringFileStatus;
         var progressValueFileStatus;
+
+        this.progressValue = 0;
 
         const getMonitoringFiles = () => {
             fetch(this.monitoringFile + '?ver=' + index++).then((stream) => {
@@ -1958,12 +2049,18 @@ export class ModuleBuilderController {
             }).then((content) => {
                 if (progressValueFileStatus == 200) {
                     $('.progress-bar').css('width', content + '%');
-                    this.progressValue = content;
+
+                    this.progressValue = parseInt(content);
 
                     if (parseInt(content) == 100) {
-                        clearInterval(this.monitoringTimer);
+                        $('.progress-bar').css('width', '0');
+                        this.progressValue = 0;
+
                         this.monitoringTimer = 0;
+                        clearInterval(this.monitoringTimer);
                     }
+
+                    if (!this.$scope.$$phase) this.$scope.$apply();
                 }
             });
         }

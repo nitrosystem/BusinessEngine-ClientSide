@@ -45,7 +45,7 @@
                         <div ng-if="template.TemplateImage"  class="image-wrapper" >
                             <img ng-src="{{template.TemplateImage}}"/>
                         </div>
-                        <h6 class="template-name w-100">{{template.TemplateName}}</h6>
+                        <h6 class="template-name w-100" title="{{template.TemplateName}}">{{template.TemplateName}}</h6>
                         <p ng-if="template.Description" class="template-description">{{template.Description}}</p>
                         <p ng-if="!template.Description" class="template-no-description">No description!</p>
                         <span ng-if="template.IsSkinTemplate" class="text-center" >{{$.module.Skin}} Skin Template </span>

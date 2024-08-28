@@ -1,150 +1,179 @@
-<div class="field-settings">
+<div class="field-settings" data-bs-theme="dark">
     <!------------------------------------>
-    <!--Basic Settings-->
+    <!--Field ID & Field Name-->
     <!------------------------------------>
-    <div class="b-group group-sm">
-        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpBasicSettings">
-            <h3 class="group-label">
-                <span class="group-icon">
-                    <i class="codicon codicon-server-process"></i>
-                </span> Basic Settings
-            </h3>
-            <span class="group-collapse">
-                <i class="codicon codicon-chevron-up"></i>
-            </span>
+    <div class="b-field">
+        <label class="form-label">Field ID</label>
+        <input type="text" ng-model="$.currentField.FieldID" class="b-input form-control" readonly></label>
+    </div>
+    <div class="b-field">
+        <label class="form-label">Fied Name</label>
+        <div class="b-input-group">
+            <input type="text" ng-model="$.currentField.FieldName" class="b-input form-control"
+                placeholder="Enter field name"
+                onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" />
+            <span><i class="codicon codicon-gear"></i></span>
         </div>
-        <div id="grpBasicSettings" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
-            <div class="b-field">
-                <label class="form-label">Field ID</label>
-                <label class="badge bg-dark text-wrap"> {{$.currentField.FieldID}}</label>
-            </div>
-            <div class="b-field">
-                <label class="form-label">Field Type</label>
+    </div>
+    <div class="b-field">
+        <label class="form-label">Field Type</label>
+        <div class="d-flex mb-2">
+            <div class="col-9">
                 <div class="b-input-group">
-                    <select ng-model="$.currentField.FieldType" class="b-input form-select" ng-options="fieldType.FieldType as fieldType.Title for fieldType in $.fieldTypes" ng-change="onChangeFieldType($event)" chosen inherit-select-classes="true" placeholder-text-multiple="'Select field type'"
-                        required>
+                    <select ng-model="$.currentField.FieldTypeBackup" class="b-input form-select"
+                        ng-options="fieldType.FieldType as fieldType.Title for fieldType in $.fieldTypes" chosen
+                        inherit-select-classes="true" placeholder-text-multiple="'Select field type'" required>
                         <option disabled></option>
                     </select>
                     <span><i class="codicon codicon-gear"></i></span>
                 </div>
             </div>
-            <div class="b-field">
-                <label class="form-label">Fied Name</label>
-                <div class="b-input-group">
-                    <input type="text" ng-model="$.currentField.FieldName" class="b-input form-control" placeholder="Enter field name" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
-                    />
-                    <span><i class="codicon codicon-gear"></i></span>
-                </div>
+            <div class="col-auto">
+                <button type="button" class="b-btn btn-action btn-sm h-100 ms-1"
+                    ng-click="onChangeFieldTypeClick($event)"
+                    ng-disabled="$.currentField.FieldType==$.currentField.FieldTypeBackup" b-custom-tooltip
+                    title="Apply Change Field Type" data-bs-placement="bottom">
+                    <i class="codicon codicon-debug-step-back"></i>
+                </button>
             </div>
-            <div class="b-field" ng-if="!$.currentField.Settings.IsDisableLayout && !$.currentField.Settings.IsHideFieldText">
-                <label class="form-label">Field Text</label>
-                <div class="b-input-group">
-                    <textarea ng-model="$.currentField.FieldText" class="b-input form-control" placeholder="Enter your field text(title)"></textarea>
-                    <span><i class="codicon codicon-gear"></i></span>
-                </div>
-            </div>
-            <div class="b-field" ng-if="$.currentField.IsValuable">
-                <label class="form-label">Is Required Field</label>
-                <label class="b-switch d-block">
-                    <input type="checkbox" ng-model="$.currentField.IsRequired">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="b-field">
-                <label class="form-label">Is Show Field</label>
-                <label class="b-switch d-block">
-                    <input type="checkbox" ng-model="$.currentField.IsShow">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="b-field">
-                <label class="form-label">Is Enabled Field</label>
-                <label class="b-switch d-block">
-                    <input type="checkbox" ng-model="$.currentField.IsEnabled">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="b-field">
-                <label class="form-label">Show Conditions</label>
-                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowConditionsClick()">
-                    <i class="codicon codicon-eye-closed"></i>
-                    <span ng-if="!$.currentField.ShowConditions.length">No Conditions</span>
-                    <span ng-if="$.currentField.ShowConditions.length">
-                        {{$.currentField.ShowConditions.length}} Conditions
-                    </span>
-                    <label>...</label>
+        </div>
+        <div ng-show="$.currentField.FieldType!==$.currentField.FieldTypeBackup"
+            class="b-notify notify-info notify-sm mb-2">
+            <i class="codicon codicon-info b-icon-2"></i>
+            <div class="text">
+                <h6 class="label text-uppercase">Important Note!</h6>
+                <div class="subtext">
+                    Changing the field type is a high-risk operation. This change resets the field settings and may
+                    cause problems in executing module actions.
                 </div>
             </div>
         </div>
     </div>
-    <!------------------------------------>
-    <!--Advanced Settings-->
-    <!------------------------------------>
-    <div class="b-group group-sm">
-        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpAdvancedSettings">
-            <h3 class="group-label">
-                <span class="group-icon">
-                    <i class="codicon codicon-server-process"></i>
-                </span> Advanced Settings
-            </h3>
-            <span class="group-collapse">
-                <i class="codicon codicon-chevron-up"></i>
-            </span>
-        </div>
-        <div id="grpAdvancedSettings" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
-            <div class="b-field">
-                <label class="form-label">Save Field Value In</label>
-                <input type="text" ng-model="$.currentField.Settings.SaveValueIn" class="b-input form-control" placeholder="Default saved in {Form.{{$.currentField.FieldName}}}" />
+    <div ng-if="!$.currentField.FieldTypeObject.IsContent">
+        <hr>
+        <!------------------------------------>
+        <!--Basic Settings-->
+        <!------------------------------------>
+        <div class="b-group group-sm">
+            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpBasicSettings"
+                ng-class="{'collapsed':$.collapsedComponentGroups}">
+                <h3 class="group-label">
+                    <span class="group-icon">
+                        <i class="codicon codicon-server-process"></i>
+                    </span> Basic Settings
+                </h3>
+                <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
             </div>
-            <div class="b-field">
-                <label class="form-label">Conditional Value(s)</label>
-                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowConditionalValuesClick()">
-                    <i class="codicon codicon-checklist"></i>
-                    <span ng-if="!$.currentField.Settings.FieldValues.length">No Value</span>
-                    <span ng-if="$.currentField.Settings.FieldValues.length">Has Value</span>
-                    <label>...</label>
-                </div>
-            </div>
-            <div class="b-field" ng-if="$.currentField.IsSelective">
-                <label class="form-label">Data Source</label>
-                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowFieldDataSourceClick($event)">
-                    <i class="codicon codicon-database"></i>
-                    <span ng-if="!$.currentField.DataSource.Type">Standard(Static items)</span>
-                    <span ng-if="$.currentField.DataSource.Type==1">Custom Defined List</span>
-                    <span ng-if="$.currentField.DataSource.Type==2">Use Service</span>
-                    <label>...</label>
-                </div>
-            </div>
-            <div class="b-field">
-                <label class="form-label">Actions</label>
-                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowFieldActionsClick()">
-                    <i class="codicon codicon-github-action"></i>
-                    <span ng-if="!$.currentField.Actions.length">No Action</span>
-                    <span ng-if="$.currentField.Actions.length">Has Actions</span>
-                    <label>...</label>
-                </div>
-            </div>
-            <div class="b-field">
-                <label class="form-label">Authorization View Field </label>
-                <select ng-model="$.currentField.AuthorizationViewField" class="b-input form-select" ng-options="role for role in $.roles" chosen inherit-select-classes="true" multiple placeholder-text-multiple="'Authorization view field roles'" required>
-                    <option disabled></option>
-                </select>
-            </div>
-            <div>
+            <div id="grpBasicSettings" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
                 <div class="b-field">
-                    <label class="form-label">Is Selective</label>
+                    <label class="form-label">Hide Field Text</label>
                     <label class="b-switch d-block">
-                        <input type="checkbox" ng-model="$.currentField.IsSelective">
+                        <input type="checkbox" ng-model="$.currentField.Settings.IsHideFieldText">
                         <span class="slider"></span>
                     </label>
                 </div>
-                <div class="b-field" ng-if="$.currentField.IsSelective">
-                    <label class="form-label">Allow Multiple</label>
+                <div class="b-field" ng-class="{'opacity-50':$.currentField.Settings.IsHideFieldText}">
+                    <label class="form-label">Field Text(Label)</label>
+                    <div class="b-input-group">
+                        <input type="text" ng-model="$.currentField.FieldText" class="b-input form-control"
+                            placeholder="Enter the field label(optional)"
+                            ng-disabled="$.currentField.Settings.IsHideFieldText" />
+                        <span><i class="codicon codicon-gear"></i></span>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Field Subtext(Hint)</label>
+                    <textarea ng-model="$.currentField.Settings.Subtext" class="b-input form-control mb-1"
+                        placeholder="Enter the field sub text(optional)"></textarea>
+                    <p class="b-notify notify-small">If the subtext is empty, no element will be created</p>
+                </div>
+                <div ng-if="$.currentField.IsValuable">
+                    <div class="b-field">
+                        <label class="form-label">Is Required Field</label>
+                        <label class="b-switch d-block">
+                            <input type="checkbox" ng-model="$.currentField.IsRequired">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div ng-class="{'opacity-50':!$.currentField.IsRequired}">
+                        <div class="b-field">
+                            <label class="form-label">Required Message</label>
+                            <input type="text" ng-model="$.currentField.Settings.RequiredMessage"
+                                ng-disabled="!$.currentField.IsRequired" class="b-input form-control"
+                                placeholder="Required message" />
+                        </div>
+                    </div>
+                    <div class="b-field">
+                        <label class="form-label">Enable Validation Pattern</label>
+                        <label class="b-switch d-block">
+                            <input type="checkbox" ng-model="$.currentField.Settings.EnableValidationPattern">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div ng-class="{'opacity-50':!$.currentField.Settings.EnableValidationPattern}">
+                        <div class="b-field">
+                            <label class="form-label">Validation Pattern</label>
+                            <textarea ng-model="$.currentField.Settings.ValidationPattern" class="b-input form-control"
+                                placeholder="Validation pattern"
+                                ng-disabled="!$.currentField.Settings.EnableValidationPattern"
+                                ng-required="$.currentField.Settings.EnableValidationPattern"></textarea>
+                        </div>
+                        <div class="b-field">
+                            <label class="form-label">Validation Message</label>
+                            <textarea ng-model="$.currentField.Settings.ValidationMessage" class="b-input form-control"
+                                placeholder="Validation message"
+                                ng-disabled="!$.currentField.Settings.EnableValidationPattern"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Is Show Field</label>
                     <label class="b-switch d-block">
-                        <input type="checkbox" hidden="hidden" ng-model="$.currentField.Settings.AllowMultiple" />
-                        <div class="slider"></div>
+                        <input type="checkbox" ng-model="$.currentField.IsShow">
+                        <span class="slider"></span>
                     </label>
                 </div>
+                <div class="b-field" ng-class="{'opacity-50':!$.currentField.IsShow}">
+                    <label class="form-label">Show Conditions</label>
+                    <button type="button" class="b-input field-settings-more-item" role="button"
+                        ng-click="$.onShowConditionsClick()" ng-disabled="!$.currentField.IsShow">
+                        <i class="codicon codicon-eye-closed"></i>
+                        <span ng-if="!$.currentField.ShowConditions.length">No Conditions</span>
+                        <span ng-if="$.currentField.ShowConditions.length">
+                            {{$.currentField.ShowConditions.length}} Conditions
+                        </span>
+                        <label>...</label>
+                    </button>
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Authorization View Field </label>
+                    <select ng-model="$.currentField.AuthorizationViewField" class="b-input form-select"
+                        ng-options="role for role in $.roles" chosen inherit-select-classes="true" multiple
+                        placeholder-text-multiple="'Authorization view field roles'" required>
+                        <option disabled></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Advanced Settings-->
+        <!------------------------------------>
+        <div class="b-group group-sm">
+            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpAdvancedSettings"
+                ng-class="{'collapsed':$.collapsedComponentGroups}">
+                <h3 class="group-label">
+                    <span class="group-icon">
+                        <i class="codicon codicon-server-process"></i>
+                    </span> Advanced Settings
+                </h3>
+                <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
+            </div>
+            <div id="grpAdvancedSettings" class="group-content collapse"
+                ng-class="{'show':!$.collapsedComponentGroups}">
                 <div class="b-field">
                     <label class="form-label">Is Valuable</label>
                     <label class="b-switch d-block">
@@ -152,155 +181,205 @@
                         <span class="slider"></span>
                     </label>
                 </div>
+                <div ng-class="{'opacity-50':!$.currentField.IsValuable}">
+                    <div class="b-field">
+                        <label class="form-label">Is Json Value</label>
+                        <label class="b-switch d-block">
+                            <input type="checkbox" ng-model="$.currentField.IsJsonValue"
+                                ng-disabled="!$.currentField.IsValuable" />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="b-field">
+                        <label class="form-label">Set Null Value When Field Is Hide</label>
+                        <label class="b-switch d-block">
+                            <input type="checkbox" ng-model="$.currentField.Settings.EnableSetNullValueWhenFieldIsHide"
+                                ng-disabled="!$.currentField.IsValuable" />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="b-field">
+                        <label class="form-label">Save Field Value In Custom Variable</label>
+                        <input type="text" ng-model="$.currentField.Settings.SaveValueIn" class="b-input form-control"
+                            placeholder="Default value saved in Form.{{$.currentField.FieldName}}" />
+                    </div>
+                    <div class="b-field">
+                        <label class="form-label">Conditional Value(s)</label>
+                        <button type="button" class="b-input field-settings-more-item" role="button"
+                            ng-click="$.onShowConditionalValuesClick()" ng-disabled="!$.currentField.IsValuable">
+                            <i class="codicon codicon-checklist"></i>
+                            <span ng-if="!$.currentField.Settings.FieldValues.length">No Value</span>
+                            <span ng-if="$.currentField.Settings.FieldValues.length">Has Value</span>
+                            <label>...</label>
+                        </button>
+                    </div>
+                </div>
                 <div class="b-field">
-                    <label class="form-label">Is Json Value</label>
+                    <label class="form-label">Is Selective</label>
                     <label class="b-switch d-block">
-                        <input type="checkbox" ng-model="$.currentField.IsJsonValue">
+                        <input type="checkbox" ng-model="$.currentField.IsSelective">
                         <span class="slider"></span>
                     </label>
                 </div>
-                <div class="b-field">
-                    <label class="form-label">Set Show Field Through Action</label>
+                <div class="b-field"
+                    ng-class="{'opacity-50':!$.currentField.IsValuable || !$.currentField.IsSelective}">
+                    <label class="form-label">Allow Multiple</label>
                     <label class="b-switch d-block">
-                        <input type="checkbox" ng-model="$.currentField.SetShowistener">
-                        <span class="slider"></span>
+                        <input type="checkbox" hidden="hidden" ng-model="$.currentField.Settings.AllowMultiple"
+                            ng-disabled="!$.currentField.IsValuable || !$.currentField.IsSelective" />
+                        <div class="slider"></div>
                     </label>
                 </div>
+                <div class="b-field" ng-class="{'opacity-50':!$.currentField.IsSelective}">
+                    <label class="form-label">Data Source</label>
+                    <button type="button" class="b-input field-settings-more-item" role="button"
+                        ng-click="$.onShowFieldDataSourceClick($event)" ng-disabled="!$.currentField.IsSelective">
+                        <i class="codicon codicon-database"></i>
+                        <span ng-if="!$.currentField.DataSource.Type">Standard(Static items)</span>
+                        <span ng-if="$.currentField.DataSource.Type==1">Custom Defined List</span>
+                        <span ng-if="$.currentField.DataSource.Type==2">Use Service</span>
+                        <label>...</label>
+                    </button>
+                </div>
                 <div class="b-field">
-                    <label class="form-label">Disable Null Value When Field Is Hide</label>
-                    <label class="b-switch d-block">
-                        <input type="checkbox" ng-model="$.currentField.Settings.DisableNullValueWhenFieldIsHide">
-                        <span class="slider"></span>
-                    </label>
+                    <label class="form-label">Actions</label>
+                    <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowFieldActionsClick()">
+                        <i class="codicon codicon-github-action"></i>
+                        <span ng-if="!$.currentField.Actions.length">No Action</span>
+                        <span ng-if="$.currentField.Actions.length">Has Actions</span>
+                        <label>...</label>
+                    </div>
+                </div>
+                <div class="b-field" ng-class="{'opacity-50':!$.currentField.ParentID}">
+                    <label class="form-label">Parent</label>
+                    <select ng-model="$.currentField.ParentID" class="b-input form-select" chosen
+                        ng-options="field.FieldID as field.FieldName for field in $.fields | filter: {IsGroup:true}"
+                        disabled></select>
                 </div>
             </div>
         </div>
-    </div>
-    <!------------------------------------>
-    <!--Appearance Settings-->
-    <!------------------------------------>
-    <div class="b-group group-sm">
-        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpAppearanceSettings">
-            <h3 class="group-label">
-                <span class="group-icon">
-                    <i class="codicon codicon-server-process"></i>
-                </span> Appearance Settings
-            </h3>
-            <span class="group-collapse">
-                <i class="codicon codicon-chevron-up"></i>
-            </span>
-        </div>
-        <div id="grpAppearanceSettings" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
-            <div class="b-field">
-                <label class="form-label">Field Template & Theme</label>
-                <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowFieldTemplateClick()">
-                    <i class="codicon codicon-preview"></i>
-                    <span ng-if="$.currentField.InheritTemplate">Inherit Template</span>
-                    <span ng-if="$.currentField.InheritTheme">Inherit Theme</span>
-                    <span ng-if="!$.currentField.InheritTemplate">{{$.currentField.Template}}</span>
-                    <span ng-if="!$.currentField.InheritTemplate && !$.currentField.InheritTheme">&nbsp|&nbsp</span>
-                    <span ng-if="!$.currentField.InheritTheme">{{$.currentField.Theme}}</span>
-                    <label>...</label>
-                </div>
+        <!------------------------------------>
+        <!--Appearance Settings-->
+        <!------------------------------------>
+        <div class="b-group group-sm">
+            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpAppearanceSettings"
+                ng-class="{'collapsed':$.collapsedComponentGroups}">
+                <h3 class="group-label">
+                    <span class="group-icon">
+                        <i class="codicon codicon-server-process"></i>
+                    </span> Appearance Settings
+                </h3>
+                <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
             </div>
-            <div class="b-field">
-                <label class="form-label">Disable Layout</label>
-                <label class="b-switch d-block">
-                    <input type="checkbox" ng-model="$.currentField.Settings.IsDisableLayout"
-                        ng-disabled="$.currentField.IsGroup && 1==2">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div ng-if="!$.currentField.Settings.IsDisableLayout">
+            <div id="grpAppearanceSettings" class="group-content collapse"
+                ng-class="{'show':!$.collapsedComponentGroups}">
                 <div class="b-field">
-                    <label class="form-label">Css Class</label>
-                    <input type="text" ng-model="$.currentField.Settings.CssClass" class="b-input form-control" placeholder="Field css class" />
+                    <label class="form-label">Field Template & Theme</label>
+                    <div class="b-input field-settings-more-item" role="button" ng-click="$.onShowFieldTemplateClick()">
+                        <i class="codicon codicon-preview"></i>
+                        <span ng-if="$.currentField.InheritTemplate">Inherit Template</span>
+                        <span ng-if="$.currentField.InheritTheme">Inherit Theme</span>
+                        <span ng-if="!$.currentField.InheritTemplate">{{$.currentField.Template}}</span>
+                        <span ng-if="!$.currentField.InheritTemplate && !$.currentField.InheritTheme">&nbsp|&nbsp</span>
+                        <span ng-if="!$.currentField.InheritTheme">{{$.currentField.Theme}}</span>
+                        <label>...</label>
+                    </div>
                 </div>
+                <p class="b-notify notify-turquoise mb-2">
+                    If you want to customize the layout html of the current field,
+                    set enable the option below and enter your customize code.
+                </p>
                 <div class="b-field">
-                    <label class="form-label">Hide Field Text(Label)</label>
+                    <label class="form-label">Set Custom Layout</label>
                     <label class="b-switch d-block">
-                        <input type="checkbox" ng-model="$.currentField.Settings.IsHideFieldText">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="b-field" ng-if="!$.currentField.Settings.IsHideFieldText">
-                    <label class="form-label">Field Text Css Class</label>
-                    <input type="text" ng-model="$.currentField.Settings.FieldTextCssClass" class="b-input form-control" placeholder="Field css class" />
-                </div>
-                <div class="b-field">
-                    <label class="form-label">Sub Text</label>
-                    <textarea ng-model="$.currentField.Settings.SubText" class="b-input form-control" placeholder="Enter sub text"></textarea>
-                </div>
-                <div class="b-field" ng-if="$.currentField.Settings.SubText">
-                    <label class="form-label">Sub Text Css Class</label>
-                    <input type="text" ng-model="$.currentField.Settings.SubTextCssClass" class="b-input form-control" placeholder="Field css class" />
-                </div>
-                <div class="b-field">
-                    <label class="form-label">Custom Layout</label>
-                    <label class="b-switch d-block">
-                        <input type="checkbox" ng-model="$.currentField.Settings.IsCustomFieldLayout">
+                        <input type="checkbox" ng-model="$.currentField.Settings.IsCustomFieldLayout"
+                            ng-change="$.onIsCustomFieldLayoutChange()" />
                         <span class="slider"></span>
                     </label>
                 </div>
                 <div class="b-field" ng-if="$.currentField.Settings.IsCustomFieldLayout">
-                    <label class="form-label">Custom Layout Html</label>
-                    <textarea code-mirror syntax="htmlmixed" ng-model="$.currentField.Settings.CustomFieldLayout"></textarea>
-                </div>
-            </div>
-            <div ng-if="$.currentField.IsValuable">
-                <div ng-if="$.currentField.IsRequired">
-                    <div class="b-field">
-                        <label class="form-label">Required Message</label>
-                        <input type="text" ng-model="$.currentField.Settings.RequiredMessage" class="b-input form-control" placeholder="Required message" />
+                    <label class="form-label">Custom Field Layout Html</label>
+                    <div monaco-editor ng-model="$.currentField.Settings.CustomFieldLayout" class="mb-2"
+                        data-language="html" data-height="190px" ng-change="$.onCustomFieldLayoutChange()"
+                        ng-required="$.currentField.Settings.IsCustomFieldLayout">
                     </div>
-                    <div class="b-field" ng-if="$.currentField.Settings.RequiredMessage">
-                        <label class="form-label">Required Message Css Class</label>
-                        <input type="text" ng-model="$.currentField.Settings.RequiredMessageCssClass" class="b-input form-control" placeholder="Field css class" />
+                    <div class="b-btn-group">
+                        <button type="button" class="b-btn btn-action" ng-click="$.onResetCustomFieldLayoutClick()">
+                            <i class="codicon codicon-refresh"></i>
+                            Reset Default Layout Html
+                        </button>
+                        <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
+                            data-bs-toggle="dropdown" aria-expanded="false"></button>
+                        <div class="dropdown-menu b-dropdown-menu">
+                            <a class="dropdown-item" href="">
+                                <i class="codicon codicon-layout-sidebar-right me-2"></i> Show & Edit In Right Widget
+                            </a>
+                            <a class="dropdown-item" href="">
+                                <i class="codicon codicon-screen-full me-2"></i> Show & Edit In FullScreen
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="b-field">
-                    <label class="form-label">Validation Pattern</label>
-                    <textarea ng-model="$.currentField.Settings.ValidationPattern" class="b-input form-control" placeholder="Validation pattern"></textarea>
+                    <label class="form-label">Field Css Class</label>
+                    <input type="text" ng-model="$.currentField.Settings.CssClass" class="b-input form-control"
+                        placeholder="Field css class" />
                 </div>
-                <div class="b-field" ng-if="$.currentField.Settings.ValidationPattern">
-                    <label class="form-label">Validation Message</label>
-                    <input type="text" ng-model="$.currentField.Settings.ValidationMessage" class="b-input form-control" placeholder="Validation message" />
+                <div class="b-field" ng-class="{'opacity-50':$.currentField.Settings.IsHideFieldText}">
+                    <label class="form-label">Field Text Css Class</label>
+                    <input type="text" ng-model="$.currentField.Settings.FieldTextCssClass" class="b-input form-control"
+                        placeholder="Field css class" ng-disabled="$.currentField.Settings.IsHideFieldText" />
                 </div>
-                <div class="b-field" ng-if="$.currentField.Settings.ValidationPattern && $.currentField.Settings.ValidationMessage">
+                <div class="b-field" ng-class="{'opacity-50':!$.currentField.Settings.Subtext}">
+                    <label class="form-label">Field Subtext Css Class</label>
+                    <input type="text" ng-model="$.currentField.Settings.SubtextCssClass" class="b-input form-control"
+                        placeholder="Field subtext css class" ng-disabled="!$.currentField.Settings.Subtext" />
+                </div>
+                <div class="b-field" ng-class="{'opacity-50':!$.currentField.IsRequired}">
                     <label class="form-label">Required Message Css Class</label>
-                    <input type="text" ng-model="$.currentField.Settings.ValidationMessageCssClass" class="b-input form-control" placeholder="Field css class" />
+                    <input type="text" ng-model="$.currentField.Settings.RequiredMessageCssClass"
+                        class="b-input form-control" placeholder="Field css class"
+                        ng-disabled="!$.currentField.IsRequired" />
+                </div>
+                <div class="b-field" ng-class="{'opacity-50':!$.currentField.Settings.EnableValidationPattern}">
+                    <label class="form-label">Validation Message Css Class</label>
+                    <input type="text" ng-model="$.currentField.Settings.ValidationMessageCssClass"
+                        ng-disabled="!$.currentField.Settings.EnableValidationPattern" class="b-input form-control"
+                        placeholder="Field css class" ng-disabled="!$.currentField.Settings.EnableValidationPattern" />
+                </div>
+                <div class="b-field">
+                    <label class="form-label">Pane Name</label>
+                    <input type="text" ng-model="$.currentField.PaneName" class="b-input form-control"
+                        placeholder="Field pane name" readonly />
+                </div>
+                <div class="b-field">
+                    <label class="form-label">View Order</label>
+                    <input type="number" ng-model="$.currentField.ViewOrder" class="b-input form-control"
+                        placeholder="View order in pane" />
                 </div>
             </div>
-            <div class="b-field" ng-if="$.currentField.ParentID">
-                <label class="form-label">Parent</label>
-                <select ng-model="$.currentField.ParentID" class="b-input form-select" ng-options="field.FieldID as field.FieldName for field in $.fields | filter: {IsGroup:true}" disabled chosen inherit-select-classes="true"></select>
-            </div>
-            <div class="b-field">
-                <label class="form-label">Pane Name</label>
-                <input type="text" ng-model="$.currentField.PaneName" class="b-input form-control" placeholder="Pane Name" ng-disabled="true" readonly />
-            </div>
-            <div class="b-field">
-                <label class="form-label">View Order</label>
-                <input type="number" ng-model="$.currentField.ViewOrder" class="b-input form-control" placeholder="View Order" />
-            </div>
         </div>
-    </div>
-    <!------------------------------------>
-    <!--Field Custom Settings-->
-    <!------------------------------------>
-    <div ng-if="$.currentField.CustomSettings" class="b-group group-sm">
-        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldCustomSettings">
-            <h3 class="group-label">
-                <span class="group-icon">
-                    <i class="codicon codicon-server-process"></i>
-                </span> Field Custom Settings
-            </h3>
-            <span class="group-collapse">
-                <i class="codicon codicon-chevron-up"></i>
-            </span>
-        </div>
-        <div id="grpFieldCustomSettings" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
-            <div ng-include="$.currentField.CustomSettings"></div>
+        <!------------------------------------>
+        <!--Field Custom Settings-->
+        <!------------------------------------>
+        <div ng-if="$.currentField.CustomSettings" class="b-group group-sm">
+            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldCustomSettings"
+                ng-class="{'collapsed':$.collapsedComponentGroups}">
+                <h3 class="group-label">
+                    <span class="group-icon">
+                        <i class="codicon codicon-server-process"></i>
+                    </span> Field Custom Settings
+                </h3>
+                <span class="group-collapse">
+                    <i class="codicon codicon-chevron-up"></i>
+                </span>
+            </div>
+            <div id="grpFieldCustomSettings" class="group-content collapse"
+                ng-class="{'show':!$.collapsedComponentGroups}">
+                <div ng-include="$.currentField.CustomSettings"></div>
+            </div>
         </div>
     </div>
     <hr>
@@ -308,7 +387,8 @@
     <!--Action Buttons-->
     <!------------------------------------>
     <div class="mb-5 d-flex justify-content-end mt-auto">
-        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveFieldClick($event)" ng-disabled="$.running">
+        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveFieldClick($event)"
+            ng-disabled="$.running">
             <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
             Save
         </button>

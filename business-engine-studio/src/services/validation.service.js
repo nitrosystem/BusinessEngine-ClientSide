@@ -1,7 +1,7 @@
 import $ from "jquery";
 
 export class ValidationService {
-    constructor($rootScope) {
+    constructor($rootScope, notificationService) {
         //Verification flag, when it is true, it means that the verification plan is passed, and when it is false, it means that the verification failed
         this.valid = false;
         //Verification prompt, if the verification fails, the default value is the prompt message of the first field, which is convenient for mobile terminal Toast to verify the interactive scheme
@@ -10,6 +10,8 @@ export class ValidationService {
         this.pristine = true;
         //Error prompt set, all the fields that failed validation and the corresponding prompt information will be added to this object
         this.error = {};
+        //notification service
+        this.notifyService = notificationService;
     }
 
     /**
@@ -48,7 +50,7 @@ export class ValidationService {
      * @param {Object} ruleObj - Customize extended validation rules
      */
     static addRule(ruleObj) {
-        ValidationService.ruleType = {...ruleObj, ...ValidationService.ruleType };
+        ValidationService.ruleType = { ...ruleObj, ...ValidationService.ruleType };
     }
 
     /**
@@ -60,25 +62,24 @@ export class ValidationService {
      * @param {Boolean} scheme[].required=true - Is it required, the default is true
      * @param {String} scheme[].nullTip=The data cannot be empty-an empty prompt when the verification is empty
      * @param {String} scheme[].errorTip=Please fill in the correct information-an error message when the verification fails
-     * @param {Boolean} watchModel - Verification plan
-     * @param {Object} $scope - Verification plan
-     * @param {String} modelName - Verification plan
+     * @param {Boolean} watchModel - if true set angular watch on model name
+     * @param {Object} $scope - $scope object
+     * @param {String} modelName - model name
+     * @param {String} enableNotification - if true disable disaplay invalid notification
      *
      */
-    init(scheme = {}, watchModel, $scope, modelName, focusOnElement = true) {
+    init(scheme = {}, watchModel, $scope, modelName, focusOnElement = true, enableNotification = false) {
         var form = new ValidationService();
         form.scheme = scheme;
         form.focusOnElement = focusOnElement;
         form.$scope = $scope;
+        form.enableNotification = enableNotification;
+        form.notifyService = this.notifyService;
 
         if (watchModel) {
-            $scope.$watch(
-                modelName,
-                function(newVal, oldVal) {
-                    if (form.validated && newVal !== oldVal) form.validator(newVal, true);
-                },
-                true
-            );
+            $scope.$watch(modelName, (newVal, oldVal) => {
+                if (form.validated && newVal !== oldVal) form.validator(newVal, true);
+            }, true);
         }
 
         return form;
@@ -107,10 +108,7 @@ export class ValidationService {
         if (typeof flag === "string") {
             _.set(this.error, key, flag);
         } else if (!flag) {
-            _.set(
-                this.error,
-                key,
-                this.scheme[key].errorTip || "Please fill in the correct information"
+            _.set(this.error, key, this.scheme[key].errorTip || "Please fill in the correct information"
             );
         }
         return flag === true;
@@ -158,6 +156,11 @@ export class ValidationService {
         }
 
         this.validated = true;
+
+        if (this.enableNotification && this.notifyService)
+            _.forOwn(this.error, (value, key) => {
+                this.notifyService.error(`Field "${key}" is not valid!`, 3000)
+            });
 
         return this.error;
     };

@@ -17,48 +17,81 @@
   max-height: 93vh;
 }
 
+textarea.progress-log {
+  width: 100%;
+  background: transparent;
+  color: #ddd;
+  padding: 1em;
+  line-height: 2em;
+  white-space: pre-line;
+}
+
 /* --------------------------------------------------------
         Width Styles
     -----------------------------------------------------------*/
 
+.b-w0 {
+  width: 0 !important;
+}
+
 .w1-rem {
-  width: 1rem;
+  width: 1rem !important;
 }
 
 .w2-rem {
-  width: 2rem;
+  width: 2rem !important;
 }
 
 .w3-rem {
-  width: 3rem;
+  width: 3rem !important;
 }
 
 .w4-rem {
-  width: 4rem;
+  width: 4rem !important;
 }
 
 .w5-rem {
-  width: 5rem;
+  width: 5rem !important;
 }
 
 .w6-rem {
-  width: 6rem;
+  width: 6rem !important;
 }
 
 .w7-rem {
-  width: 7rem;
+  width: 7rem !important;
 }
 
 .w8-rem {
-  width: 8rem;
+  width: 8rem !important;
 }
 
 .w9-rem {
-  width: 9rem;
+  width: 9rem !important;
 }
 
 .w10-rem {
-  width: 10rem;
+  width: 10rem !important;
+}
+
+.w15-rem {
+  width: 15rem !important;
+}
+
+.w20-rem {
+  width: 20rem !important;
+}
+
+.w30-rem {
+  width: 30rem !important;
+}
+
+.w40-rem {
+  width: 40rem !important;
+}
+
+.w50-rem {
+  width: 50rem !important;
 }
 
 .w-fit {
@@ -142,7 +175,7 @@
   font-size: 1.1rem;
 }
 
-.b-upload-box > input {
+.b-upload-box>input {
   opacity: 0;
   position: absolute;
   left: 0;
@@ -152,12 +185,12 @@
   cursor: pointer;
 }
 
-.b-upload-box > p {
+.b-upload-box>p {
   color: #c7ae55;
   text-shadow: 0 0 3px #ff0000, 0 0 5px #0000ff;
 }
 
-.b-upload-box > i {
+.b-upload-box>i {
   font-size: 3rem !important;
   color: #ffc700;
 }

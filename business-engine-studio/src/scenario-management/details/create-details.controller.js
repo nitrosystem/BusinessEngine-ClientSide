@@ -82,23 +82,23 @@ export class CreateDetailsController {
 
     setDetails() {
         this.form = this.validationService.init({
-                ScenarioID: {
-                    id: "drpScenarioID",
-                    required: true,
-                },
-                ModuleName: {
-                    id: "txtModuleName",
-                    required: true,
-                },
-                ModuleTitle: {
-                    id: "txtModuleTitle",
-                    required: true,
-                },
-                ModuleBuilderType: {
-                    id: "drpModuleBuilderType",
-                    required: true,
-                }
+            ScenarioID: {
+                id: "drpScenarioID",
+                required: true,
             },
+            ModuleName: {
+                id: "txtModuleName",
+                required: true,
+            },
+            ModuleTitle: {
+                id: "txtModuleTitle",
+                required: true,
+            },
+            ModuleBuilderType: {
+                id: "drpModuleBuilderType",
+                required: true,
+            }
+        },
             true,
             this.$scope,
             "$.detailsModule"
@@ -178,35 +178,34 @@ export class CreateDetailsController {
                 this.currentTabKey = this.$rootScope.currentTab.key;
 
                 this.apiService.post("Studio", "SaveDetailsModule", this.detailsModule).then((data) => {
-                        this.detailsModule.ModuleID = data;
+                    this.detailsModule.ModuleID = data;
 
-                        if (this.oldModuleName != this.detailsModule.ModuleName) this.importantNoteForChangeModuleName = true;
+                    if (this.oldModuleName != this.detailsModule.ModuleName) this.importantNoteForChangeModuleName = true;
 
-                        this.oldModuleName = this.detailsModule.ModuleName;
+                    this.oldModuleName = this.detailsModule.ModuleName;
 
-                        this.notifyService.success("Details updated has been successfully");
+                    this.notifyService.success("Details updated has been successfully");
 
-                        this.$scope.$emit("onUpdateCurrentTab", {
-                            id: this.detailsModule.ModuleID,
-                            title: this.detailsModule.ModuleName,
-                            key: this.currentTabKey,
-                        });
+                    this.$scope.$emit("onUpdateCurrentTab", {
+                        id: this.detailsModule.ModuleID,
+                        title: this.detailsModule.ModuleName,
+                        key: this.currentTabKey,
+                    });
 
-                        this.$rootScope.refreshSidebarExplorerItems();
+                    this.$rootScope.refreshSidebarExplorerItems();
 
-                        delete this.awaitAction;
-                        delete this.running;
-                    },
-                    (error) => {
-                        this.awaitAction.isError = true;
-                        this.awaitAction.subtitle = error.statusText;
-                        this.awaitAction.desc =
-                            this.globalService.getErrorHtmlDetailsat(error);
+                    delete this.awaitAction;
+                    delete this.running;
+                }, (error) => {
+                    this.awaitAction.isError = true;
+                    this.awaitAction.subtitle = error.statusText;
+                    this.awaitAction.desc =
+                        this.globalService.getErrorHtmlDetailsat(error);
 
-                        this.notifyService.error(error.data.Message);
+                    this.notifyService.error(error.data.Message);
 
-                        delete this.running;
-                    }
+                    delete this.running;
+                }
                 );
             }
         });

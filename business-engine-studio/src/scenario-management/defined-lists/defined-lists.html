@@ -1,0 +1,172 @@
+<div ng-controller="definedListsController as $" class="defined-lists overflow-hidden">
+    <b-content-widget data-module-type="defined-lists" data-title="Defined Lists" data-icon="list-ordered"
+        data-subtitle="Scenario defined lists and public or field options" data-await-action="$.awaitAction"
+        data-module="$" extra-icon1="codicon codicon-table" extra-icon1-title="Table Mode"
+        extra-icon1-method="onTableModeClick" extra-icon2="codicon codicon-chrome-restore" extra-icon2-title="Box Mode"
+        extra-icon2-method="onBoxModeClick">
+        <!------------------------------------>
+        <!--Advanced Search Panel-->
+        <!------------------------------------>
+        <div class="advanced-search-box">
+            <div class="content-pane">
+                <div class="row">
+                    <div class="col-3 me-3">
+                        <div class="b-input-group">
+                            <input type="text" ng-model="$.filter.EntityName" class="b-input form-control"
+                                placeholder="Search by defined list name" />
+                            <span><i class="codicon codicon-table"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-3 me-3">
+                        <div class="b-input-group">
+                            <select ng-model="$.filter.EntityType" class="b-input form-select" ng-disabled="$.running"
+                                chosen inherit-select-classes="true"
+                                placeholder-text-single="'Select defined list type'" required>
+                                <option ng-value="">All</option>
+                                <option ng-value="'table'">Table</option>
+                                <option ng-value="'view'">View</option>
+                            </select>
+                            <span><i class="codicon codicon-circuit-board"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="b-field b-switch-inline mt-2 mb-2">
+                            <label class="form-label d-block mb-0">Is Readonly</label>
+                            <label class="b-switch">
+                                <input type="checkbox" ng-model="$.filter.IsReadonly">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col text-end">
+                        <div class="b-btn-group">
+                            <button type="button" class="b-btn btn-submit" ng-click="$.onAddEntityClick()"
+                                ng-disabled="$.item">
+                                <i class="codicon codicon-plus" ng-disabled="$.running"></i>
+                                Add New List
+                            </button>
+                            <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split"
+                                ng-disabled="$.item" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                            <div class="dropdown-menu b-dropdown-menu"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Show Defined Lists Box Mode-->
+        <!------------------------------------>
+        <div class="defined-lists-box" ng-if="!$.displayMode || $.displayMode=='box'">
+            <div class="defined-list-item" ng-repeat="list in $.definedLists">
+                <div class="defined-list-title-wrapper">
+                    <i class="codicon codicon-checklist"></i>
+                    <h5 class="defined-list-title" title="{{list.ListName}}">
+                        {{list.ListName}}
+                        <small class="small" title="{{list.ListType}}">({{list.ListType}})</small>
+                    </h5>
+                    <div class="action-tools">
+                        <button type="button"><i class="codicon codicon-edit"></i></button>
+                        <button type="button"><i class="codicon codicon-trash"></i></button>
+                    </div>
+                </div>
+                <h6 class="defined-list-subtitle" title="{{list.Field.FieldText}}">
+                    {{list.Field.FieldName}}
+                    <small class="small" title="{{list.Field.FieldType}}">({{list.Field.FieldType}})</small>
+                </h6>
+                <ul class="defined-list-items">
+                    <li class="list-item" ng-repeat="item in list.Items">
+                        <div class="item-title-wrapper">
+                            <h6 class="item-title">
+                                {{item.Text}}
+                                <span class="sub-title">&nbsp-&nbsp{{item.Value}}</span>
+                            </h6>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!------------------------------------>
+        <!--Show Defined Lists Table Mode-->
+        <!------------------------------------>
+        <div class="b-table" ng-if="$.displayMode=='table'">
+            <div class="table-body">
+                <div class="grid items-name">
+                    <div class="g-col-1">
+                        <label class="b-checkbox">
+                            <input type="checkbox" ng-model="$.filter.IsSelectedAll">
+                            <i class="checkbox-icon"></i>
+                        </label>
+                    </div>
+                    <div class="g-col-2">Entity Type</div>
+                    <div class="g-col-3">List Name</div>
+                    <div class="g-col-2">Is Readonly</div>
+                    <div class="g-col-2">
+                        <i class="codicon codicon-arrow-up d-inline-block"></i>
+                        <i class="codicon codicon-arrow-down d-inline-block"></i>
+                    </div>
+                    <div class="g-col-2">
+                        <i class="codicon codicon-ellipsis"></i>
+                    </div>
+                </div>
+                <div class="grid table-row" ng-repeat="list in $.definedLists | orderBy: 'ViewOrder'">
+                    <div class="g-col-1">
+                        <label class="b-checkbox">
+                            <input type="checkbox" ng-model="$.list.IsSelected">
+                            <i class="checkbox-icon"></i>
+                        </label>
+                    </div>
+                    <div class="g-col-2">
+                        {{list.EntityType}}
+                    </div>
+                    <div class="g-col-3">
+                        <span class="text"> {{list.EntityName}} </span>
+                        <span class="subtext"> {{list.TableName}} </span>
+                    </div>
+                    <div class="g-col-2">
+                        <i ng-if="!list.IsReadOnly" class="codicon codicon-chrome-maximize fs-4 text-start"></i>
+                        <i ng-if="list.IsReadOnly" class="codicon codicon-check fs-4 text-start"></i>
+                    </div>
+                    <div class="g-col-2">
+                        <button type="button" class="b-clean text-light p-0" ng-disabled="$.running || $index==0">
+                            <i class="codicon codicon-arrow-up d-inline-block me-1"
+                                ng-click="$.onEntitySwapClick($index,$index-1)"></i>
+                        </button>
+                        <button type="button" class="b-clean text-light p-0"
+                            ng-disabled="$.running || $index==$.definedLists.length-1">
+                            <i class="codicon codicon-arrow-down d-inline-block"
+                                ng-click="$.onEntitySwapClick($index,$index+1)"></i>
+                        </button>
+                    </div>
+                    <div class="g-col-2">
+                        <div class="b-multi-btns">
+                            <button type="button" ng-click="$.onEditEntityClick(list.EntityID,list.EntityName)">
+                                <i class="codicon codicon-edit"></i>
+                            </button>
+                            <button type="button" ng-click="$.onDeleteEntityClick(list.EntityID,$index)">
+                                <i class="codicon codicon-trash"></i>
+                            </button>
+                            <button type="button">
+                                <i class="codicon codicon-ellipsis"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-footer">
+                <div ng-if="!$.definedLists.length" class="b-notify notify-info mb-4">
+                    <i class="codicon codicon-info b-icon-2"></i>
+                    <div class="text">
+                        <h4 class="label">No defined list.</h4>
+                        <span class="subtext">
+                            Click
+                            <button type="button" class="b-btn btn-sm ms-2 me-2" ng-click="$.onAddEntityClick()">
+                                Add New List
+                            </button>
+                            for creating a new defined list.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-content-widget>
+</div>

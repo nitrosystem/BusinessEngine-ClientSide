@@ -134,3 +134,26 @@ export function EsckeyDirective() {
         },
     };
 }
+
+export function NotFieldTypeDirective () {
+    return {
+        template:
+            `
+            <div class="b-notify notify-warning mb-2">
+                <i class="codicon codicon-search-stop b-icon-2"></i>
+                <p class="text mb-0"> 
+                    Field type 
+                    <b>"{{field.FieldType}}"</b>
+                    not found in installed extensions and components!.
+                </p>
+            </div>
+            `,
+        restrict: 'E',
+        replace: true,
+        scope: {
+            field: "="
+        },
+        link: function(scope, element, attrs) {
+        }
+    };
+}

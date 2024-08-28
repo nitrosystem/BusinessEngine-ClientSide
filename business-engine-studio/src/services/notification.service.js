@@ -8,12 +8,12 @@ export class NotificationService {
     this.$timeout = $timeout;
 
     this.options = {
-      delay: 5000,
+      delay: 10000,
     };
 
     this.template = `
-    <div class="notification-item">
-        <div class="b-notification-toast">
+    <div class="notification-item notify-type-{{type}}">
+        <div class="b-notification-toast notify-{{icon}}">
             <div class="notify-container">
                 <div class="notify-icon">
                     <i class="codicon codicon-{{icon}}"></i>
@@ -23,7 +23,7 @@ export class NotificationService {
                     <p class="notify-text" ng-bind-html="text"></p>
                     <span ng-if="notify.subtext" class="notify-subtext" ng-bind-html="notify.subtext"></p>
                 </div>
-                <span class="notify-close" ng-click="notify.isActive=false">
+                <span class="notify-close" ng-click="onCloseNotifyClick()">
                     <i class="codicon codicon-close"></i>
                 </span>
                 <div class="notify-actions"></div>
@@ -45,12 +45,12 @@ export class NotificationService {
     }
   }
 
-  notify(message, icon, code) {
+  notify(message, type, icon, callback) {
     this.message = message;
     this.icon = icon;
-    this.code = code;
+    this.callback = callback;
 
-    if (code) this.$rootScope.$emit("notifying-service-event", this);
+    if (callback) this.$rootScope.$emit("notifying-service-event", this);
 
     const notify = {
       icon: this.icon,
@@ -58,29 +58,39 @@ export class NotificationService {
     };
 
     var scope = this.$rootScope.$new();
+    scope.type = type;
     scope.text = this.$sce.trustAsHtml(this.message);
     scope.icon = this.icon;
     var $notificationElement = this.$compile(this.template)(scope);
     $("#bNotifications").append($notificationElement);
 
+    scope.onCloseNotifyClick = function () {
+      $notificationElement.remove();
+    }
+
     this.$timeout(() => {
       $notificationElement.addClass("is-visible");
-    }, 500);
+      $notificationElement.find('.notify-progress-bar').addClass("b-w0");
+    }, 100);
 
     this.$timeout(() => {
-      $notificationElement.removeClass("is-visible");
-
-      this.$timeout(() => {
-        $notificationElement.remove();
-      }, 1000);
+      $notificationElement.remove();
     }, this.options.delay);
   }
 
   success(message) {
-    this.notify(message, "check-all");
+    this.notify(message, 'success', "check-all");
+  }
+
+  info(message) {
+    this.notify(message, 'info', "check-all");
+  }
+
+  warning(message) {
+    this.notify(message, 'warning', "warning");
   }
 
   error(message) {
-    this.notify(message, "warning");
+    this.notify(message, 'error', "warning");
   }
 }

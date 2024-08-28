@@ -43,29 +43,26 @@ export class EntitiesController {
             subtitle: "Just a moment for loading entities...",
         };
 
-        this.apiService.get("Studio", "GetEntities").then(
-            (data) => {
-                this.entities = data.Entities;
+        this.apiService.get("Studio", "GetEntities").then((data) => {
+            this.entities = data.Entities;
 
-                var columns = 0;
-                _.forEach((this.entities), (e) => { columns += (e.Columns || []).length; });
-                this.entitiesColumnsCount = columns;
+            var columns = 0;
+            _.forEach((this.entities), (e) => { columns += (e.Columns || []).length; });
+            this.entitiesColumnsCount = columns;
 
-                this.onFocusModule();
+            this.onFocusModule();
 
-                delete this.running;
-                delete this.awaitAction;
-            },
-            (error) => {
-                this.awaitAction.isError = true;
-                this.awaitAction.subtitle = error.statusText;
-                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+            delete this.running;
+            delete this.awaitAction;
+        }, (error) => {
+            this.awaitAction.isError = true;
+            this.awaitAction.subtitle = error.statusText;
+            this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                this.notifyService.error(error.data.Message);
+            this.notifyService.error(error.data.Message);
 
-                delete this.running;
-            }
-        );
+            delete this.running;
+        });
     }
 
     onFocusModule() {

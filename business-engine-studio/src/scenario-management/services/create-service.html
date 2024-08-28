@@ -40,8 +40,7 @@
                                     <div class="col" ng-repeat="serviceType in value | toArray:false | orderBy:'ViewOrder'">
                                         <div class="card service-type" ng-click="$.onSelectServiceSubtypeClick(serviceType)" ng-class="{'active':$.service.ServiceSubtype==serviceType.ServiceSubtype}">
                                             <div class="card-body text-center">
-                                                <i ng-if="!serviceType.IconType" class="fs-1 {{serviceType.Icon}} text-muted mb-4 d-block"></i>
-                                                <img ng-if="serviceType.IconType" class="service-image" ng-src="{{serviceType.Icon}}" />
+                                                <img class="service-image" ng-src="{{serviceType.Icon}}" />
                                                 <h5 class="service-title">{{serviceType.Title}}</h5>
                                                 <p class="service-summary">{{serviceType.Description}}</p>
                                             </div>
@@ -100,8 +99,7 @@
                     <div class="col ps-5">
                         <div class="b-field service-type-selected" ng-click="$.step=1">
                             <label>{{$.service.ServiceSubtype}}</label>
-                            <i ng-if="!$.serviceType.IconType" class="{{$.serviceType.Icon}}"></i>
-                            <img ng-if="$.serviceType.IconType" class="service-image" ng-src="{{$.serviceType.Icon}}" />
+                            <img class="service-image" ng-src="{{$.serviceType.Icon}}" />
                         </div>
                         <div class="b-field">
                             <label class="form-label">Description</label>

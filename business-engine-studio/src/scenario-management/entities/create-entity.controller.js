@@ -26,7 +26,7 @@ export class CreateEntityController {
         this.$scope.$watch("$.entity.EntityName", (newVal, oldVal) => {
             if (newVal != oldVal && !this.entity.Settings.DatabaseObjectNameModified)
                 this.entity.Settings.DatabaseObjectPostfixName =
-                this.getWordPluralize(newVal);
+                    this.getWordPluralize(newVal);
         });
 
         studioService.setFocusModuleDelegate(this, this.onFocusModule);
@@ -58,6 +58,7 @@ export class CreateEntityController {
                         var relationship = groups[key][0];
                         var item = {
                             RelationshipName: relationship.RelationshipName,
+                            OldRelationshipName: relationship.RelationshipName,
                             ParentEntityTableName: relationship.ParentEntityTableName,
                             ChildEntityTableName: relationship.ChildEntityTableName,
                             EnforceForReplication: relationship.EnforceForReplication,
@@ -66,6 +67,7 @@ export class CreateEntityController {
                             UPDATESpecification: relationship.UPDATESpecification,
                             Columns: _.filter(data.Relationships, (r) => { return r.RelationshipName == relationship.RelationshipName })
                         };
+
                         _.filter(this.entities, (e) => { return e.TableName == relationship.ParentEntityTableName }).map((entity) => {
                             item.ParentEntityColumns = entity.Columns;
                         });
@@ -85,7 +87,7 @@ export class CreateEntityController {
                             IsPrimary: true,
                             IsIdentity: true,
                             ViewOrder: 0,
-                        }, ],
+                        },],
                         Relationships: []
                     };
 
@@ -129,42 +131,42 @@ export class CreateEntityController {
 
     setForm() {
         this.form = this.validationService.init({
-                ScenarioID: {
-                    rule: "guid",
-                    id: "drpScenarioID",
-                    required: true,
-                },
-                EntityName: {
-                    id: "txtEntityName",
-                    required: true,
-                },
-                EntityType: {
-                    id: "rdEntityType",
-                    required: true,
-                },
-                "Settings.DatabaseObjectPrefixName": {
-                    rule: ({ length }) => {
-                        if (length >= 2 && length <= 20) {
-                            return true;
-                        }
-                        return "Table prefix length must be beetwen 2 and 20 character";
-                    },
-                    id: "txtTablePrefix",
-                    required: true,
-                },
-                "Settings.DatabaseObjectPostfixName": {
-                    id: "txtTablePostfix",
-                    required: true,
-                },
-                Columns: {
-                    rule: ({ length }) => {
-                        if (length >= 1) return true;
-
-                        return "Entity must have column(s)";
-                    },
-                    required: true,
-                },
+            ScenarioID: {
+                rule: "guid",
+                id: "drpScenarioID",
+                required: true,
             },
+            EntityName: {
+                id: "txtEntityName",
+                required: true,
+            },
+            EntityType: {
+                id: "rdEntityType",
+                required: true,
+            },
+            "Settings.DatabaseObjectPrefixName": {
+                rule: ({ length }) => {
+                    if (length >= 2 && length <= 20) {
+                        return true;
+                    }
+                    return "Table prefix length must be beetwen 2 and 20 character";
+                },
+                id: "txtTablePrefix",
+                required: true,
+            },
+            "Settings.DatabaseObjectPostfixName": {
+                id: "txtTablePostfix",
+                required: true,
+            },
+            Columns: {
+                rule: ({ length }) => {
+                    if (length >= 1) return true;
+
+                    return "Entity must have column(s)";
+                },
+                required: true,
+            },
+        },
             true,
             this.$scope,
             "$.entity"
@@ -311,7 +313,7 @@ export class CreateEntityController {
                 TableName: this.entity.TableName,
             };
 
-            relationship.RelationshipName = 'FK_' + entity.TableName + '_' + this.entity.TableName;
+            relationship.RelationshipName = 'FK_' + entity.TableName + '_' + (this.entity.TableName || '');
         });
     }
 
@@ -537,42 +539,43 @@ export class CreateEntityController {
             this.currentTabKey = this.$rootScope.currentTab.key;
 
             this.apiService.post("Studio", "SaveEntity", this.entity).then((data) => {
-                    this.isNewEntity = !!!this.entity.EntityID;
+                this.isNewEntity = !!!this.entity.EntityID;
 
-                    this.entity = data;
-                    this.entity.Relationships = relationships;
+                this.entity = data;
+                this.entity.Relationships = relationships;
 
-                    this.notifyService.success("Entity updated has been successfully");
+                this.notifyService.success("Entity updated has been successfully");
 
-                    this.$scope.$emit("onUpdateCurrentTab", {
-                        id: this.entity.EntityID,
-                        title: this.entity.EntityName,
-                        key: this.currentTabKey,
-                    });
+                this.$scope.$emit("onUpdateCurrentTab", {
+                    id: this.entity.EntityID,
+                    title: this.entity.EntityName,
+                    key: this.currentTabKey,
+                });
 
-                    this.$rootScope.refreshSidebarExplorerItems();
+                this.$rootScope.refreshSidebarExplorerItems();
 
-                    delete this.awaitAction;
-                    delete this.running;
-                },
-                (error) => {
-                    this.awaitAction.isError = true;
-                    this.awaitAction.subtitle = error.statusText;
-                    this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
+                var groups = _.groupBy(this.entity.Relationships || [], 'RelationshipName');
+                for (var key in groups) groups[key][0].OldRelationshipName = groups[key][0].RelationshipName;
 
-                    if (error.data.HResult == "-2146232060")
-                        this.notifyService.error(
-                            `Entity name must be unique.${this.entity.EntityName} is already in the scenario entities`
-                        );
-                    else if (error.data.HResult == "-2146233088")
-                        this.notifyService.error(
-                            `Table name must be unique.${this.entity.TableName} is already in the database`
-                        );
-                    else this.notifyService.error(error.data.Message);
+                delete this.awaitAction;
+                delete this.running;
+            }, (error) => {
+                this.awaitAction.isError = true;
+                this.awaitAction.subtitle = error.statusText;
+                this.awaitAction.desc = this.globalService.getErrorHtmlFormat(error);
 
-                    delete this.running;
-                }
-            );
+                if (error.data.HResult == "-2146232060")
+                    this.notifyService.error(
+                        `Entity name must be unique.${this.entity.EntityName} is already in the scenario entities`
+                    );
+                else if (error.data.HResult == "-2146233088")
+                    this.notifyService.error(
+                        `Table name must be unique.${this.entity.TableName} is already in the database`
+                    );
+                else this.notifyService.error(error.data.Message);
+
+                delete this.running;
+            });
         }
     }
 

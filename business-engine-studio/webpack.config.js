@@ -63,7 +63,7 @@ module.exports = (env) => {
             ],
         },
         devServer: {
-            allowedHosts: ["dnndev.me"],
+            allowedHosts: ["dnndev.me","dnntest1"],
             headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",

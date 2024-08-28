@@ -15,19 +15,22 @@
                     <label class="label">Extension Marketplace</label>
                     <div class="tools-items">
                         <div class="tools-item">
-                            <button type="button" ng-click="$.onFilterItemsClick()" b-custom-tooltip title="Filter & Find Extensions">
+                            <button type="button" ng-click="$.onFilterItemsClick()" b-custom-tooltip
+                                title="Filter & Find Extensions">
                                 <i class="codicon codicon-filter"></i>
                             </button>
                         </div>
                         <div class="tools-item">
-                            <button type="button" ng-click="$.onRefreshItemsClick()" b-custom-tooltip title="Refresh & Reload Extensions">
+                            <button type="button" ng-click="$.onRefreshItemsClick()" b-custom-tooltip
+                                title="Refresh & Reload Extensions">
                                 <i class="codicon codicon-refresh"></i>
-                             </button>
+                            </button>
                         </div>
                         <div class="tools-item">
-                            <button type="button" ng-click="$.onFilterItemsClick()" b-custom-tooltip title="More Actions">
+                            <button type="button" ng-click="$.onFilterItemsClick()" b-custom-tooltip
+                                title="More Actions">
                                 <i class="codicon codicon-ellipsis"></i>
-                             </button>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -36,7 +39,8 @@
                 <!------------------------------------>
                 <div class="search-wrapper">
                     <div class="b-input-group">
-                        <input type="text" ng-model="filter.SearchText" class="b-input" placeholder="Search Installed & Marketplace Extensions" />
+                        <input type="text" ng-model="filter.SearchText" class="b-input"
+                            placeholder="Search Installed & Marketplace Extensions" />
                         <span><i class="codicon codicon-search"></i></span>
                     </div>
                 </div>
@@ -140,17 +144,21 @@
     <!------------------------------------>
     <!--Content Panel Installed Extensions group by type-->
     <!------------------------------------>
-    <b-content-widget data-title="Extensions" data-icon="extensions" data-module-type="extensions" data-subtitle="components, skins, services, actions, packages, ..." data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+    <b-content-widget data-title="Extensions" data-icon="extensions" data-module-type="extensions"
+        data-subtitle="components, skins, services, actions, packages, ..." data-await-action="$.awaitAction"
+        data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
         <div class="d-flex mb-4">
             <div class="col-3 me-3">
                 <div class="b-input-group">
-                    <input type="text" ng-model="$.filter.Extension" class="b-input form-control" placeholder="Search by action name" />
+                    <input type="text" ng-model="$.filter.Extension" class="b-input form-control"
+                        placeholder="Search by action name" />
                     <span><i class="codicon codicon-bell"></i></span>
                 </div>
             </div>
             <div class="col-1">
                 <div class="b-input-group">
-                    <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()" ng-disabled="$.running">
+                    <button type="button" class="b-btn btn-submit ps-3 pe-3" ng-click="$.onSearchClick()"
+                        ng-disabled="$.running">
                         <i class="codicon codicon-search m-0" ng-disabled="$.running"></i>
                     </button>
                 </div>
@@ -160,11 +168,13 @@
                     <!------------------------------------>
                     <!--Install New Extenions-->
                     <!------------------------------------>
-                    <button type="button" class="b-btn btn-action" ng-click="$.onInstallExtensionClick()" ng-disabled="$.running">
+                    <button type="button" class="b-btn btn-action" ng-click="$.onInstallExtensionClick()"
+                        ng-disabled="$.running">
                         <i class="codicon codicon-plus" ng-disabled="$.running"></i>
                         Install New Extension
                     </button>
-                    <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.running" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
+                        ng-disabled="$.running" data-bs-toggle="dropdown" aria-expanded="false">
                     </button>
                     <div class="dropdown-menu b-dropdown-menu">
                         <a class="dropdown-item" href="" ng-click="$.param.ExpressionParsingType=''">
@@ -203,7 +213,9 @@
                             <div class="col-1 my-auto text-center">Price</div>
                             <div class="col-2 my-auto">...</div>
                         </div>
-                        <div class="d-flex table-row" ng-repeat="item in $.availableExtensions | fuzzyBy: 'extensionName' : $.filter.Extension" role="button">
+                        <div class="d-flex table-row"
+                            ng-repeat="item in $.availableExtensions | fuzzyBy: 'extensionName' : $.filter.Extension"
+                            role="button">
                             <div class="col-1 my-auto">
                                 <i class="codicon codicon-extensions fs2-rem b-color-{{$index+1}}"></i>
                             </div>
@@ -218,20 +230,22 @@
                             </div>
                             <div class="col-1 my-auto">
                                 <label class="b-switch switch-sm">
-                                    <input type="checkbox" ng-model="item.isFree" ng-disabled="true"/>
+                                    <input type="checkbox" ng-model="item.isFree" ng-disabled="true" />
                                     <span class="slider"></span>
                                 </label>
                             </div>
                             <div class="col-1 my-auto">
                                 <label class="b-switch switch-sm mb-1">
-                                    <input type="checkbox" ng-model="item.isTrial" ng-disabled="true"/>
+                                    <input type="checkbox" ng-model="item.isTrial" ng-disabled="true" />
                                     <span class="slider"></span>
                                 </label>
                                 <span ng-if="item.isTrial" class="fs08-rem"> {{item.trialDays}} days</span>
                             </div>
                             <div class="col-1 my-auto">
-                                <a ng-href="item.demo" target="_blank" class="b-btn btn-action btn-sm btn-full text-decoration-none mb-2">Demo</a>
-                                <a ng-if="!item.isFree" ng-href="item.demo" target="_blank" class="b-btn btn-primary btn-sm btn-full text-decoration-none">Buy</a>
+                                <a ng-href="item.demo" target="_blank"
+                                    class="b-btn btn-action btn-sm btn-full text-decoration-none mb-2">Demo</a>
+                                <a ng-if="!item.isFree" ng-href="item.demo" target="_blank"
+                                    class="b-btn btn-primary btn-sm btn-full text-decoration-none">Buy</a>
                             </div>
                             <div class="col-1 my-auto text-center">
                                 {{item.price}}
@@ -241,13 +255,18 @@
                                     <!------------------------------------>
                                     <!--Install New Extenions-->
                                     <!------------------------------------>
-                                    <button type="button" class="b-btn btn-submit btn-full" ng-click="$.onInstallAvailableExtension(item,$index)" ng-disabled="$.running">
+                                    <button type="button" class="b-btn btn-submit btn-full"
+                                        ng-click="$.onInstallAvailableExtension(item,$index)" ng-disabled="$.running">
                                         <span ng-if="!$.running || $.awaitAction.extIndex!=$index">INSTALL</span>
                                         <span ng-if="$.running && $.awaitAction.extIndex==$index">...</span>
                                     </button>
-                                    <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" ng-disabled="$.running" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                    <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split"
+                                        ng-disabled="$.running" data-bs-toggle="dropdown"
+                                        aria-expanded="false"></button>
                                     <div class="dropdown-menu b-dropdown-menu">
-                                        <a class="dropdown-item" ng-href="/DesktopModules/BusinessEngine/install/{{item.extensionFile}}" target="_blank">
+                                        <a class="dropdown-item"
+                                            ng-href="/DesktopModules/BusinessEngine/install/{{item.extensionFile}}"
+                                            target="_blank">
                                             <i class="codicon codicon-cloud-download me-2"></i> Download Extension
                                         </a>
                                     </div>
@@ -288,7 +307,8 @@
                         </div>
                         <div class="d-flex table-row" ng-repeat="item in $.extensions" role="button">
                             <div class="col-1 my-auto">
-                                <img ng-if="item.ExtensionImage" class="extension-image" ng-src="{{item.ExtensionImage}}" />
+                                <img ng-if="item.ExtensionImage" class="extension-image"
+                                    ng-src="{{item.ExtensionImage}}" />
                                 <i ng-if="!item.ExtensionImage" class="codicon codicon-extensions fs2-rem"></i>
                             </div>
                             <div class="col-3 my-auto text-light">
@@ -304,10 +324,14 @@
                             </div>
                             <div class=" col-1">
                                 <div class="b-multi-btns">
-                                    <button type="button" ng-click="$.onViewExtensionClick(item)" ng-disabled="$.running" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                    <button type="button" ng-click="$.onViewExtensionClick(item)"
+                                        ng-disabled="$.running" b-custom-tooltip data-bs-placement="bottom"
+                                        title="Column Properties">
                                         <i class="codicon codicon-output"></i>
                                     </button>
-                                    <button type="button" ng-click="$.onDeleteExtensionClick(item.ExtensionID,$index)" ng-disabled="$.running" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                    <button type="button" ng-click="$.onDeleteExtensionClick(item.ExtensionID,$index)"
+                                        ng-disabled="$.running" b-custom-tooltip data-bs-placement="bottom"
+                                        title="Cancel Column">
                                         <i class="codicon codicon-trash"></i>
                                     </button>
                                 </div>
@@ -322,17 +346,23 @@
     <!------------------------------------>
     <!--Install New Extension Panel->
     <!------------------------------------>
-    <b-right-widget ng-if="$.workingMode=='install-extension'" data-title="Install New Extension Wizard" data-icon="extensions" data-subtitle="select and upload extension package" data-await-action="$.awaitAction" class="b-install-extensions-wizard" data-module="$"
-        data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+    <b-right-widget ng-if="$.workingMode=='install-extension'" data-title="Install New Extension Wizard"
+        data-icon="extensions" data-subtitle="select and upload extension package" data-await-action="$.awaitAction"
+        class="b-install-extensions-wizard" data-module="$" data-reload-method="onPageLoad"
+        data-close-method="onCloseWindow">
         <!------------------------------------>
         <!--Install Wizard->
         <!------------------------------------>
         <div class="wizard-steps artin">
             <div class="wz-steps">
-                <div class="wz-step"><span></span>Upload Extension </div>
-                <div class="wz-step"><span></span>Extension Info </div>
-                <div class="wz-step"><span></span>Install Extension </div>
-                <div class="wz-step"><span></span>Finish & Use! </div>
+                <div class="wz-step" ng-class="{'disabled':$.running,'active':$.extInstalingStep==1}"><span></span>Upload
+                    Extension </div>
+                <div class="wz-step" ng-class="{'disabled':$.running,'active':$.extInstalingStep==2}"><span></span>Extension
+                    Info </div>
+                <div class="wz-step" ng-class="{'disabled':$.running,'active':$.extInstalingStep==3}"><span></span>Install
+                    Extension </div>
+                <div class="wz-step" ng-class="{'disabled':$.running,'active':$.extInstalingStep==4}"><span></span>Finish &
+                    Use! </div>
             </div>
             <div class="step-content">
                 <!--Wizard Loading-->
@@ -340,11 +370,22 @@
                     <div class="lines"></div>
                 </div>
                 <!------------------------------------>
+                <!--Install Progress-->
+                <!------------------------------------>
+                <div ng-if="$.awaitAction.showProgress" data-bs-theme="dark">
+                    <div class="progress mt-2 mb-1" role="progressbar" aria-label="{{$.awaitAction.subtitle}}"
+                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                    </div>
+                </div>
+                <!------------------------------------>
                 <!--Wizard Step 1 (Select & Upload Extension File)-->
                 <!------------------------------------>
-                <div ng-if="$.step==1">
+                <div ng-if="$.extInstalingStep==1">
                     <div class="b-upload-box">
-                        <input type="file" class="form-control" accept=".zip" ngf-select="$.onUploadExtensionPackage($files,$file, $newFiles, $duplicateFiles, $invalidFiles, $event)" ngf-max-size="103809024" ngf-fix-orientation="true" />
+                        <input type="file" class="form-control" accept=".zip"
+                            ngf-select="$.onUploadExtensionPackage($files,$file, $newFiles, $duplicateFiles, $invalidFiles, $event)"
+                            ngf-max-size="103809024" ngf-fix-orientation="true" />
                         <p>Click to open browse files and select one zip file for install extension.</p>
                         <i class="codicon codicon-extensions"></i>
                     </div>
@@ -352,7 +393,8 @@
                         <i class="codicon codicon-shield b-icon-2"></i>
                         <div class="text">
                             <h4 class="label">Important.</h4>
-                            <p class="subtext">the extension file size must be standard size that define in web.config. </p>
+                            <p class="subtext">the extension file size must be standard size that define in web.config.
+                            </p>
                             <a href="#" class="card-link">More info</a>
                         </div>
                     </div>
@@ -360,7 +402,7 @@
                 <!------------------------------------>
                 <!--Wizard Step 2 (Show Extension Info)-->
                 <!------------------------------------>
-                <div ng-if="$.step==2">
+                <div ng-if="$.extInstalingStep==2">
                     <div class="extension-details">
                         <div class="ext-row ext-splitter">
                             <div class="image-wrapper">
@@ -370,30 +412,30 @@
                                 <h1 class="ext-name">{{$.extension.ExtensionName}}</h1>
                                 <h4 class="ext-title">{{$.extension.Title}}</h4>
                                 <span class="ext-type">{{$.extension.ExtensionType}}</span>
+                                <p class="ext-summary">
+                                    {{$.extension.Summary}}
+                                </p>
                             </div>
                             <div class="ext-is-commercial">
-                                <div class="form-label">Is Commercial</div>
-                                <label class="b-switch">
-                                    <input type="checkbox" ng-model="$.extension.IsCommercial" ng-disabled="true">
-                                    <span class="slider"></span>
-                                </label>
+                                <p><b>Version</b> {{$.extension.Version}}</p>
+                                <p><b>Folder </b> {{$.extension.FolderName}}</p>
                             </div>
                         </div>
-                        <div class="ext-row ext-splitter">
-                        </div>
+                        <div class="ext-row ext-splitter"></div>
                     </div>
                 </div>
                 <!------------------------------------>
                 <!--Wizard Step 3 (Install Extension)-->
                 <!------------------------------------>
-                <div ng-if="$.step==3">
-                    <div class="monitor-install-extension"></div>
+                <div ng-if="$.extInstalingStep==3">
+                    <textarea class="progress-log" rows="10" readonly></textarea>
                 </div>
                 <!------------------------------------>
                 <!--Wizard Step 4 (Action Builder)-->
                 <!------------------------------------>
-                <div ng-show="$.step==4">
-                    <h3 class="text-center text-success text-uppercase">Congratulations! THE EXTENSION HAS BEEN INSTALLED SUCCESSFULLY.</h3>
+                <div ng-show="$.extInstalingStep==4">
+                    <h3 class="text-center text-success text-uppercase">Congratulations! THE EXTENSION HAS BEEN
+                        INSTALLED SUCCESSFULLY.</h3>
                 </div>
                 <!------------------------------------>
                 <!--Wizard Actoions(Buttons)-->
@@ -401,17 +443,21 @@
                 <hr class="mb-4" />
                 <div class="mb-1 d-flex">
                     <div class="ms-auto">
-                        <button type="button" class="b-btn me-2" ng-if="$.step>1 && $.step<4" ng-click="$.onInstallExtensionStepClick()" ng-disabled="$.running">
+                        <button type="button" class="b-btn me-2" ng-if="$.extInstalingStep>1 && $.extInstalingStep<4 && !$.awaitAction.isError"
+                            ng-click="$.onInstallExtensionStepClick()" ng-disabled="$.running">
                             Next
                             <i class="codicon codicon-arrow-right ms-2 me-0"></i>
                         </button>
-                        <button type="button" class="b-btn btn-submit me-2" ng-if="$.step>=4" ng-click="$.onDoneInstallExtensionClick()" ng-disabled="$.running">
-                            <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
+                        <button type="button" class="b-btn btn-submit me-2" ng-if="$.extInstalingStep>=4"
+                            ng-click="$.onDoneInstallExtensionClick()" ng-disabled="$.running">
+                            <i class="codicon codicon-save"
+                                ng-class="{'loading-circle mini':$.running=='save-action'}"></i>
                             Done
                         </button>
-                        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelInstallExtensionClick()" ng-disabled="$.running">
+                        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelInstallExtensionClick()"
+                            ng-disabled="$.running">
                             <i class="codicon codicon-circle-slash"></i>
-                            Cancel
+                            Close
                         </button>
                     </div>
                 </div>

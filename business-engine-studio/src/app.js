@@ -10,10 +10,12 @@ import { config as appConfig } from "./configs/app.config";
 import { GlobalService } from "./services/global.service";
 import { ApiService } from "./services/api.service";
 import { ValidationService } from "./services/validation.service";
-import { NotificationService } from "./services/notification.service";
-import { StudioService } from "./services/studio.service";
 import { moduleDesignerService } from "./scenario-management/module-builder/services/module-designer.service";
 import { moduleBuilderService } from "./scenario-management/module-builder/services/module-builder.service";
+//Factories
+import { NotificationService } from "./services/notification.service";
+import { EventService } from "./services/event.service";
+import { StudioService } from "./services/studio.service";
 
 // Directives
 import {
@@ -26,6 +28,7 @@ import {
     CustomFocusDirective,
     CustomSidebarDirective,
     EsckeyDirective,
+    NotFieldTypeDirective,
 } from "./directives/custom.directive";
 import { MonacoEditor } from "./directives/monaco-editor.directive";
 
@@ -61,32 +64,29 @@ import { ActionsController } from "./scenario-management/actions/actions.control
 import { CreateActionController } from "./scenario-management/actions/create-action.controller";
 import { ModuleBuilderController } from "./scenario-management/module-builder/module-builder.controller";
 import { ProviderSettingsController } from "./scenario-management/providers/provider-settings.controllers";
-
-import {
-    DeferredBroadcast,
-    DeferredEmit,
-    DeferredEvent,
-} from "./providers/deferred-events.provider";
 import { LibrariesController } from "./libraries/libraries.controller";
+import { DefinedListsController } from "./scenario-management/defined-lists/defined-lists.controller";
+
+//providers
+import { DeferredBroadcast, DeferredEmit, DeferredEvent, } from "./providers/deferred-events.provider";
 
 const app = angular
-    .module("BusinessEngineStudioApp", [
-        require("angular-sanitize"),
-        "localytics.directives",
-        "angular.filter",
-        "ngDragDrop", "ngFileUpload"
-    ])
+    .module("BusinessEngineStudioApp", [require("angular-sanitize"), "angular.filter", "localytics.directives", "ngDragDrop", "ngFileUpload"])
     .config(appConfig)
     .provider("$deferredEvent", DeferredEvent)
     .provider("$deferredEmit", DeferredEmit)
     .provider("$deferredBroadcast", DeferredBroadcast)
+
     .service("globalService", GlobalService)
     .service("apiService", ApiService)
     .service("validationService", ValidationService)
     .service("moduleDesignerService", moduleDesignerService)
     .service("moduleBuilderService", moduleBuilderService)
+
     .factory("notificationService", NotificationService)
+    .factory("eventService", EventService)
     .factory("studioService", StudioService)
+
     .directive("studio", StudioDirective)
     .directive("bCustomDate", CustomDateDirective)
     .directive("bCustomResizeable", CustomResizeableDirective)
@@ -96,7 +96,9 @@ const app = angular
     .directive("bCustomFocus", CustomFocusDirective)
     .directive("bCustomSidebar", CustomSidebarDirective)
     .directive("bEscKey", EsckeyDirective)
+    .directive("bNotFieldType", NotFieldTypeDirective)
     .directive("monacoEditor", MonacoEditor)
+
     .component("bSidebarExplorer", SidebarExplorerComponent)
     .component("bContentWidget", ContentWidgetComponent)
     .component("bRightWidget", RightWidgetComponent)
@@ -106,6 +108,7 @@ const app = angular
     .component("bPropertyList", PropertyListComponent)
     .component("bSelectService", SelectServiceComponent)
     .component("bSelectAction", SelectActionComponent)
+
     .controller("studioController", StudioController)
     .controller("createScenarioController", CreateScenarioController)
     .controller("pageResourcesController", PageResourcesController)
@@ -126,7 +129,8 @@ const app = angular
     .controller("actionsController", ActionsController)
     .controller("createActionController", CreateActionController)
     .controller("moduleBuilderController", ModuleBuilderController)
-    .controller("providerSettingsController", ProviderSettingsController);
+    .controller("providerSettingsController", ProviderSettingsController)
+    .controller("definedListsController", DefinedListsController);
 
 window["app"] = app;
 

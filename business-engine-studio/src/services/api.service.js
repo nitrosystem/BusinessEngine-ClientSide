@@ -1,79 +1,55 @@
 import { GlobalSettings } from "../configs/global.settings";
 
 export class ApiService {
-    constructor($http, $q, $templateCache, $rootScope) {
+    constructor($rootScope, $http, $q, $templateCache, Upload, notificationService) {
+        this.$rootScope = $rootScope;
         this.$http = $http;
         this.$q = $q;
         this.$templateCache = $templateCache;
-        this.$rootScope = $rootScope;
+        this.uploadService = Upload;
+        this.notifyService = notificationService;
     }
 
     get(controller, methodName, params, customHeaders) {
-        return this.getApi(
-            "BusinessEngine",
-            controller,
-            methodName,
-            params,
-            customHeaders
-        );
+        return this.getApi('BusinessEngine', controller, methodName, params, customHeaders);
     }
 
     getApi(module, controller, methodName, params, customHeaders) {
         const defer = this.$q.defer();
 
-        const url =
-            GlobalSettings.apiBaseUrl +
-            module +
-            "/API/" +
-            controller +
-            "/" +
-            methodName;
+        const url = GlobalSettings.apiBaseUrl + module + '/API/' + controller + "/" + methodName;
 
-        var headers = customHeaders ? customHeaders : GlobalSettings.apiHeaders;
-        headers = {...headers, ... { Requestverificationtoken: $('[name="__RequestVerificationToken"]').val() } }
+        var headers = customHeaders ?? GlobalSettings.apiHeaders;
+        headers = { ...headers, ... { Requestverificationtoken: $('[name="__RequestVerificationToken"]').val() } };
 
         this.$http({
             method: "GET",
             url: url,
             headers: headers,
             params: params,
-        }).then(
-            (data) => {
-                defer.resolve(data.data);
-            },
-            (error) => {
-                if (error.status == 401) this.$rootScope.$broadcast('onUnauthorized401', { error: error }); // if user is logoff then refresh page for redirect to login page
-                defer.reject(error);
-            }
-        );
+        }).then((data) => {
+            defer.resolve((data ?? {}).data);
+        }, (error) => {
+            defer.reject(error);
+
+            this.notifyService.error(((error ?? {}).data || {}).Message);
+            console.error(error);
+        });
 
         return defer.promise;
     }
 
     post(controller, methodName, data, params, customHeaders) {
-        return this.postApi(
-            "BusinessEngine",
-            controller,
-            methodName,
-            data,
-            params,
-            customHeaders
-        );
+        return this.postApi('BusinessEngine', controller, methodName, data, params, customHeaders);
     }
 
     postApi(module, controller, methodName, data, params, customHeaders) {
         const defer = this.$q.defer();
 
-        const url =
-            GlobalSettings.apiBaseUrl +
-            module +
-            "/API/" +
-            controller +
-            "/" +
-            methodName;
+        const url = GlobalSettings.apiBaseUrl + module + '/API/' + controller + "/" + methodName;
 
-        var headers = customHeaders ? customHeaders : GlobalSettings.apiHeaders;
-        headers = {...headers, ... { Requestverificationtoken: $('[name="__RequestVerificationToken"]').val() } }
+        var headers = customHeaders ?? GlobalSettings.apiHeaders;
+        headers = { ...headers, ... { Requestverificationtoken: $('[name="__RequestVerificationToken"]').val() } };
 
         this.$http({
             method: "POST",
@@ -81,15 +57,40 @@ export class ApiService {
             headers: headers,
             data: data,
             params: params,
-        }).then(
-            (data) => {
-                defer.resolve(data.data);
-            },
-            (error) => {
-                if (error.status == 401) this.$rootScope.$broadcast('onUnauthorized401', { error: error }); // if user is logoff then refresh page for redirect to login page
-                defer.reject(error);
-            }
-        );
+        }).then((data) => {
+            defer.resolve((data ?? {}).data);
+        }, (error) => {
+            defer.reject(error);
+
+            this.notifyService.error(((error ?? {}).data || {}).Message);
+            console.error(error);
+        });
+
+        return defer.promise;
+    }
+
+    upload(apiUrl, file, customHeaders) {
+        const defer = this.$q.defer();
+
+        var headers = customHeaders ?? GlobalSettings.apiHeaders;
+        headers = { ...headers, ... { Requestverificationtoken: $('[name="__RequestVerificationToken"]').val() } };
+
+        this.uploadService.upload({
+            url: window.bEngineGlobalSettings.apiBaseUrl + apiUrl,
+            headers: headers || GlobalSettings.apiHeaders,
+            data: { files: file },
+        }).then((data) => {
+            defer.resolve(data.data);
+        }, (error) => {
+            if (error.status == 401) location.reload(); // if user is logoff then refresh page for redirect to login page
+
+            defer.reject(error);
+
+            this.notifyService.error(((error ?? {}).data || {}).Message);
+            console.error(error);
+        }, (evt) => {
+            defer.notify(evt);
+        });
 
         return defer.promise;
     }
@@ -98,7 +99,7 @@ export class ApiService {
         const defer = this.$q.defer();
 
         var formdata = new FormData();
-        angular.forEach([file], function(value, key) {
+        angular.forEach([file], function (value, key) {
             formdata.append(key, value);
         });
 
@@ -111,7 +112,11 @@ export class ApiService {
             }
         }).then((data) => {
             defer.resolve(data);
-        });
+        }, (error) => {
+            if (error.status == 401) location.reload(); // if user is logoff then refresh page for redirect to login page
+
+            defer.reject(error)
+        })
 
         return defer.promise;
     }

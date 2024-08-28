@@ -1,42 +1,58 @@
-<div id="mobule-builder" class="module-builder" ng-controller="moduleBuilderController as $">
+<div id="mobule-builder{{$.module.ModuleID}}" class="module-builder" ng-controller="moduleBuilderController as $">
     <!------------------------------------>
     <!--Sidebar-->
     <!------------------------------------>
     <div class="mb-sidebar" b-custom-sidebar="builder">
         <ul class="sidebar-tabs">
-            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='toolbox'}" role="presentation" ng-click="$.onSidebarTabClick('toolbox')" ng-if="$.module.ModuleBuilderType != 'HtmlEditor'">
+            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='toolbox'}" role="presentation"
+                ng-click="$.onSidebarTabClick('toolbox')" ng-if="$.module.ModuleBuilderType != 'HtmlEditor'"
+                b-custom-tooltip data-bs-placement="bottom" title="Components Toolbox">
                 <a class="item-link" role="button">
                     <i class="codicon codicon-extensions"></i>
                 </a>
             </li>
-            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='field-settings'}" role="presentation" ng-click="$.onSidebarTabClick('field-settings')" ng-if="$.module.ModuleBuilderType != 'HtmlEditor'">
+            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='field-settings'}" role="presentation"
+                ng-click="$.onSidebarTabClick('field-settings')" ng-if="$.module.ModuleBuilderType != 'HtmlEditor'"
+                b-custom-tooltip data-bs-placement="bottom" title="Current Field Settings">
                 <a class="item-link" role="button">
                     <i class="codicon codicon-settings-gear"></i>
                 </a>
             </li>
-            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='selected-components'}" role="presentation" ng-click="$.onSidebarTabClick('selected-components')">
+            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='filter-components'}" role="presentation"
+                ng-click="$.onSidebarTabClick('filter-components')" b-custom-tooltip data-bs-placement="bottom"
+                title="Filter Fields">
                 <a class="item-link" role="button">
-                    <i class="codicon codicon-layers"></i>
+                    <i class="codicon codicon-filter"></i>
                 </a>
             </li>
-            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='actions'}" role="presentation" ng-click="$.onSidebarTabClick('actions')">
+            <li class="tab-item" ng-class="{'active':$.currentSidebarTab=='actions'}" role="presentation"
+                ng-click="$.onSidebarTabClick('actions')" b-custom-tooltip data-bs-placement="bottom"
+                title="Current Field | Module Actions">
                 <a class="item-link" role="button">
                     <i class="codicon codicon-github-action"></i>
                 </a>
             </li>
         </ul>
         <div class="search-box">
-            <input type="text" class="search-input" ng-model="$.searchComponent" placeholder="Search field type by title" ng-disabled="$.currentSidebarTab!=='toolbox'" ng-class="{'opacity-25':$.currentSidebarTab!=='toolbox'}" autocomplete="off" />
-            <i class="codicon codicon-collapse-all" ng-click="$.collapsedComponentGroups=!$.collapsedComponentGroups"></i>
+            <input type="text" class="search-input" ng-model="$.searchComponent"
+                placeholder="Search field type by title" ng-disabled="$.currentSidebarTab!=='toolbox'"
+                ng-class="{'opacity-25':$.currentSidebarTab!=='toolbox'}" autocomplete="off" />
+            <i class="codicon"
+                ng-class="{'codicon-collapse-all':!$.collapsedComponentGroups,'codicon-expand-all':$.collapsedComponentGroups}"
+                ng-click="$.collapsedComponentGroups=!$.collapsedComponentGroups"></i>
         </div>
-        <div class="tab-contents b-scrollbar h-100">
+        <div class="tab-contents b-scrollbar">
             <!------------------------------------>
             <!--Toolbox Tab-->
             <!------------------------------------>
-            <div class="tab-content" ng-if="$.currentSidebarTab=='toolbox' && $.module.ModuleBuilderType != 'HtmlEditor'">
+            <div class="tab-content"
+                ng-if="$.currentSidebarTab=='toolbox' && $.module.ModuleBuilderType != 'HtmlEditor'">
                 <div class="field-types">
-                    <div class="b-group group-sm mb-2" ng-repeat="(key,value) in $.fieldTypes | fuzzyBy: 'Title': $.searchComponent |  groupBy:'GroupName' ">
-                        <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpFieldType_{{$index}}" ng-class="{'collapsed':$.collapsedComponentGroups}">
+                    <div class="b-group group-sm mb-2"
+                        ng-repeat="(key,value) in $.fieldTypes | orderBy:'GroupViewOrder' | fuzzyBy: 'Title': $.searchComponent |  groupBy:'GroupName'">
+                        <div class="group-header" data-bs-toggle="collapse"
+                            data-bs-target="#grpFieldType_{{$index}}_{{$.module.ModuleID}}"
+                            ng-class="{'collapsed':$.collapsedComponentGroups}">
                             <h3 class="group-label">
                                 <span class="group-icon">
                                     <i class="codicon codicon-server-process"></i>
@@ -46,10 +62,15 @@
                                 <i class="codicon codicon-chevron-up"></i>
                             </span>
                         </div>
-                        <div id="grpFieldType_{{$index}}" class="group-content collapse" ng-class="{'show':!$.collapsedComponentGroups}">
+                        <div id="grpFieldType_{{$index}}_{{$.module.ModuleID}}" class="group-content collapse"
+                            ng-class="{'show':!$.collapsedComponentGroups}">
                             <div class="row">
                                 <div class="col-6" ng-repeat="fieldType in value | toArray:false | orderBy:'ViewOrder'">
-                                    <div class="field-type" jqyoui-draggable="{animate:true,onStop:'$.onStopDrag($index)'}" jqyoui-options="{appendTo: 'body',revert: 'invalid',helper: 'clone'}" data-drag="true" data-new-field="true" data-field-type="{{fieldType.FieldType}}">
+                                    <div class="field-type" title="{{fieldType.Title}}"
+                                        jqyoui-draggable="{animate:true,onStop:'$.onStopDrag($index)'}"
+                                        jqyoui-options="{appendTo: 'body',revert: 'invalid',helper: 'clone'}"
+                                        data-drag="true" data-new-field="true"
+                                        data-field-type="{{fieldType.FieldType}}">
                                         <img class="field-image" ng-src="{{fieldType.Icon}}" />
                                         <label class="title">{{fieldType.Title}}</label>
                                     </div>
@@ -62,10 +83,11 @@
             <!------------------------------------>
             <!--Field Settings Tab-->
             <!------------------------------------>
-            <div class="tab-content" ng-if="$.currentSidebarTab=='field-settings' && $.currentField && $.module.ModuleBuilderType != 'HtmlEditor'">
+            <div class="tab-content"
+                ng-if="$.currentSidebarTab=='field-settings' && $.currentField && $.module.ModuleBuilderType != 'HtmlEditor'">
                 <div ng-include="$.fieldSettingsWidget"></div>
             </div>
-            <div class="tab-content" ng-if="$.currentSidebarTab=='selected-components'">
+            <div class="tab-content" ng-if="$.currentSidebarTab=='filter-components'">
             </div>
             <!------------------------------------>
             <!--Actions List-->
@@ -77,14 +99,16 @@
                         <i class="codicon codicon-close"></i>
                     </span>
                 </div>
-                <div ng-if="$.fieldActionsFilter && (!$.currentField.Actions ||!$.currentField.Actions.length)" class="b-notify notify-info mb-4">
+                <div ng-if="$.fieldActionsFilter && (!$.currentField.Actions ||!$.currentField.Actions.length)"
+                    class="b-notify notify-info mb-4">
                     <i class="codicon codicon-info b-icon-2"></i>
                     <div class="text">
-                        <h4 class="label">the Current field has no any actions.</h4>
+                        Current field has no any actions.
                     </div>
                 </div>
                 <ul class="action-list">
-                    <li class="action-item" ng-repeat="action in $.actions | fuzzyBy: 'FieldID': $.fieldActionsFilter | orderBy:['-FieldID','-ParentID','ViewOrder']">
+                    <li class="action-item"
+                        ng-repeat="action in $.actions | fuzzyBy: 'FieldID': $.fieldActionsFilter | orderBy:['-FieldID','-ParentID','ViewOrder']">
                         <div class="action-type">
                             <i class="action-icon {{action.ActionTypeIcon}}"></i>
                             <span>{{action.ActionType}}</span>
@@ -96,10 +120,12 @@
                             <span ng-if="action.FieldID">{{action.FieldName}}</span>
                         </h5>
                         <div class="action-buttons">
-                            <button type="button" class="b-btn btn-sm btn-action mb-2" ng-click="$.onEditActionClick(action)">
+                            <button type="button" class="b-btn btn-sm btn-action mb-2"
+                                ng-click="$.onEditActionClick(action)">
                                 <i class="codicon codicon-edit me-0"></i>
                             </button>
-                            <button type="button" class="b-btn btn-sm btn-action mb-2" ng-click="$.onDeleteActionClick(action.ActionID,$index)">
+                            <button type="button" class="b-btn btn-sm btn-action mb-2"
+                                ng-click="$.onDeleteActionClick(action.ActionID,$index)">
                                 <i class="codicon codicon-trash me-0"></i>
                             </button>
                         </div>
@@ -108,13 +134,15 @@
                 <div class="actions-footer">
                     <button type="button" class="b-btn btn-action btn-sm me-2" ng-click="$.onGotoActionsPageClick()">
                         <i class="codicon codicon-github-action"></i>
-                         Actions Page
+                        Actions Page
                     </button>
-                    <button type="button" ng-if="!$.fieldActionsFilter" class="b-btn btn-action btn-sm" ng-click="$.onAddActionClick('module',$.module.ModuleID)">
+                    <button type="button" ng-if="!$.fieldActionsFilter" class="b-btn btn-action btn-sm"
+                        ng-click="$.onAddActionClick('module',$.module.ModuleID)">
                         <i class="codicon codicon-plus"></i>
                         New Action
                     </button>
-                    <button type="button" ng-if="$.fieldActionsFilter" class="b-btn btn-action btn-sm" ng-click="$.onAddActionClick('field',$.currentField.FieldID)">
+                    <button type="button" ng-if="$.fieldActionsFilter" class="b-btn btn-action btn-sm"
+                        ng-click="$.onAddActionClick('field',$.currentField.FieldID)">
                         <i class="codicon codicon-plus"></i>
                         New Field Action
                     </button>
@@ -125,18 +153,27 @@
     <!------------------------------------>
     <!--Workspace Board-->
     <!------------------------------------>
-    <b-content-widget data-title="{{$.module.ModuleTitle}} - {{$.module.ModuleType}} Module Builder" data-icon="notebook-template" data-module-type="module-builder" data-subtitle="{{$.module.ModuleName}}" data-await-action="$.awaitAction" class="mb-workspace"
-        data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
-        <button type="button" class="btn-skin" ng-click="$.onShowModuleSkinClick()" b-custom-tooltip data-bs-placement="right" title="Show Skin Widget">
+    <b-content-widget data-title="{{$.module.ModuleTitle}} - {{$.module.ModuleType}} Module Builder"
+        data-icon="notebook-template" data-module-type="module-builder" data-subtitle="{{$.module.ModuleName}}"
+        data-await-action="$.awaitAction" class="mb-workspace" data-module="$" data-reload-method="onPageLoad"
+        data-close-method="onCloseWindow">
+        <button type="button" class="btn-skin" ng-click="$.onShowModuleSkinClick()" b-custom-tooltip
+            data-bs-placement="right" title="Show Skin Widget">
             <i class="codicon codicon-symbol-color"></i>
         </button>
         <div class="workspace-actions">
+            <button type="button" class="b-btn btn-action me-3" ng-click="$.onToggleSearchFieldsClick()"
+                data-bs-toggle="collapse" data-bs-target="#searchWrapper{{$.module.ModuleID}}" aria-expanded="false"
+                aria-controls="searchWrapper{{$.module.ModuleID}}">
+                <i class="codicon codicon-search me-0"></i>
+            </button>
             <div class="b-btn-group me-3">
                 <button type="button" class="b-btn btn-action" ng-click="$.onShowActionsClick()">
                     <i class="codicon codicon-bracket-dot"></i>
                     Actions
                 </button>
-                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onAddActionClick('module',$.module.ModuleID)">
                         <i class="codicon codicon-github-action me-2"></i> New Action
@@ -148,19 +185,22 @@
                     <i class="codicon codicon-preserve-case"></i>
                     Variables
                 </button>
-                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onModuleSettingsClick()">
                         <i class="codicon codicon-gear me-2"></i> Module Settings
                     </a>
                 </div>
             </div>
-            <div class="b-btn-group me-3" ng-if="$.module.Skin && $.module.Template">
-                <button type="button" class="b-btn btn-action" ng-click="$.onShowLayoutTemplateClick()" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
+            <div class="b-btn-group me-3">
+                <button type="button" ng-if="$.module.Skin && $.module.Template" class="b-btn btn-action"
+                    ng-click="$.onShowLayoutTemplateClick()" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
                     <i class="codicon codicon-preview"></i>
                     Layout Template
                 </button>
-                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.module.ParentID" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
+                    ng-disabled="$.module.ParentID" data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div ng-if="!$.module.ParentID" class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onShowCustomResourcesClick()">
                         <i class="codicon codicon-combine me-2"></i> Add Custom Resources To the Module
@@ -173,18 +213,23 @@
             <!------------------------------------>
             <!--Standard Form Builder Buttons-->
             <!------------------------------------>
-            <div class="b-btn-group" ng-if="$.module.ModuleBuilderType!='HtmlEditor' && $.module.Skin && $.module.Template">
-                <button type="button" class="b-btn btn-submit" ng-click="$.buildModule()">
-                    <i class="codicon" 
-                        ng-class="{'spin':$.running!=='get-module-builder',
-                        'codicon-terminal-debian': $.running!=='building-module',
-                        'codicon-settings-gear': $.running==='building-module'}">
+            <div class="b-btn-group build-wrapper" id="buildWrapper{{$.module.ModuleID}}"
+                ng-if="$.module.ModuleBuilderType!='HtmlEditor' && $.module.Skin && $.module.Template">
+                <span class="building progress-bar" ng-show="$.running=='building-module'"
+                    ng-class="{'error':$.awaitAction.isError}"></span>
+                <button type="button" class="b-btn btn-submit overflow-hidden" ng-click="$.buildModule()"
+                    title="Build & Render Module(F10)">
+                    <i class="codicon" ng-class="{'spin':$.running!=='get-module-builder',
+                    'codicon-terminal-debian': $.running!=='building-module',
+                    'codicon-settings-gear': $.running==='building-module'}">
                     </i>
                     Build Module
                 </button>
-                <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
-                    <a class="dropdown-item" href="" ng-click="$.renderDesignForm()" b-custom-tooltip data-bs-placement="top" title="Render design Form and display Fields in edit mode.">
+                    <a class="dropdown-item" href="" ng-click="$.renderDesignForm()" b-custom-tooltip
+                        data-bs-placement="top" title="Render design Form and display Fields in edit mode.">
                         <i class="codicon codicon-symbol-color me-2"></i> Show Panes & Fields On Designer Board
                     </a>
                     <a class="dropdown-item" href="" ng-click="$.onGotoModuleResourcesClick()">
@@ -193,7 +238,8 @@
                     <a class="dropdown-item" target="_blank" ng-href="{{$.moduleViewLinkUrl}}">
                         <i class="codicon codicon-output me-2"></i> Show Module Output
                     </a>
-                    <a class="dropdown-item" target="_blank" ng-click="$.onClearCache()" b-custom-tooltip data-bs-placement="bottom" title="Clear dnn cache and add host crm version">
+                    <a class="dropdown-item" target="_blank" ng-click="$.onClearCache()" b-custom-tooltip
+                        data-bs-placement="bottom" title="Clear dnn cache and add host crm version">
                         <i class="codicon codicon-issue-reopened me-2"></i> Clear Cache & Add Version
                     </a>
                 </div>
@@ -206,7 +252,8 @@
                     <i class="codicon codicon-save"></i>
                     Save Module
                 </button>
-                <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <button type="button" class="b-btn btn-submit dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <div class="dropdown-menu b-dropdown-menu">
                     <a class="dropdown-item" href="" ng-click="$.onGotoModuleResourcesClick()">
                         <i class="codicon codicon-library me-2"></i> Goto Module Resources
@@ -214,7 +261,8 @@
                     <a class="dropdown-item" target="_blank" ng-href="{{$.moduleViewLinkUrl}}">
                         <i class="codicon codicon-output me-2"></i> Show Module Output
                     </a>
-                    <a class="dropdown-item" target="_blank" ng-click="$.onClearCache()" b-custom-tooltip data-bs-placement="bottom" title="Clear dnn cache and Add host crm version">
+                    <a class="dropdown-item" target="_blank" ng-click="$.onClearCache()" b-custom-tooltip
+                        data-bs-placement="bottom" title="Clear dnn cache and Add host crm version">
                         <i class="codicon codicon-issue-reopened me-2"></i> Clear Cache & Add Version
                     </a>
                 </div>
@@ -224,47 +272,72 @@
         <!--Standard Form Builder Board-->
         <!------------------------------------>
         <div class="workspace-fields" ng-if="$.module.ModuleBuilderType!='HtmlEditor'">
+            <div class="collapse search-wrapper" id="searchWrapper{{$.module.ModuleID}}">
+                <input type="text" class="search-text" ng-if="$.module.ModuleID" 
+                ng-model="$.searchText" ng-change="$.onSearchTextChange()"
+                    b-custom-focus="onFocusSearchInput_{{$.module.ModuleID}}"
+                    placeholder="Search by field name, field text, field type and etc...">
+                <i class="codicon codicon-search-fuzzy search-icon"></i>
+            </div>
             <div id="board{{$.module.ModuleID}}" class="panes"></div>
         </div>
         <!------------------------------------>
         <!--Html Editor-->
         <!------------------------------------>
-        <div class="tabs-container pb-3" ng-if="$.module.ModuleBuilderType=='HtmlEditor'" ng-class="{'b-full-screen':$.IsEditorFullscreen}">
+        <div class="tabs-container pb-3" ng-if="$.module.ModuleBuilderType=='HtmlEditor'"
+            ng-class="{'b-full-screen':$.IsEditorFullscreen}">
             <ul class="nav nav-tabs b-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="html-tab{{$.module.ModuleID}}" data-bs-toggle="tab" data-bs-target="#html{{$.module.ModuleID}}" type="button" role="tab" aria-controls="html{{$.module.ModuleID}}" aria-selected="true" data-tab="1">Html</button>
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#html{{$.module.ModuleID}}"
+                        type="button" role="tab" aria-controls="html{{$.module.ModuleID}}" aria-selected="true"
+                        data-tab="1">Html</button>
                 </li>
                 <li class="nav-item" role="presentation" ng-if="!$.module.IsDisabledFrontFramework">
-                    <button class="nav-link" id="js-tab{{$.module.ModuleID}}" data-bs-toggle="tab" data-bs-target="#js{{$.module.ModuleID}}" type="button" role="tab" aria-controls="js{{$.module.ModuleID}}" aria-selected="false" data-tab="2">Javascript</button>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#js{{$.module.ModuleID}}"
+                        type="button" role="tab" aria-controls="js{{$.module.ModuleID}}" aria-selected="false"
+                        data-tab="2">Javascript</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="css-tab{{$.module.ModuleID}}" data-bs-toggle="tab" data-bs-target="#css{{$.module.ModuleID}}" type="button" role="tab" aria-controls="css{{$.module.ModuleID}}" aria-selected="false" data-tab="3">Css</button>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#css{{$.module.ModuleID}}"
+                        type="button" role="tab" aria-controls="css{{$.module.ModuleID}}" aria-selected="false"
+                        data-tab="3">Css</button>
                 </li>
                 <li class="position-absolute end-0 m-3">
-                    <button type="button" ng-if="$.IsEditorFullscreen" class="b-btn btn-action fullscreen-save-button" ng-click="$.buildModule()">
+                    <button type="button" ng-if="$.IsEditorFullscreen" class="b-btn btn-action fullscreen-save-button"
+                        ng-click="$.buildModule()">
                         <i class="codicon codicon-save"></i>
                         Save Module
                     </button>
-                    <i class="codicon" ng-class="{'codicon-screen-full':!$.IsEditorFullscreen,'codicon-screen-normal':$.IsEditorFullscreen}" ng-click="$.IsEditorFullscreen=!$.IsEditorFullscreen"></i>
+                    <i class="codicon"
+                        ng-class="{'codicon-screen-full':!$.IsEditorFullscreen,'codicon-screen-normal':$.IsEditorFullscreen}"
+                        ng-click="$.IsEditorFullscreen=!$.IsEditorFullscreen"></i>
                 </li>
             </ul>
             <div class="tab-content p-0 mb-4">
-                <div class="tab-pane fade show active" id="html{{$.module.ModuleID}}" role="tabpanel" aria-labelledby="html-tab{{$.module.ModuleID}}">
-                    <div monaco-editor ng-model="$.module.CustomHtml" data-source="['fields','form','_b','variables','actionParams']" data-language="html" data-height="100vh" required>
+                <div class="tab-pane fade show active" id="html{{$.module.ModuleID}}" role="tabpanel">
+                    <div monaco-editor ng-model="$.module.CustomHtml"
+                        data-source="['fields','form','_b','variables','actionParams']" data-language="html"
+                        data-height="100vh" required>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="js{{$.module.ModuleID}}" role="tabpanel" aria-labelledby="js-tab{{$.module.ModuleID}}" ng-if="!$.module.IsDisabledFrontFramework">
-                    <div monaco-editor ng-model="$.module.CustomJs" data-source="['fields','form','_b','variables','actionParams']" data-language="javascript" data-height="100vh" required>
+                <div class="tab-pane fade" id="js{{$.module.ModuleID}}" role="tabpanel"
+                    ng-if="!$.module.IsDisabledFrontFramework">
+                    <div monaco-editor ng-model="$.module.CustomJs"
+                        data-source="['fields','form','_b','variables','actionParams']" data-language="javascript"
+                        data-height="100vh" required>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="css{{$.module.ModuleID}}" role="tabpanel" aria-labelledby="css-tab{{$.module.ModuleID}}">
-                    <div monaco-editor ng-model="$.module.CustomCss" data-source="['fields','form','_b','variables','actionParams']" data-language="css" data-height="100vh" required>
+                <div class="tab-pane fade" id="css{{$.module.ModuleID}}" role="tabpanel">
+                    <div monaco-editor ng-model="$.module.CustomCss"
+                        data-source="['fields','form','_b','variables','actionParams']" data-language="css"
+                        data-height="100vh" required>
                     </div>
                 </div>
             </div>
             <div class="d-flex">
                 <div class="justify-content-end ms-auto me-3">
-                    <button type="button" class="b-btn btn-submit me-2" ng-click="$.buildModule()" ng-disabled="$.running">
+                    <button type="button" class="b-btn btn-submit me-2" ng-click="$.buildModule()"
+                        ng-disabled="$.running">
                         <i class="codicon codicon-save" ng-class="{'loading-circle mini':$.running=='save-module'}"></i>
                         Save Module
                     </button>

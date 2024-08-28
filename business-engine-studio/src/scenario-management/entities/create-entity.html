@@ -1,5 +1,7 @@
 <div ng-controller="createEntityController as $" class="create-entity" ng-class="{'was-validated':$.form.validated}">
-    <b-content-widget data-title="Create Entity" data-icon="table" data-module-type="create-entity" data-subtitle="Add or edit scenario entity" data-await-action="$.awaitAction" data-module="$" data-reload-method="onPageLoad" data-close-method="onCloseWindow">
+    <b-content-widget data-title="Create Entity" data-icon="table" data-module-type="create-entity"
+        data-subtitle="Add or edit scenario entity" data-await-action="$.awaitAction" data-module="$"
+        data-reload-method="onPageLoad" data-close-method="onCloseWindow">
         <!------------------------------------>
         <!--Entity-->
         <!------------------------------------>
@@ -11,8 +13,10 @@
                 <div class="b-field">
                     <label class="form-label">Scenario</label>
                     <div class="b-input-group">
-                        <select id="drpScenarioID" ng-model="$.entity.ScenarioID" class="b-input form-select" ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios" ng-change="$.onScenarioChange()" ng-disabled="$.running" chosen inherit-select-classes="true"
-                            placeholder-text-single="'Select entity scenario'" required>
+                        <select id="drpScenarioID" ng-model="$.entity.ScenarioID" class="b-input form-select"
+                            ng-options="scenario.ScenarioID as scenario.ScenarioTitle for scenario in $.scenarios"
+                            ng-change="$.onScenarioChange()" ng-disabled="$.running" chosen
+                            inherit-select-classes="true" placeholder-text-single="'Select entity scenario'" required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
                     </div>
@@ -20,7 +24,9 @@
                 <div class="b-field">
                     <label class="form-label">Group</label>
                     <div class="b-input-group">
-                        <select ng-model="$.entity.GroupID" class="b-input form-select" ng-options="group.GroupID as group.GroupName for group in $.groups" chosen inherit-select-classes="true" placeholder-text-single="'Select a group(optional)'">
+                        <select ng-model="$.entity.GroupID" class="b-input form-select"
+                            ng-options="group.GroupID as group.GroupName for group in $.groups" chosen
+                            inherit-select-classes="true" placeholder-text-single="'Select a group(optional)'">
                             <option value=""></option>
                         </select>
                         <span><i class="codicon codicon-layers"></i></span>
@@ -29,7 +35,8 @@
                 <div class="b-field">
                     <label class="form-label">Entity Name</label>
                     <div class="b-input-group">
-                        <input type="text" id="txtEntityName" ng-model="$.entity.EntityName" class="b-input form-control" placeholder="Enter entity name" autocomplete="off" required />
+                        <input type="text" id="txtEntityName" ng-model="$.entity.EntityName"
+                            class="b-input form-control" placeholder="Enter entity name" autocomplete="off" required />
                         <span><i class="codicon codicon-account"></i></span>
                     </div>
                     <p class="b-invalid">{{$.form.error.EntityName}}</p>
@@ -37,7 +44,8 @@
                 <div class="b-field">
                     <label class="form-label">View Order</label>
                     <div class="b-input-group">
-                        <input type="number" ng-model="$.entity.ViewOrder" class="b-input form-control" placeholder="Enter table view order" autocomplete="off" />
+                        <input type="number" ng-model="$.entity.ViewOrder" class="b-input form-control"
+                            placeholder="Enter table view order" autocomplete="off" />
                         <span><i class="codicon codicon-list-ordered"></i></span>
                     </div>
                 </div>
@@ -53,11 +61,19 @@
                         <span class="slider"></span>
                     </label>
                 </div>
-                <div class="b-field">
+                <div class="b-field" ng-class="{'opacity-25':!$.entity.IsReadonly}">
                     <label class="form-label">Result Type</label>
                     <div class="b-radio-list-inline">
-                        <div class="radio-item"><input type="radio" id="rdEntityTypeTable" name="entityType{{$.entity.EntityID}}" value="table" ng-model="$.entity.EntityType" required><label for="rdEntityTypeTable">Table</label></div>
-                        <div class="radio-item"><input type="radio" id="rdEntityTypeView" name="entityType{{$.entity.EntityID}}" value="view" ng-model="$.entity.EntityType" required><label for="rdEntityTypeView">View</label></div>
+                        <div class="radio-item"><input type="radio" id="rdEntityTypeTable"
+                                name="entityType{{$.entity.EntityID}}" value="table" ng-model="$.entity.EntityType"
+                                ng-disabled="!$.entity.IsReadonly" ng-required="$.entity.IsReadonly">
+                            <label for="rdEntityTypeTable">Table</label>
+                        </div>
+                        <div class="radio-item"><input type="radio" id="rdEntityTypeView"
+                                name="entityType{{$.entity.EntityID}}" value="view" ng-model="$.entity.EntityType"
+                                ng-disabled="!$.entity.IsReadonly" ng-required="$.entity.IsReadonly">
+                            <label for="rdEntityTypeView">View</label>
+                        </div>
                     </div>
                 </div>
                 <div class="b-field" ng-if="!$.entity.IsReadonly">
@@ -69,10 +85,15 @@
                     <div class="b-input-group">
                         <div class="b-input form-control d-flex">
                             <div class="col-4">
-                                <input type="text" id="txtTablePrefix" ng-model="$.entity.Settings.DatabaseObjectPrefixName" class="b-input-nobg" placeholder="Table prefix" autocomplete="off" required />
+                                <input type="text" id="txtTablePrefix"
+                                    ng-model="$.entity.Settings.DatabaseObjectPrefixName" class="b-input-nobg"
+                                    placeholder="Table prefix" autocomplete="off" required />
                             </div>
                             <div class="col-8">
-                                <input type="text" id="txtTablePostfix" ng-model="$.entity.Settings.DatabaseObjectPostfixName" class="b-input-nobg" ng-change="$.entity.Settings.DatabaseObjectNameModified=true" placeholder="Enter table name" autocomplete="off" required />
+                                <input type="text" id="txtTablePostfix"
+                                    ng-model="$.entity.Settings.DatabaseObjectPostfixName" class="b-input-nobg"
+                                    ng-change="$.entity.Settings.DatabaseObjectNameModified=true"
+                                    placeholder="Enter table name" autocomplete="off" required />
                             </div>
                         </div>
                         <span><i class="codicon codicon-table"></i></span>
@@ -83,8 +104,10 @@
                 <div class="b-field" ng-if="$.entity.IsReadonly && $.entity.EntityType=='table'">
                     <label class="form-label">Table</label>
                     <div class="b-input-group">
-                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select" ng-options="table for table in $.dataBaseObjects.Tables" ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select database table'"
-                            required>
+                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select"
+                            ng-options="table for table in $.dataBaseObjects.Tables"
+                            ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen
+                            inherit-select-classes="true" placeholder-text-single="'Select database table'" required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
                     </div>
@@ -92,8 +115,10 @@
                 <div class="b-field" ng-if="$.entity.IsReadonly && $.entity.EntityType=='view'">
                     <label class="form-label">Table</label>
                     <div class="b-input-group">
-                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select" ng-options="view for view in $.dataBaseObjects.Views" ng-change="$.onDatabaseObjectChange()" ng-disabled="$.running" chosen inherit-select-classes="true" placeholder-text-single="'Select database table'"
-                            required>
+                        <select id="drpEntityTable" ng-model="$.entity.TableName" class="b-input form-select"
+                            ng-options="view for view in $.dataBaseObjects.Views" ng-change="$.onDatabaseObjectChange()"
+                            ng-disabled="$.running" chosen inherit-select-classes="true"
+                            placeholder-text-single="'Select database table'" required>
                         </select>
                         <span><i class="codicon codicon-activate-breakpoints"></i></span>
                     </div>
@@ -101,7 +126,8 @@
                 <div class="b-field">
                     <label class="form-label">Description</label>
                     <div class="b-input-group">
-                        <textarea ng-model="$.entity.Description" class="b-input form-control" rows="4" placeholder="Enter entity description"></textarea>
+                        <textarea ng-model="$.entity.Description" class="b-input form-control" rows="4"
+                            placeholder="Enter entity description"></textarea>
                         <span class="my-auto"><i class="codicon codicon-debug-stackframe-active"></i></span>
                     </div>
                 </div>
@@ -131,8 +157,12 @@
                                         <div class="b-field mb-0">
                                             <label class="form-label">Parent Entity(Primary Key)</label>
                                             <div class="b-input-group">
-                                                <select ng-model="relationship.ParentEntityTableName" class="b-input" ng-options="entity.TableName as entity.EntityName+'('+entity.TableName+')' for entity in $.entities | orderBy:'EntityName'" chosen inherit-select-classes="true" placeholder-text-single="'Select parent entity'"
-                                                    ng-change="$.onParentEntityChange(relationship)" ng-disabled="$.running" required>
+                                                <select ng-model="relationship.ParentEntityTableName" class="b-input"
+                                                    ng-options="entity.TableName as entity.EntityName+'('+entity.TableName+')' for entity in $.entities | orderBy:'EntityName'"
+                                                    chosen inherit-select-classes="true"
+                                                    placeholder-text-single="'Select parent entity'"
+                                                    ng-change="$.onParentEntityChange(relationship)"
+                                                    ng-disabled="$.running" required>
                                                     <option disabled value=""></option>
                                                 </select>
                                                 <span><i class="codicon codicon-table"></i></span>
@@ -143,7 +173,8 @@
                                         <div class="b-field mb-0">
                                             <label class="form-label">Child Entity(Foreign Key Table)</label>
                                             <div class="b-input-group">
-                                                <input type="button" class="b-input text-start" readonly value="{{$.entity.EntityName}}({{$.entity.TableName}})" />
+                                                <input type="button" class="b-input text-start" readonly
+                                                    value="{{$.entity.EntityName}}({{$.entity.TableName}})" />
                                                 <span><i class="codicon codicon-table"></i></span>
                                             </div>
                                         </div>
@@ -176,7 +207,10 @@
                                         <div class="col-6 my-auto">
                                             <div class="b-field  mb-0">
                                                 <div class="b-input-group">
-                                                    <select ng-model="column.PrimaryKey" class="b-input form-select" ng-options="column.ColumnName as column.ColumnName for column in relationship.ParentEntityColumns" chosen inherit-select-classes="true" placeholder-text-single="'Select primary field'">
+                                                    <select ng-model="column.PrimaryKey" class="b-input form-select"
+                                                        ng-options="column.ColumnName as column.ColumnName for column in relationship.ParentEntityColumns"
+                                                        chosen inherit-select-classes="true"
+                                                        placeholder-text-single="'Select primary field'">
                                                         <option value=""></option>
                                                     </select>
                                                     <span><i class="codicon codicon-table"></i></span>
@@ -186,7 +220,10 @@
                                         <div class="col-5 my-auto">
                                             <div class="b-field mb-0">
                                                 <div class="b-input-group">
-                                                    <select ng-model="column.ForeignKey" class="b-input form-select" ng-options="column.ColumnName as column.ColumnName for column in $.entity.Columns" chosen inherit-select-classes="true" placeholder-text-single="'Select foreign field'">
+                                                    <select ng-model="column.ForeignKey" class="b-input form-select"
+                                                        ng-options="column.ColumnName as column.ColumnName for column in $.entity.Columns"
+                                                        chosen inherit-select-classes="true"
+                                                        placeholder-text-single="'Select foreign field'">
                                                         <option value=""></option>
                                                     </select>
                                                     <span><i class="codicon codicon-table"></i></span>
@@ -195,7 +232,9 @@
                                         </div>
                                         <div class="col-1 my-auto">
                                             <div class="b-field mb-0">
-                                                <button type="button" class="b-btn btn-cancel p-2" ng-click="relationship.Columns.splice($index,1)" ng-disabled="$.running">
+                                                <button type="button" class="b-btn btn-cancel p-2"
+                                                    ng-click="relationship.Columns.splice($index,1)"
+                                                    ng-disabled="$.running">
                                                     <i class="codicon codicon-trash me-0"></i>
                                                 </button>
                                             </div>
@@ -209,7 +248,9 @@
                                         <div class="b-field mb-1">
                                             <label class="form-label d-block">DELETE Specification</label>
                                             <div class="b-input-group">
-                                                <select ng-model="relationship.DELETESpecification" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Delete rule'">
+                                                <select ng-model="relationship.DELETESpecification"
+                                                    class="b-input form-select" chosen inherit-select-classes="true"
+                                                    placeholder-text-single="'Delete rule'">
                                                     <option value=""></option>
                                                     <option value="NO_ACTION">No Action</option>
                                                     <option value="CASCADE">Cascade</option>
@@ -224,7 +265,9 @@
                                         <div class="b-field mb-1">
                                             <label class="form-label d-block">UPDATE Specification</label>
                                             <div class="b-input-group">
-                                                <select ng-model="relationship.UPDATESpecification" class="b-input form-select" chosen inherit-select-classes="true" placeholder-text-single="'Update rule'">
+                                                <select ng-model="relationship.UPDATESpecification"
+                                                    class="b-input form-select" chosen inherit-select-classes="true"
+                                                    placeholder-text-single="'Update rule'">
                                                     <option value=""></option>
                                                     <option value="NO_ACTION">No Action</option>
                                                     <option value="CASCADE">Cascade</option>
@@ -243,20 +286,24 @@
                         <div class="b-field">
                             <label class="form-label">Relationship Name</label>
                             <div class="b-input-group">
-                                <input type="text" ng-model="relationship.RelationshipName" class="b-input" placeholder="Enter relationship name" autocomplete="off" required />
+                                <input type="text" ng-model="relationship.RelationshipName" class="b-input"
+                                    placeholder="Enter relationship name" autocomplete="off" required />
                                 <span><i class="codicon codicon-account"></i></span>
                             </div>
                         </div>
-                        <button type="button" class="b-btn btn-action btn-sm mb-3" ng-click="relationship.Columns.push({})">
+                        <button type="button" class="b-btn btn-action btn-sm mb-3"
+                            ng-click="relationship.Columns.push({})">
                             <i class="codicon codicon-plus me-0"></i>
                         </button>
-                        <button type="button" class="b-btn btn-cancel d-flex ms-auto" ng-click="$.entity.Relationships.splice($index,1)" ng-disabled="$.running">
+                        <button type="button" class="b-btn btn-cancel d-flex ms-auto"
+                            ng-click="$.entity.Relationships.splice($index,1)" ng-disabled="$.running">
                             <i class="codicon codicon-trash me-0"></i>
                         </button>
                     </div>
                 </div>
-                <button type="button" class="b-btn btn-action ms-auto" ng-click="$.onAddRelationshipClick()" ng-disabled="$.running">
-                    <i class="codicon codicon-plus" ></i>
+                <button type="button" class="b-btn btn-action ms-auto" ng-click="$.onAddRelationshipClick()"
+                    ng-disabled="$.running">
+                    <i class="codicon codicon-plus"></i>
                     Add Relationship
                 </button>
             </div>
@@ -299,15 +346,19 @@
                     </div>
                     <div class="header-tools">
                         <div class="b-btn-group">
-                            <button type="button" class="b-btn btn-action" ng-click="$.onAddColumnClick()" ng-disabled="$.column">
+                            <button type="button" class="b-btn btn-action" ng-click="$.onAddColumnClick()"
+                                ng-disabled="$.column">
                                 <i class="codicon codicon-plus" ng-disabled="$.running"></i>
                                 Add Column
                             </button>
-                            <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split" ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button type="button" class="b-btn btn-action dropdown-toggle dropdown-toggle-split"
+                                ng-disabled="$.column" data-bs-toggle="dropdown" aria-expanded="false">
                             </button>
                             <div class="dropdown-menu b-dropdown-menu">
-                                <a class="dropdown-item" href="" ng-if="!$.entity.IsReadonly" ng-click="$.onSyncColumns()">Sync Columns With Database</a>
-                                <a class="dropdown-item" href="" ng-if="$.entity.IsReadonly" ng-click="$.onRefreshColumns()">Refresh Columns</a>
+                                <a class="dropdown-item" href="" ng-if="!$.entity.IsReadonly"
+                                    ng-click="$.onSyncColumns()">Sync Columns With Database</a>
+                                <a class="dropdown-item" href="" ng-if="$.entity.IsReadonly"
+                                    ng-click="$.onRefreshColumns()">Refresh Columns</a>
                                 <a class="dropdown-item" href="">Import columns from excel file</a>
                                 <a class="dropdown-item" href="">Import columns from text file</a>
                             </div>
@@ -327,7 +378,8 @@
                             <i class="codicon codicon-ellipsis"></i>
                         </div>
                     </div>
-                    <div class="d-flex table-row" ng-repeat="column in $.entity.Columns | orderBy:'ViewOrder'" ng-if="!column.IsEdited" role="button" ng-style="{'order':($index+1)}">
+                    <div class="d-flex table-row" ng-repeat="column in $.entity.Columns | orderBy:'ViewOrder'"
+                        ng-if="!column.IsEdited" role="button" ng-style="{'order':($index+1)}">
                         <div class="col-3 my-auto" ng-click="$.onRowItemClick(column,$index)">
                             {{column.ColumnName}}
                         </div>
@@ -343,17 +395,22 @@
                                 <i class="codicon codicon-arrow-up d-inline-block me-1"
                                     ng-click="$.onColumnSwapClick($index,$index-1)"></i>
                             </button>
-                            <button type="button" class="b-clean text-light" ng-disabled="$.column || $index==$.entity.Columns.length-1">
+                            <button type="button" class="b-clean text-light"
+                                ng-disabled="$.column || $index==$.entity.Columns.length-1">
                                 <i class="codicon codicon-arrow-down d-inline-block"
                                     ng-click="$.onColumnSwapClick($index,$index+1)"></i>
                             </button>
                         </div>
                         <div class=" col-2" ng-if="!$.entity.IsReadonly">
                             <div class="b-multi-btns">
-                                <button type="button" ng-click="$.onColumnPropertiesClick(column,false,$index)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                <button type="button" ng-click="$.onColumnPropertiesClick(column,false,$index)"
+                                    ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom"
+                                    title="Column Properties">
                                     <i class="codicon codicon-gear"></i>
                                 </button>
-                                <button type="button" ng-click="$.entity.Columns.splice($index,1)" ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                <button type="button" ng-click="$.entity.Columns.splice($index,1)"
+                                    ng-disabled="$.column" b-custom-tooltip data-bs-placement="bottom"
+                                    title="Cancel Column">
                                     <i class="codicon codicon-trash"></i>
                                 </button>
                             </div>
@@ -362,13 +419,17 @@
                     <!------------------------------------>
                     <!-- Edit Column -->
                     <!------------------------------------>
-                    <div ng-if="$.column.IsEdited" class="d-flex table-row edit-row" ng-style="{'order':$.column.ViewOrder}">
+                    <div ng-if="$.column.IsEdited" class="d-flex table-row edit-row"
+                        ng-style="{'order':$.column.ViewOrder}">
                         <div class="col-3 me-2">
-                            <input type="text" id="txtColumnName" ng-model="$.column.ColumnName" class="b-input form-control" b-custom-focus="onEditColumn" placeholder="Enter column name" autocomplete="off" required />
+                            <input type="text" id="txtColumnName" ng-model="$.column.ColumnName"
+                                class="b-input form-control" b-custom-focus="onEditColumn"
+                                placeholder="Enter column name" autocomplete="off" required />
                             <p class="b-invalid">{{$.columnForm.error.ColumnName}}</p>
                         </div>
                         <div class="col-3 me-2">
-                            <input type="text" id="txtColumnType" ng-model="$.column.ColumnType" class="b-input form-control" placeholder="Enter column type" required />
+                            <input type="text" id="txtColumnType" ng-model="$.column.ColumnType"
+                                class="b-input form-control" placeholder="Enter column type" required />
                             <p class="b-invalid">{{$.columnForm.error.ColumnType}}</p>
                         </div>
                         <div class="col-2 me-2 d-flex align-items-center">
@@ -381,13 +442,16 @@
                         <div class="col-2"></div>
                         <div class="col-2 ">
                             <div class="b-multi-btns">
-                                <button type="button" ng-click="$.onSaveColumnClick()" b-custom-tooltip data-bs-placement="bottom" title="Save Column">
+                                <button type="button" ng-click="$.onSaveColumnClick()" b-custom-tooltip
+                                    data-bs-placement="bottom" title="Save Column">
                                     <i class="codicon codicon-save"></i>
                                 </button>
-                                <button type="button" ng-click="$.onCancelColumnClick()" b-custom-tooltip data-bs-placement="bottom" title="Cancel Column">
+                                <button type="button" ng-click="$.onCancelColumnClick()" b-custom-tooltip
+                                    data-bs-placement="bottom" title="Cancel Column">
                                     <i class="codicon codicon-circle-slash"></i>
                                 </button>
-                                <button type="button" ng-click="$.onColumnPropertiesClick($.column,true)" b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
+                                <button type="button" ng-click="$.onColumnPropertiesClick($.column,true)"
+                                    b-custom-tooltip data-bs-placement="bottom" title="Column Properties">
                                     <i class="codicon codicon-gear"></i>
                                 </button>
                             </div>
@@ -395,10 +459,11 @@
                     </div>
                 </div>
                 <div class="table-footer">
-                    <button type="button" class="b-btn btn-action btn-sm mb-3" ng-click="$.onAddColumnClick()" ng-disabled="$.column">
+                    <button type="button" class="b-btn btn-action btn-sm mb-3" ng-click="$.onAddColumnClick()"
+                        ng-disabled="$.column">
                         <i class="codicon codicon-plus me-0" ng-disabled="$.running"></i>
                     </button>
-                    <div ng-if="!$.entity.Columns.length" class="b-notify notify-warning mb-4">
+                    <div ng-if="!$.entity.Columns.length" class="b-notify notify-info mb-4">
                         <i class="codicon codicon-info b-icon-2"></i>
                         <div class="text">
                             <h4 class="label">Entity has no columns.</h4>
@@ -412,32 +477,36 @@
                     <p class="b-invalid">{{$.form.error.Columns}}</p>
                     <div class="mt-3 mb-1 d-flex">
                         <div class="me-auto" ng-if="$.entity.EntityID">
-                            <button type="button" class="b-btn btn-danger" ng-click="$.onDeleteEntityClick()" ng-disabled="$.running">
+                            <button type="button" class="b-btn btn-danger" ng-click="$.onDeleteEntityClick()"
+                                ng-disabled="$.running">
                                 <i class="codicon codicon-trash"></i>
                                 Remove Entity
                             </button>
                         </div>
                         <div class="ms-auto">
-                            <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveEntityClick()" ng-disabled="$.running || $.column">
+                            <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveEntityClick()"
+                                ng-disabled="$.running || $.column">
                                 <i class="codicon codicon-save"
                                     ng-class="{'loading-circle mini':$.running=='save-entity'}"></i>
                                 Save Entity
                             </button>
-                            <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelEntityClick()" ng-disabled="$.running || $.column">
+                            <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelEntityClick()"
+                                ng-disabled="$.running || $.column">
                                 <i class="codicon codicon-circle-slash"></i>
                                 Cancel
                             </button>
 
                         </div>
                     </div>
-                    <div ng-if="$.isNewEntity" class="mt-4 mb-2 b-notify notify-warning mb-4">
+                    <div ng-if="$.isNewEntity" class="mt-4 b-notify notify-warning mb-3">
                         <i class="codicon codicon-info b-icon-2"></i>
                         <div class="text">
                             <h6 class="label text-uppercase">Create View Model Base On Entity</h6>
                             <div class="subtext">
                                 Do you want to create a ViewModel based on the created Entity?
                                 <br> Every column at Entity is one property at ViewModel
-                                <br> After click on below button, goto ViewModel page and will create or update ViewModel
+                                <br> After click on below button, goto ViewModel page and will create or update
+                                ViewModel
                                 <br>
                                 <button type="button" class="mt-2 b-btn btn-green" ng-click="$.onSaveViewModelClick()">
                                     <i class="codicon codicon-references"></i>
@@ -452,14 +521,16 @@
         <!------------------------------------>
         <!-- Column Properties Modal-->
         <!------------------------------------>
-        <div id="wnColumnProperties" b-custom-modal class="modal fade b-modal-dark" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div id="wnColumnProperties" b-custom-modal class="modal fade b-modal-dark" tabindex="-1"
+            data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
                             {{$.column.ColumnName}} Column Properties
                         </h5>
-                        <button type="button" class="btn-close" aria-label="Close" ng-click="$.onCancelColumnPropertiesClick()"></button>
+                        <button type="button" class="btn-close" aria-label="Close"
+                            ng-click="$.onCancelColumnPropertiesClick()"></button>
                     </div>
                     <div class="modal-body">
                         <!------------------------------------>
@@ -490,21 +561,26 @@
                                         <div class="b-field">
                                             <label class="form-label">Default Value</label>
                                             <div class="b-input-group">
-                                                <input type="text" ng-model="$.column.DefaultValue" class="b-input bg-2 form-control" placeholder="Enter column default value" autocomplete="off" />
+                                                <input type="text" ng-model="$.column.DefaultValue"
+                                                    class="b-input bg-2 form-control"
+                                                    placeholder="Enter column default value" autocomplete="off" />
                                                 <span><i class="codicon codicon-diff-ignored"></i></span>
                                             </div>
                                         </div>
                                         <div class="b-field">
                                             <label class="form-label">Description</label>
                                             <div class="b-input-group">
-                                                <textarea type="text" ng-model="$.column.Description" class="b-input bg-2 form-control" rows="2" placeholder="Enter column description"></textarea>
+                                                <textarea type="text" ng-model="$.column.Description"
+                                                    class="b-input bg-2 form-control" rows="2"
+                                                    placeholder="Enter column description"></textarea>
                                                 <span><i class="codicon codicon-book"></i></span>
                                             </div>
                                         </div>
                                         <div class="b-field">
                                             <label class="form-label">Column ID</label>
                                             <div class="b-input-group">
-                                                <label class="b-input bg-2 form-control">{{$.column.ColumnID||'00000000-0000-0000-0000-000000000000'}}</label>
+                                                <label
+                                                    class="b-input bg-2 form-control">{{$.column.ColumnID||'00000000-0000-0000-0000-000000000000'}}</label>
                                                 <span><i class="codicon codicon-arrow-swap"></i></span>
                                             </div>
                                         </div>
@@ -513,11 +589,13 @@
                                         <div class="b-alert">
                                             <span class="alert-title">Column Settings</span>
                                             <p>
-                                                Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.
+                                                Lorem ipsum is placeholder text commonly used in the graphic, print, and
+                                                publishing industries for previewing layouts and visual mockups.
                                             </p>
                                             <hr>
                                             <p>
-                                                Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The
+                                                Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in
+                                                laying out print, graphic or web designs. The
                                             </p>
                                         </div>
                                     </div>
@@ -528,7 +606,8 @@
                         <!-- Table Designer-->
                         <!------------------------------------>
                         <div class="b-group light-gray">
-                            <div class="group-header" data-bs-toggle="collapse" data-bs-target="#grpColumnPropsTableDesigner">
+                            <div class="group-header" data-bs-toggle="collapse"
+                                data-bs-target="#grpColumnPropsTableDesigner">
                                 <h3 class="group-label">
                                     <span class="group-icon">
                                         <i class="codicon codicon-calendar"></i>
@@ -559,7 +638,9 @@
                                         <div class="b-field" ng-if="$.column.IsComputedColumn">
                                             <label class="form-label">Formula</label>
                                             <div class="b-input-group">
-                                                <input type="text" ng-model="$.column.Formula" class="b-input bg-2 form-control" placeholder="Enter formula" autocomplete="off" required />
+                                                <input type="text" ng-model="$.column.Formula"
+                                                    class="b-input bg-2 form-control" placeholder="Enter formula"
+                                                    autocomplete="off" required />
                                                 <span><i class="codicon codicon-symbol-operator"></i></span>
                                             </div>
                                             <p class="b-invalid">{{$.columnForm.error.IsComputedColumn}}</p>
@@ -567,7 +648,8 @@
                                     </div>
                                     <div class="col-5 ps-3">
                                         <div class="b-alert">
-                                            <b>Column Settings</b> Dar sorati ke mayelid entity faghat khandani bashad in tik ro bezanid
+                                            <b>Column Settings</b> Dar sorati ke mayelid entity faghat khandani bashad
+                                            in tik ro bezanid
                                         </div>
                                     </div>
                                 </div>
@@ -575,11 +657,13 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveColumnPropertiesClick()" ng-disabled="$.running">
+                        <button type="button" class="b-btn btn-submit me-2" ng-click="$.onSaveColumnPropertiesClick()"
+                            ng-disabled="$.running">
                             <i class="codicon codicon-save"></i>
                             Save
                         </button>
-                        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelColumnPropertiesClick()" ng-disabled="$.running">
+                        <button type="button" class="b-btn btn-cancel" ng-click="$.onCancelColumnPropertiesClick()"
+                            ng-disabled="$.running">
                             <i class="codicon codicon-circle-slash"></i>
                             Cancel
                         </button>

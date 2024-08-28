@@ -17,13 +17,14 @@ import createListTemplate from "./scenario-management/lists/create-list.html";
 import createDetailsTemplate from "./scenario-management/details/create-details.html";
 import createActionTemplate from "./scenario-management/actions/create-action.html";
 import moduleBuilderTemplate from "./scenario-management/module-builder/module-builder.html";
+import definedListsTemplate from "./scenario-management/defined-lists/defined-lists.html";
 import providerSettingsTemplate from "./scenario-management/providers/provider-settings.html";
 import extensionsTemplate from "./extensions/extensions.html";
 import pageResourcesTemplate from "./page-resources/page-resources.html";
 import librariesTemplate from "./libraries/libraries.html";
 
 export class StudioController {
-    constructor($scope, $rootScope, $timeout, $q, $compile, globalService, apiService) {
+    constructor($scope, $rootScope, $timeout, $q, $compile, globalService, apiService, eventService) {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.$timeout = $timeout;
@@ -31,6 +32,11 @@ export class StudioController {
         this.$compile = $compile;
         this.globalService = globalService;
         this.apiService = apiService;
+        this.eventService = eventService
+
+        // this.eventService.register('keydown', (e) => {
+        //     debugger
+        // });
 
         $scope.$on("onGotoPage", (e, args) => {
             const subParamsUrl = args.subParams ? this.globalService.getUrlQueryFromObject(args.subParams) : "";
@@ -345,8 +351,8 @@ export class StudioController {
         baseUrl = baseUrl.replace(
             "{d}",
             GlobalSettings.dnnModuleID && !id && !GlobalSettings.moduleID ?
-            "&d=" + GlobalSettings.dnnModuleID :
-            ""
+                "&d=" + GlobalSettings.dnnModuleID :
+                ""
         );
 
         return baseUrl;
@@ -464,6 +470,11 @@ export class StudioController {
                 result.title = "Provider Settings";
                 result.content = providerSettingsTemplate;
                 result.icon = "window";
+                break;
+            case "defined-lists":
+                result.title = "Defined Lists";
+                result.content = definedListsTemplate;
+                result.icon = "list-ordered";
                 break;
             case "extensions":
                 result.title = "Extensions";

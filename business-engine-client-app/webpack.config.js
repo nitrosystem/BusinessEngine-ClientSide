@@ -40,26 +40,26 @@ module.exports = (env) => {
         ],
         module: {
             rules: [{
-                    test: /\.html$/,
-                    exclude: [path.resolve(__dirname, "./node_modules")],
-                    use: [{
-                            loader: "ngtemplate-loader",
-                        },
-                        {
-                            loader: "html-loader",
-                        },
-                    ],
+                test: /\.html$/,
+                exclude: [path.resolve(__dirname, "./node_modules")],
+                use: [{
+                    loader: "ngtemplate-loader",
                 },
                 {
-                    test: /\.css$/,
-                    use: [MiniCssExtractPlugin.loader, "css-loader"],
+                    loader: "html-loader",
                 },
-                {
-                    test: /\.(woff(2)?|ttf|eot)$/,
-                    generator: {
-                        filename: "./fonts/[name][ext]",
-                    },
+                ],
+            },
+            {
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
+            },
+            {
+                test: /\.(woff(2)?|ttf|eot)$/,
+                generator: {
+                    filename: "./fonts/[name][ext]",
                 },
+            },
             ],
         },
         devServer: {
@@ -74,12 +74,12 @@ module.exports = (env) => {
             },
         },
         externals: {
-            bootstrap: "bootstrap",
-            jquery: "jQuery",
-            lodash: "_",
             angular: "angular",
             angularfilter: "angular-filter",
-            angularsanitize: "angular-sanitize"
+            angularsanitize: "angular-sanitize",
+            lodash: "_",
+            jquery: "jQuery",
+            bootstrap: "bootstrap"
         },
     };
 };

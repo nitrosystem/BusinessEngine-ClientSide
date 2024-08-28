@@ -42,34 +42,29 @@ export class moduleBuilderService {
                                     subtitle: "Just a moment for save rendered module...",
                                 };
 
-                                this.apiService
-                                    .post("Studio", "SaveRenderedModule", {
-                                        ModuleID: m.ModuleID,
-                                        ParentID: m.ParentID,
-                                        ModuleTemplate: moduleTemplate,
-                                        IsRenderScriptsAndStyles: true,
-                                    })
-                                    .then(
-                                        (data) => {
-                                            populateModules(index + 1);
+                                this.apiService.post("Studio", "SaveRenderedModule", {
+                                    ModuleID: m.ModuleID,
+                                    ParentID: m.ParentID,
+                                    ModuleTemplate: moduleTemplate,
+                                    IsRenderScriptsAndStyles: true,
+                                }).then((data) => {
+                                    populateModules(index + 1);
 
-                                            this.notifyService.success(
-                                                "Rendered module save has been successfully"
-                                            );
-
-                                            delete this.awaitAction;
-                                        },
-                                        (error) => {
-                                            populateModules(index + 1);
-
-                                            this.awaitAction.isError = true;
-                                            this.awaitAction.subtitle = error.statusText;
-                                            this.awaitAction.desc =
-                                                this.globalService.getErrorHtmlFormat(error);
-
-                                            this.notifyService.error(error.data.Message);
-                                        }
+                                    this.notifyService.success(
+                                        "Rendered module save has been successfully"
                                     );
+
+                                    delete this.awaitAction;
+                                }, (error) => {
+                                    populateModules(index + 1);
+
+                                    this.awaitAction.isError = true;
+                                    this.awaitAction.subtitle = error.statusText;
+                                    this.awaitAction.desc =
+                                        this.globalService.getErrorHtmlFormat(error);
+
+                                    this.notifyService.error(error.data.Message);
+                                });
                             });
                         } else
                             populateModules(index + 1);
@@ -77,7 +72,6 @@ export class moduleBuilderService {
                 }
 
                 populateModules(0);
-
             });
     }
 
@@ -108,8 +102,7 @@ export class moduleBuilderService {
 
         var panes = [];
         $(`<div>${module.LayoutTemplate}</div>`)
-            .find("*[data-pane]")
-            .each((index, element) => {
+            .find("*[data-pane]").each((index, element) => {
                 const paneName = $(element).data("pane");
                 panes.push(paneName);
             });
@@ -190,11 +183,12 @@ export class moduleBuilderService {
 
                 this.getFieldUI(field, this.$scope).then(($fieldItem) => {
                     if (field.FieldTypeObject.IsContent) {
-                        if (field.ShowConditions && field.ShowConditions.length)
-                            $fieldItem
-                            .find("*[data-field-content]")
-                            .append(field.Settings.Content);
-                        else $fieldItem = $(field.Settings.Content);
+                        if (field.ShowConditions && field.ShowConditions.length) {
+                            $fieldItem.find("*[data-field-content]").append(field.Settings.Content);
+                        }
+                        else {
+                            $fieldItem = $(field.Settings.Content);
+                        }
                     }
 
                     $pane.append($fieldItem);
@@ -237,104 +231,69 @@ export class moduleBuilderService {
             return;
         }
 
-        const fieldTemplate = _.find(field.FieldTypeObject.Templates || [], (t) => {
-            return t.TemplateName == field.Template;
-        });
+        const fieldTemplate = _.find(field.FieldTypeObject.Templates || [], (t) => { return t.TemplateName == field.Template; });
         const fieldTemplatePath = fieldTemplate ? (fieldTemplate.TemplatePath || "").replace("[EXTPATH]", GlobalSettings.modulePath + "extensions") : "";
 
-        var layout = this.getDefaultFieldLayoutTemplate(field);
-
         if (fieldTemplatePath) {
+            var layout = field.Settings.IsCustomFieldLayout && field.Settings.CustomFieldLayoutModified && field.Settings.CustomFieldLayout
+                ? field.Settings.CustomFieldLayout : this.getDefaultFieldLayoutTemplate(field);
 
-            fetch(fieldTemplatePath + "?ver=" + GlobalSettings.version)
-                .then((stream) => {
-                    if (stream.status >= 400) {
-                        throw new Error("Bad response from server");
-                    }
-                    return stream.text();
-                })
-                .then((fieldHtml) => {
-                    fieldHtml = fieldHtml || "";
+            fetch(fieldTemplatePath + "?ver=" + GlobalSettings.version).then((stream) => {
+                if (stream.status >= 400) throw new Error("Bad response from server");
+                return stream.text();
+            }).then((fieldHtml) => {
+                fieldHtml = fieldHtml || "";
 
-                    var matches = fieldHtml.match(/\[\[(.[^\[\]\{\}]+)\]\]/gm);
-                    _.forEach(matches, (m) => {
-                        const match = /\[\[(.[^\[\]\{\}]+)\]\]/gm.exec(m);
-                        const value = _.get(field, match[1]);
-                        fieldHtml = fieldHtml.replace(match[0], value);
-                    });
-
-                    if ((field.ShowConditions && field.ShowConditions.length) || (field.AuthorizationViewField && field.AuthorizationViewField.length) || field.Settings.SetShowistener) {
-                        layout = layout.replace(
-                            /\[FIELD-SHOW\]/g,
-                            `ng-if="Field.${field.FieldName}.IsShow"`
-                        );
-                    } else {
-                        layout = layout.replace(/\[FIELD-SHOW\]/g, "");
-                    }
-
-                    layout = layout.replace(/\[FIELD-TEXT\]/g, field.FieldText);
-                    layout = layout.replace(/\[FIELD-COMPONENT\]/g, fieldHtml);
-                    layout = layout.replace(
-                        /\[FIELD-SUBTEXT\]/g,
-                        field.Settings.SubText ?
-                        `<span class="${
-                  field.Settings.SubTextCssClass
-                    ? field.Settings.SubTextCssClass
-                    : ""
-                }">${field.Settings.SubText}</span>` :
-                        ""
-                    );
-                    layout = layout.replace(
-                        /\[FIELD-REQUIRED-MESSAGE\]/g,
-                        field.IsRequired && field.Settings.RequiredMessage ?
-                        `<p ng-show="[FIELD].Validated && ([FIELD].Value==null || [FIELD].Value==undefined || [FIELD].Value=='') && [FIELD].RequiredError" class="b-invlid-message ${
-                  field.Settings.RequiredMessageCssClass
-                    ? field.Settings.RequiredMessageCssClass
-                    : ""
-                }">${field.Settings.RequiredMessage}</p>` :
-                        ""
-                    );
-                    layout = layout.replace(
-                        /\[FIELD-VALIDATION-MESSAGE\]/g,
-                        field.Settings.ValidationPattern && field.Settings.ValidationMessage ?
-                        `<p ng-show="[FIELD].Value!=undefined && [FIELD].Value!=null && [FIELD].Value!='' && [FIELD].IsPatternValidate && ![FIELD].IsValid" class="b-invlid-message ${
-                  field.Settings.ValidationMessageCssClass
-                    ? field.Settings.ValidationMessageCssClass
-                    : ""
-                }">${field.Settings.ValidationMessage}</p>` :
-                        ""
-                    );
-
-                    this.parseFieldPanes(field, layout).then((data) => {
-                        if (data && data.type == 0) {
-                            layout = data.html;
-                        } else if (data && data.type == 1) {
-                            layout = layout.replace(
-                                /\[FIELDPANES(,attrs=(.[^\]]+))?\]/gm,
-                                data.html
-                            );
-                        }
-                        layout = layout.replace(/\[FIELD\]/g, "Field." + field.FieldName);
-                        layout = layout.replace(/\[FIELDID\]/g, field.FieldID);
-                        layout = layout.replace(/\[FIELDNAME\]/g, field.FieldName);
-                        layout = layout.replace(
-                            /\[\[(.[^\[\]\{\}]+)\]\]/gm,
-                            field.FieldName
-                        );
-                        layout = layout.replace(
-                            /\[FIELD-CLASSES\]/g,
-                            field.Settings && field.Settings.CssClass ?
-                            field.Settings.CssClass :
-                            ""
-                        );
-
-                        $defer.resolve(layout);
-                    });
-                })
-                .catch((err) => {
-                    $defer.resolve("");
+                /* 
+                    This part of the current service is finding the items according to the regular expressions
+                    in the field template code and replacing it with the correct value.
+                */
+                var matches = fieldHtml.match(/\[\[(.[^\[\]\{\}]+)\]\]/gm);
+                _.forEach(matches, (m) => {
+                    const match = /\[\[(.[^\[\]\{\}]+)\]\]/gm.exec(m);
+                    const value = _.get(field, match[1]) ?? '';
+                    fieldHtml = fieldHtml.replace(match[0], value);
                 });
-        } else $defer.resolve(layout);
+
+                if (field.ShowConditions && field.ShowConditions.length) {
+                    layout = layout.replace(/\[FIELD-DISPLAY-EXPRESSION\]/g, `ng-if="Field.${field.FieldName}.IsShow"`);
+                } else {
+                    layout = layout.replace(/\[FIELD-DISPLAY-EXPRESSION\]/g, "");
+                }
+
+                /*
+                    Parse field label regular expressions 
+                */
+                var fieldLableRegexResult = /\#FIELDTEXT([\s\S]*)\#ENDFIELDTEXT/gm.exec(layout);
+                if (fieldLableRegexResult && fieldLableRegexResult.length >= 2)
+                    layout = layout.replace(fieldLableRegexResult[0], field.Settings.IsHideFieldText ? "" : fieldLableRegexResult[1]);
+
+                layout = layout.replace(/\[FIELD-TEXT\]/g, field.FieldText);
+                layout = layout.replace(/\[FIELD-COMPONENT\]/g, fieldHtml);
+                layout = layout.replace(/\[FIELD-SUBTEXT\]/g, field.Settings.Subtext ? `<span class="${field.Settings.SubtextCssClass || ''}">${field.Settings.Subtext}</span>` : '');
+                layout = layout.replace(/\[FIELD-REQUIRED-MESSAGE\]/g, field.IsRequired && field.Settings.RequiredMessage ? `<p ng-show="[FIELD].Validated && ([FIELD].Value==null || [FIELD].Value==undefined || [FIELD].Value=='') && [FIELD].RequiredError" class="b-invlid-message ${field.Settings.RequiredMessageCssClass || ''}">${field.Settings.RequiredMessage}</p>` : '');
+                layout = layout.replace(/\[FIELD-VALIDATION-MESSAGE\]/g, field.Settings.ValidationPattern && field.Settings.ValidationMessage ? `<p ng-show="[FIELD].Value!=undefined && [FIELD].Value!=null && [FIELD].Value!='' && [FIELD].IsPatternValidate && ![FIELD].IsValid" class="b-invlid-message ${field.Settings.ValidationMessageCssClass || ''}">${field.Settings.ValidationMessage}</p>` : '');
+
+                this.parseFieldPanes(field, layout).then((data) => {
+                    if (data && data.type == 0) {
+                        layout = data.html;
+                    } else if (data && data.type == 1) {
+                        layout = layout.replace(/\[FIELDPANES(,attrs=(.[^\]]+))?\]/gm, data.html);
+                    }
+                    layout = layout.replace(/\[FIELD\]/g, "Field." + field.FieldName);
+                    layout = layout.replace(/\[FIELDID\]/g, field.FieldID);
+                    layout = layout.replace(/\[FIELDNAME\]/g, field.FieldName);
+                    layout = layout.replace(/\[\[(.[^\[\]\{\}]+)\]\]/gm, field.FieldName);
+                    layout = layout.replace(/\[FIELD-CLASSES\]/g, field.Settings && field.Settings.CssClass ? field.Settings.CssClass : "");
+
+                    $defer.resolve(layout);
+                });
+            }).catch((err) => {
+                $defer.resolve("");
+            });
+        } else {
+            $defer.resolve("");
+        }
 
         return $defer.promise;
     }
@@ -346,33 +305,30 @@ export class moduleBuilderService {
         if (matches && matches.length) {
             _.forEach(matches, (m) => {
                 const match = /^\[FIELDPANES(,attrs=(.[^\]]+))?\]$/gm.exec(m);
-                this.$deferredBroadcast(
-                    this.$scope,
-                    `onGet${field.FieldType}FieldPanes`, {
-                        field: field,
-                        attrs: match[2],
-                        layout
-                    }
-                ).then((data) => {
+
+                this.$deferredBroadcast(this.$scope, `onGet${field.FieldType}FieldPanes`, { field: field, attrs: match[2], layout }).then((data) => {
                     $defer.resolve({ html: data.html, type: data.type != undefined ? data.type : 1 });
                 });
             });
-        } else $defer.resolve({ type: 2 });
+        }
+        else {
+            $defer.resolve({ type: 2 });
+        }
 
         return $defer.promise;
     }
 
     getDefaultFieldLayoutTemplate(field) {
         const result =
-            `<div data-field="${field.FieldName}" [FIELD-SHOW] class="${field.Settings.CssClass || ""}">
-                <label class="form-label" ng-if="!Field.${field.FieldName}.Settings.IsHideFieldText">
-                  [FIELD-TEXT]
-                </label>
-                [FIELD-COMPONENT]
-                [FIELD-REQUIRED-MESSAGE]
-                [FIELD-VALIDATION-MESSAGE]
-                [FIELD-SUBTEXT]
-              </div>`;
+            `<div data-field="${field.FieldName}" [FIELD-DISPLAY-EXPRESSION] class="${field.Settings.CssClass || ''}">
+    #FIELDTEXT
+        <label class="${field.Settings.FieldTextCssClass || ''}">[FIELD-TEXT]</label>
+    #ENDFIELDTEXT
+    [FIELD-COMPONENT]
+    [FIELD-REQUIRED-MESSAGE]
+    [FIELD-VALIDATION-MESSAGE]
+    [FIELD-SUBTEXT]
+</div>`;
 
         return result;
     }

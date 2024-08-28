@@ -165,31 +165,28 @@ export class ActionService {
         var action = node.Action;
 
         this.callAction(action, $scope).then((data) => {
-                    if (data && data.invalidConditions) {
-                        defer.resolve();
-                        return defer.promise;
-                    }
-                    if (node.SuccessActions.length)
-                        this.callActionFromBuffer(node.SuccessActions, defer, $scope);
-                    else
-                        defer.resolve(data);
-                },
-                (error) => {
-                    if (node.ErrorActions.length)
-                        this.callActionFromBuffer(node.ErrorActions, defer, $scope);
-                    else
-                        defer.reject(error);
-                }
-            )
-            .finally((data) => {
-                if (node.CompletedActions.length)
-                    this.callActionFromBuffer(node.CompletedActions, defer, $scope);
-                else
-                    defer.resolve(data);
+            if (data && data.invalidConditions) {
+                defer.resolve();
+                return defer.promise;
+            }
+            if (node.SuccessActions.length)
+                this.callActionFromBuffer(node.SuccessActions, defer, $scope);
+            else
+                defer.resolve(data);
+        }, (error) => {
+            if (node.ErrorActions.length)
+                this.callActionFromBuffer(node.ErrorActions, defer, $scope);
+            else
+                defer.reject(error);
+        }).finally((data) => {
+            if (node.CompletedActions.length)
+                this.callActionFromBuffer(node.CompletedActions, defer, $scope);
+            else
+                defer.resolve(data);
 
-                buffer.shift();
-                this.callActionFromBuffer(buffer, defer, $scope);
-            });
+            buffer.shift();
+            this.callActionFromBuffer(buffer, defer, $scope);
+        });
 
         return defer.promise;
     }
@@ -217,11 +214,11 @@ export class ActionService {
 
                     // call the action with filled the action params
                     actionMethod.apply(this, [$scope, action, params]).then((data) => {
-                            //run post script after performed the action
-                            this.runPostscript(action, params, $scope).then(() => {
-                                defer.resolve(data);
-                            });
-                        },
+                        //run post script after performed the action
+                        this.runPostscript(action, params, $scope).then(() => {
+                            defer.resolve(data);
+                        });
+                    },
                         (error) => {
                             defer.reject(error);
                         }
@@ -294,14 +291,14 @@ export class ActionService {
             Field: $scope.Field,
             PageUrl: document.URL,
         }).then((data) => {
-                if (data) {
-                    this.globalService.parseJsonItems(data);
+            if (data) {
+                this.globalService.parseJsonItems(data);
 
-                    this.assignScopeData(data, $scope);
-                }
+                this.assignScopeData(data, $scope);
+            }
 
-                defer.resolve(data);
-            },
+            defer.resolve(data);
+        },
             (error) => {
                 defer.reject(error.data);
             }
@@ -322,7 +319,7 @@ export class ActionService {
                 // });
             } else {
                 if ($scope[key])
-                    value && typeof value == 'object' ? $scope[key] = {...$scope[key], ...value } : value;
+                    value && typeof value == 'object' ? $scope[key] = { ...$scope[key], ...value } : value;
                 else
                     $scope[key] = value;
             }
